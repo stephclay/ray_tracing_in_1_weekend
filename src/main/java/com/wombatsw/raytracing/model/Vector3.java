@@ -57,8 +57,7 @@ public class Vector3 extends Triplet<Vector3> {
         Vector3 v = randomUnitVector();
         if (v.dot(normal) > 0) { // same hemisphere
             return v;
-        }
-        else {
+        } else {
             return v.negate();
         }
     }

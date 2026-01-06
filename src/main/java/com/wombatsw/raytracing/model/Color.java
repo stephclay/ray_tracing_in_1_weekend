@@ -19,7 +19,7 @@ public class Color extends Triplet<Color> {
      * Write this color to the provided byte array at the given offset.
      *
      * @param imageData The byte array
-     * @param offset The offset
+     * @param offset    The offset
      */
     public void writeColor(final byte[] imageData, final int offset) {
         double r = gamma(getX());

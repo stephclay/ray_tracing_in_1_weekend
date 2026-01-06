@@ -14,12 +14,13 @@ public class Intersection {
     /**
      * Intersection constructor
      *
-     * @param ray The intersecting ray
-     * @param t The location of the intersection on the ray
+     * @param ray             The intersecting ray
+     * @param t               The location of the intersection on the ray
      * @param outwardNormalFn The normal for the outside face of the intersection point
      */
     public Intersection(final Ray ray, final double t, final Function<Point3, Vector3> outwardNormalFn) {
-        p = ray.at(t);;
+        p = ray.at(t);
+        ;
         this.t = t;
 
         Vector3 outwardNormal = outwardNormalFn.apply(p);

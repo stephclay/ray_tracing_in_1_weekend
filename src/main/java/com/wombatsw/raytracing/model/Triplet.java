@@ -121,7 +121,7 @@ public abstract class Triplet<T extends Triplet<T>> {
      * Perform linear interpolation between this triplet and the provided one
      *
      * @param end The other triplet
-     * @param a The scaling value in the range [0, 1]
+     * @param a   The scaling value in the range [0, 1]
      * @return A new triplet with the result
      */
     public T lerp(final Triplet<?> end, final double a) {
