@@ -5,6 +5,7 @@ import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Ray;
+import com.wombatsw.raytracing.model.ScatterData;
 import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.AbstractObj;
 
@@ -164,12 +165,15 @@ public class Camera {
 
         Intersection intersect = world.intersect(ray, new Interval(0.001, Double.POSITIVE_INFINITY));
         if (intersect != null) {
-            Vector3 dir = intersect.getN().add(Vector3.randomUnitVector());
-            Ray bounced = new Ray(intersect.getP(), dir);
-            return getRayColor(bounced, depth - 1, world).mul(0.5);
+            ScatterData scatterData = intersect.getMaterial().scatter(intersect);
+            if (scatterData != null) {
+                Color scatterColor = getRayColor(scatterData.ray(), depth - 1, world);
+                return scatterColor.mul(scatterData.attenuation());
+            }
+            return BLACK;
         }
 
-        Vector3 unitDir = ray.getDirection().normalize();
+        Vector3 unitDir = ray.direction().normalize();
         double a = 0.5 * (unitDir.getY() + 1.0);
 
         return WHITE.lerp(BLUE, a);

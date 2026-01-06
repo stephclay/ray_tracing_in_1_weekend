@@ -66,4 +66,15 @@ public class Vector3 extends Triplet<Vector3> {
     public Vector3 create(final double x, final double y, final double z) {
         return new Vector3(x, y, z);
     }
+
+    /**
+     * Reflect the vector relative to the given surface normal
+     *
+     * @param n The surface normal
+     * @return The reflected vector
+     */
+    public Vector3 reflect(final Vector3 n) {
+        double scale = 2.0 * dot(n);
+        return sub(n.mul(scale));
+    }
 }

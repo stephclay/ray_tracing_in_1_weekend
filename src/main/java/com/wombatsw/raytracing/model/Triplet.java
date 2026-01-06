@@ -6,6 +6,8 @@ package com.wombatsw.raytracing.model;
  * @param <T> The concrete type that extends this abstract class.
  */
 public abstract class Triplet<T extends Triplet<T>> {
+    private static final double EPSILON = 1e-8;
+
     private final double x, y, z;
 
     public Triplet(final double x, final double y, final double z) {
@@ -63,6 +65,16 @@ public abstract class Triplet<T extends Triplet<T>> {
      */
     public T sub(final Triplet<?> v) {
         return create(x - v.getX(), y - v.getY(), z - v.getZ());
+    }
+
+    /**
+     * Multiply the values of this triplet with the values of the provided triplet
+     *
+     * @param v The value to multiply
+     * @return A new triplet with the result
+     */
+    public T mul(final Triplet<?> v) {
+        return create(x * v.getX(), y * v.getY(), z * v.getZ());
     }
 
     /**
@@ -144,5 +156,11 @@ public abstract class Triplet<T extends Triplet<T>> {
      */
     public double len() {
         return Math.sqrt(lenSquared());
+    }
+
+    public boolean nearZero() {
+        return Math.abs(x) < EPSILON &&
+                Math.abs(y) < EPSILON &&
+                Math.abs(z) < EPSILON;
     }
 }

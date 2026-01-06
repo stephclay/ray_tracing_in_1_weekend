@@ -3,17 +3,9 @@ package com.wombatsw.raytracing.model;
 /**
  * An interval between 2 scalar values
  */
-public class Interval {
+public record Interval(double min, double max) {
     public final static Interval EMPTY = new Interval(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
     public final static Interval UNIVERSE = new Interval(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-
-    private final double min;
-    private final double max;
-
-    public Interval(final double min, final double max) {
-        this.min = min;
-        this.max = max;
-    }
 
     /**
      * Check of the provide value is within the interval, including endpoints
@@ -44,19 +36,5 @@ public class Interval {
      */
     public double clamp(final double x) {
         return Math.max(min, Math.min(max, x));
-    }
-
-    /**
-     * @return the interval minimum
-     */
-    public double getMin() {
-        return min;
-    }
-
-    /**
-     * @return the interval maximum
-     */
-    public double getMax() {
-        return max;
     }
 }

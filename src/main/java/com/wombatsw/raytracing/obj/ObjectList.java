@@ -13,6 +13,15 @@ import java.util.Arrays;
 public class ObjectList extends AbstractObj {
     private final ArrayList<AbstractObj> list = new ArrayList<AbstractObj>();
 
+    public ObjectList() {
+        super(null);
+    }
+
+    public ObjectList(AbstractObj... objs) {
+        this();
+        add(objs);
+    }
+
     /**
      * Add an object to the list. May be chained
      *
@@ -34,10 +43,10 @@ public class ObjectList extends AbstractObj {
     @Override
     public Intersection intersect(final Ray ray, final Interval tRange) {
         Intersection returnVal = null;
-        double closestT = tRange.getMax();
+        double closestT = tRange.max();
 
         for (AbstractObj obj : list) {
-            Intersection intersection = obj.intersect(ray, new Interval(tRange.getMin(), closestT));
+            Intersection intersection = obj.intersect(ray, new Interval(tRange.min(), closestT));
             if (intersection != null) {
                 closestT = intersection.getT();
                 returnVal = intersection;

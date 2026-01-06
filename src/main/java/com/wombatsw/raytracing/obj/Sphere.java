@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.obj;
 
+import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Point3;
@@ -13,16 +14,17 @@ public class Sphere extends AbstractObj {
     private final Point3 center;
     private final double radius;
 
-    public Sphere(final Point3 center, final double radius) {
+    public Sphere(final Point3 center, final double radius, final Material material) {
+        super(material);
         this.center = center;
         this.radius = Math.max(0, radius);
     }
 
     @Override
     public Intersection intersect(final Ray ray, final Interval tRange) {
-        Point3 oc = center.sub(ray.getOrigin());
-        double a = ray.getDirection().lenSquared();
-        double h = ray.getDirection().dot(oc);
+        Point3 oc = center.sub(ray.origin());
+        double a = ray.direction().lenSquared();
+        double h = ray.direction().dot(oc);
         double c = oc.lenSquared() - radius * radius;
         double discriminant = h * h - a * c;
         if (discriminant < 0) {
@@ -54,6 +56,6 @@ public class Sphere extends AbstractObj {
      * @return The {@link Intersection}
      */
     private @NonNull Intersection getIntersection(final Ray ray, final double t) {
-        return new Intersection(ray, t, p -> p.vectorFrom(center).div(radius));
+        return new Intersection(ray, t, getMaterial(), p -> p.vectorFrom(center).div(radius));
     }
 }
