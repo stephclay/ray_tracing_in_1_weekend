@@ -54,8 +54,13 @@ public class Intersection {
         n = outwardNormalFn.apply(p);
 
         frontFace = ray.direction().dot(n) < 0;
-        if (frontFace) {
+        if (!frontFace) {
             n.negate();
         }
+        // Make sure all the intersection data cannot be updated
+        ray.direction().setMutable(false);
+        ray.origin().setMutable(false);
+        n.setMutable(false);
+        p.setMutable(false);
     }
 }

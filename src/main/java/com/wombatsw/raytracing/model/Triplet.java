@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * An abstract type for points, vectors, and colors. Most methods mutate the triplet, which is done to limit object
@@ -12,6 +13,7 @@ import lombok.Setter;
  * @param <T> The concrete type that extends this abstract class.
  */
 @EqualsAndHashCode
+@ToString
 public abstract class Triplet<T extends Triplet<T>> {
     private static final double EPSILON = 1e-8;
 

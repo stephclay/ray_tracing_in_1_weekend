@@ -1,13 +1,17 @@
 package com.wombatsw.raytracing.model;
 
 import com.wombatsw.raytracing.engine.MathUtils;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Arrays;
 
 /**
  * A mutable tuple with vector operation methods. Operations can be chained
  */
+@EqualsAndHashCode(exclude = "mutable")
+@ToString
 class Tuple {
     private final double[] values;
     /**

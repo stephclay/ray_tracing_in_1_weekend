@@ -10,8 +10,6 @@ import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.AbstractObj;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
-import lombok.experimental.Accessors;
 
 /**
  * Camera object, which also handles driving the rendering process
@@ -138,6 +136,7 @@ public class Camera {
                 .add(pixelDU.copy().mul(x + offset.getX()))
                 .add(pixelDV.copy().mul(y + offset.getY()));
         Vector3 rayDirection = new Vector3(pixelCenter, cameraCenter);
+        rayDirection.setMutable(false);
         return new Ray(cameraCenter, rayDirection);
     }
 

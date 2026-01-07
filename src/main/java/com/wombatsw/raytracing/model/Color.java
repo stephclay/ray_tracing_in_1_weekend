@@ -1,11 +1,13 @@
 package com.wombatsw.raytracing.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * A mutable color represented by an RGB triplet
  */
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class Color extends Triplet<Color> {
     private static final Interval RANGE = new Interval(0, 0.999999);
 
