@@ -1,10 +1,12 @@
 package com.wombatsw.raytracing.model;
 
 import com.wombatsw.raytracing.engine.MathUtils;
+import lombok.EqualsAndHashCode;
 
 /**
  * A mutable 3D Vector
  */
+@EqualsAndHashCode(callSuper = true)
 public class Vector3 extends Triplet<Vector3> {
     public Vector3(final double x, final double y, final double z) {
         super(new Tuple(x, y, z));

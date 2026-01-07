@@ -8,145 +8,150 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TripletTest {
 
     @Test
-    void testAdd() {
-        Vector3 v1 = new Vector3(1, 2, 3);
-        Vector3 v2 = new Vector3(-1, 0, 5);
+    public void testAdd() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> t2 = createTriplet(-1, 0, 5);
 
-        Vector3 result = v1.add(v2);
+        Triplet<?> result = t1.add(t2);
         assertVectorEquals(0, 2, 8, result);
     }
 
     @Test
-    void testSub() {
-        Vector3 v1 = new Vector3(1, 2, 3);
-        Vector3 v2 = new Vector3(-1, 0, 5);
+    public void testSub() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> t2 = createTriplet(-1, 0, 5);
 
-        Vector3 result = v1.sub(v2);
+        Triplet<?> result = t1.sub(t2);
         assertVectorEquals(2, 2, -2, result);
     }
 
     @Test
-    void testMulScalar() {
-        Vector3 v1 = new Vector3(1, 2, 3);
+    public void testMulScalar() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
 
-        Vector3 result = v1.mul(-2);
+        Triplet<?> result = t1.mul(-2);
         assertVectorEquals(-2, -4, -6, result);
     }
 
     @Test
-    void testMulVector() {
-        Vector3 v1 = new Vector3(1, 2, 3);
-        Vector3 v2 = new Vector3(-1, 0, 5);
+    public void testMulVector() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> t2 = createTriplet(-1, 0, 5);
 
-        Vector3 result = v1.mul(v2);
+        Triplet<?> result = t1.mul(t2);
         assertVectorEquals(-1, -0, 15, result);
     }
 
     @Test
-    void testDiv() {
-        Vector3 v1 = new Vector3(1, 2, 3);
+    public void testDiv() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
 
-        Vector3 result = v1.div(-2);
+        Triplet<?> result = t1.div(-2);
         assertVectorEquals(-0.5, -1, -1.5, result);
     }
 
     @Test
-    void testNegate() {
-        Vector3 v1 = new Vector3(1, 2, 3);
+    public void testNegate() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
 
-        Vector3 result = v1.negate();
+        Triplet<?> result = t1.negate();
         assertVectorEquals(-1, -2, -3, result);
     }
 
     @Test
-    void testNormalize() {
-        Vector3 v1 = new Vector3(1, 2, 3);
+    public void testNormalize() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
 
-        Vector3 result = v1.normalize();
+        Triplet<?> result = t1.normalize();
         double lenMinusOne = Math.abs(result.lenSquared() - 1);
         assertTrue(lenMinusOne < 1e-20);
     }
 
     @Test
-    void testReflect() {
-        Vector3 v1 = new Vector3(1, 2, 3);
-        Vector3 n = new Vector3(0, 1, 0); // Needs to be a unit vector
+    public void testReflect() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> n = createTriplet(0, 1, 0); // Needs to be a unit vector
 
-        Vector3 result = v1.reflect(n);
+        Triplet<?> result = t1.reflect(n);
         assertVectorEquals(1, -2, 3, result);
     }
 
     @Test
-    void testTranslate() {
-        Vector3 v1 = new Vector3(1, 2, 3);
-        Vector3 v2 = new Vector3(-1, 0, 5);
+    public void testTranslate() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> t2 = createTriplet(-1, 0, 5);
 
-        Vector3 result = v1.translate(v2, 2);
+        Triplet<?> result = t1.translate(t2, 2);
         assertVectorEquals(-1, 2, 13, result);
     }
 
     @Test
-    void testLerp() {
-        Vector3 v1 = new Vector3(1, 2, 3);
-        Vector3 v2 = new Vector3(2, 3, 4);
+    public void testLerp() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> t2 = createTriplet(2, 3, 4);
 
-        Vector3 result1 = v1.copy().lerp(v2, 0);
+        Triplet<?> result1 = t1.copy().lerp(t2, 0);
         assertVectorEquals(1, 2, 3, result1);
 
-        Vector3 result2 = v1.copy().lerp(v2, 0.5);
+        Triplet<?> result2 = t1.copy().lerp(t2, 0.5);
         assertVectorEquals(1.5, 2.5, 3.5, result2);
 
-        Vector3 result3 = v1.copy().lerp(v2, 1);
+        Triplet<?> result3 = t1.copy().lerp(t2, 1);
         assertVectorEquals(2, 3, 4, result3);
     }
 
     @Test
-    void testDot() {
-        Vector3 v1 = new Vector3(1, 0, 1);
-        Vector3 v2 = new Vector3(0, 1, 0);
-        Vector3 v3 = new Vector3(1, 1, 2);
+    public void testDot() {
+        Triplet<?> t1 = createTriplet(1, 0, 1);
+        Triplet<?> t2 = createTriplet(0, 1, 0);
+        Triplet<?> t3 = createTriplet(1, 1, 2);
 
-        double result1 = v1.copy().dot(v2);
-        assertEquals(0,  result1);
+        double result1 = t1.copy().dot(t2);
+        assertEquals(0, result1);
 
-        double result2 = v1.copy().dot(v3);
-        assertEquals(3,  result2);
+        double result2 = t1.copy().dot(t3);
+        assertEquals(3, result2);
     }
 
     @Test
-    void testCross() {
-        Vector3 v1 = new Vector3(1, 0, 0);
-        Vector3 v2 = new Vector3(0, 1, 0);
+    public void testCross() {
+        Triplet<?> t1 = createTriplet(1, 0, 0);
+        Triplet<?> t2 = createTriplet(0, 1, 0);
 
-        Vector3 result = v1.cross(v2);
+        Triplet<?> result = t1.cross(t2);
         assertVectorEquals(0, 0, 1, result);
     }
 
     @Test
-    void testLenSquared() {
-        Vector3 v1 = new Vector3(2, 3, 4);
+    public void testLenSquared() {
+        Triplet<?> t1 = createTriplet(2, 3, 4);
 
-        double lenSquared = v1.lenSquared();
+        double lenSquared = t1.lenSquared();
         assertEquals(29, lenSquared);
     }
 
     @Test
-    void testLen() {
-        Vector3 v1 = new Vector3(1, 2, 2);
+    public void testLen() {
+        Triplet<?> t1 = createTriplet(1, 2, 2);
 
-        double len = v1.len();
+        double len = t1.len();
         assertEquals(3, len);
     }
 
     @Test
-    void testNearZero() {
-        Vector3 v1 = new Vector3(1e-100, 1e-100, 1e-100);
+    public void testNearZero() {
+        Triplet<?> t1 = createTriplet(1e-100, 1e-100, 1e-100);
 
-        assertTrue(v1.nearZero());
+        assertTrue(t1.nearZero());
     }
 
-    public void assertVectorEquals(final double expectedX,  final double expectedY, final double expectedZ,
-                                   final Vector3 actual) {
+    private Triplet<?> createTriplet(final double x, final double y, final double z) {
+        // The type does not really matter, so use Vector3
+        return new Vector3(x, y, z);
+    }
+
+    private void assertVectorEquals(final double expectedX, final double expectedY, final double expectedZ,
+                                    final Triplet<?> actual) {
         assertEquals(expectedX, actual.getX());
         assertEquals(expectedY, actual.getY());
         assertEquals(expectedZ, actual.getZ());

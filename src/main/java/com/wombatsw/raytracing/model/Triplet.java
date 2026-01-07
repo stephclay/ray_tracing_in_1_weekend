@@ -1,6 +1,7 @@
 package com.wombatsw.raytracing.model;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Getter;
  *
  * @param <T> The concrete type that extends this abstract class.
  */
+@EqualsAndHashCode
 public abstract class Triplet<T extends Triplet<T>> {
     private static final double EPSILON = 1e-8;
 
