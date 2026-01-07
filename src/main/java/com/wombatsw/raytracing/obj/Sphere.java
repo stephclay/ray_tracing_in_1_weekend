@@ -5,6 +5,7 @@ import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Ray;
+import com.wombatsw.raytracing.model.Vector3;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -22,7 +23,7 @@ public class Sphere extends AbstractObj {
 
     @Override
     public Intersection intersect(final Ray ray, final Interval tRange) {
-        Point3 oc = center.sub(ray.origin());
+        Point3 oc = center.copy().sub(ray.origin());
         double a = ray.direction().lenSquared();
         double h = ray.direction().dot(oc);
         double c = oc.lenSquared() - radius * radius;
@@ -56,6 +57,6 @@ public class Sphere extends AbstractObj {
      * @return The {@link Intersection}
      */
     private @NonNull Intersection getIntersection(final Ray ray, final double t) {
-        return new Intersection(ray, t, getMaterial(), p -> p.vectorFrom(center).div(radius));
+        return new Intersection(ray, t, getMaterial(), p -> new Vector3(p, center).div(radius));
     }
 }

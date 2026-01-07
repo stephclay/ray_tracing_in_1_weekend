@@ -46,8 +46,8 @@ public class RayTracerApp implements CommandLineRunner {
     private AbstractObj getWorld() {
         Material matGround = new Lambertian(new Color(0.8, 0.8, 0.0)); // yellow
         Material matCenter = new Lambertian(new Color(0.1, 0.2, 0.5)); // blue
-        Material matLeft   = new Metal(new Color(0.8, 0.8, 0.8)); // gray
-        Material matRight  = new Metal(new Color(0.8, 0.6, 0.2)); // slightly red-ish yellow
+        Material matLeft = new Metal(new Color(0.8, 0.8, 0.8)); // gray
+        Material matRight = new Metal(new Color(0.8, 0.6, 0.2)); // slightly red-ish yellow
 
         return new ObjectList(
                 new Sphere(new Point3(0, -100.5, -1), 100, matGround),

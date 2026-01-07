@@ -20,7 +20,7 @@ public abstract class AbstractObj {
      *
      * @param ray    The ray to check
      * @param tRange The interval on the ray that is allowed for intersections
-     * @return The {@link Intersection} data or {@code null} if no intersection exists or it was outside the interval
+     * @return The {@link Intersection} data or {@code null} if no intersection exists, or it was outside the interval
      */
     public abstract Intersection intersect(final Ray ray, final Interval tRange);
 

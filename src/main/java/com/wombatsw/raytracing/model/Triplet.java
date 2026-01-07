@@ -1,109 +1,158 @@
 package com.wombatsw.raytracing.model;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+
 /**
- * An abstract type for points, vectors, and colors.
+ * An abstract type for points, vectors, and colors. Most methods mutate the triplet, which is done to limit object
+ * creation and improve performance.
  *
  * @param <T> The concrete type that extends this abstract class.
  */
 public abstract class Triplet<T extends Triplet<T>> {
     private static final double EPSILON = 1e-8;
 
-    private final double x, y, z;
+    @Getter(AccessLevel.PACKAGE)
+    private final Tuple tuple;
 
-    public Triplet(final double x, final double y, final double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    Triplet(final Tuple t) {
+        tuple = new Tuple(t);
     }
 
     /**
      * Create a new instance of the implementing class.
      *
-     * @param x The first component of the triplet
-     * @param y The second component of the triplet
-     * @param z The third component of the triplet
+     * @param t The triplet values
      * @return The instantiated object
      */
-    public abstract T create(final double x, final double y, final double z);
+    abstract T create(final Tuple t);
+
+    public T copy() {
+        return create(tuple.copy());
+    }
 
     /**
      * @return the first component
      */
     public double getX() {
-        return x;
+        return tuple.getValue(0);
     }
 
     /**
      * @return the second component
      */
     public double getY() {
-        return y;
+        return tuple.getValue(1);
     }
 
     /**
      * @return the third component
      */
     public double getZ() {
-        return z;
+        return tuple.getValue(2);
     }
 
     /**
-     * Add this triplet to the provided one
+     * Add the provided triplet into this one. This is a mutating operation
      *
      * @param v The value to add
-     * @return A new triplet with the result
+     * @return This triplet
      */
     public T add(final Triplet<?> v) {
-        return create(x + v.getX(), y + v.getY(), z + v.getZ());
+        tuple.add(v.tuple);
+        return cast();
     }
 
     /**
-     * Subtract the provided triplet from this one
+     * Subtract this triplet from the provided one. This is a mutating operation
      *
      * @param v The value to subtract
-     * @return A new triplet with the result
+     * @return This triplet
      */
     public T sub(final Triplet<?> v) {
-        return create(x - v.getX(), y - v.getY(), z - v.getZ());
+        tuple.sub(v.tuple);
+        return cast();
     }
 
     /**
-     * Multiply the values of this triplet with the values of the provided triplet
-     *
-     * @param v The value to multiply
-     * @return A new triplet with the result
-     */
-    public T mul(final Triplet<?> v) {
-        return create(x * v.getX(), y * v.getY(), z * v.getZ());
-    }
-
-    /**
-     * Multiply this triplet ny a scalar value
+     * Multiply this triplet by a scalar value. This is a mutating operation
      *
      * @param t The value to multiply
-     * @return A new triplet with the result
+     * @return This triplet
      */
     public T mul(final double t) {
-        return create(x * t, y * t, z * t);
+        tuple.mul(t);
+        return cast();
+    }
+
+    public T mul(final Triplet<?> v) {
+        tuple.mul(v.tuple);
+        return cast();
     }
 
     /**
-     * Divide this triplet ny a scalar value
+     * Divide this vector by a scalar value. This is a mutating operation
      *
      * @param t The value to divide
-     * @return A new triplet with the result
+     * @return This triplet
      */
     public T div(final double t) {
         return mul(1 / t);
     }
 
     /**
-     * Negate this triplet
+     * Negate this triplet. This is a mutating operation
      *
-     * @return A new triplet with the result
+     * @return This triplet
      */
     public T negate() {
         return mul(-1);
+    }
+
+    /**
+     * Normalize this triplet to a unit value. This is a mutating operation
+     *
+     * @return This triplet
+     */
+    public T normalize() {
+        return div(len());
+    }
+
+    /**
+     * Reflect this vector relative to the given surface normal. This is a mutating operation
+     *
+     * @param n The surface normal, which must be a unit vector
+     * @return This triplet
+     */
+    public T reflect(final Triplet<?> n) {
+        double scale = 2.0 * dot(n);
+        Tuple t = n.tuple.copy().mul(scale);
+        tuple.sub(t);
+        return cast();
+    }
+
+    /**
+     * Translate this triplet in the given direction according to the given scale. This is a mutating operation
+     *
+     * @param dir The direction of translation
+     * @param t   The scaling factor for the given direction
+     * @return This triplet
+     */
+    public T translate(final Triplet<?> dir, final double t) {
+        tuple.translate(dir.tuple, t);
+        return cast();
+    }
+
+    /**
+     * Perform linear interpolation between this triplet and the provided one
+     *
+     * @param end The other triplet. This is a mutating operation
+     * @param a   The scaling value in the range [0, 1]
+     * @return This triplet
+     */
+    public T lerp(final Triplet<?> end, final double a) {
+        tuple.lerp(end.tuple, a);
+        return cast();
     }
 
     /**
@@ -113,7 +162,7 @@ public abstract class Triplet<T extends Triplet<T>> {
      * @return The dot product
      */
     public double dot(final Triplet<?> v) {
-        return x * v.getX() + y * v.getY() + z * v.getZ();
+        return getX() * v.getX() + getY() * v.getY() + getZ() * v.getZ();
     }
 
     /**
@@ -123,21 +172,10 @@ public abstract class Triplet<T extends Triplet<T>> {
      * @return A new triplet with the result
      */
     public T cross(final Triplet<?> v) {
-        return create(
-                y * v.getZ() - z * v.getY(),
-                z * v.getX() - x * v.getZ(),
-                x * v.getY() - y * v.getX());
-    }
-
-    /**
-     * Perform linear interpolation between this triplet and the provided one
-     *
-     * @param end The other triplet
-     * @param a   The scaling value in the range [0, 1]
-     * @return A new triplet with the result
-     */
-    public T lerp(final Triplet<?> end, final double a) {
-        return mul(1 - a).add(end.mul(a));
+        return create(new Tuple(
+                getY() * v.getZ() - getZ() * v.getY(),
+                getZ() * v.getX() - getX() * v.getZ(),
+                getX() * v.getY() - getY() * v.getX()));
     }
 
     /**
@@ -158,9 +196,19 @@ public abstract class Triplet<T extends Triplet<T>> {
         return Math.sqrt(lenSquared());
     }
 
+    /**
+     * Check if the triplet value is near zero for all components
+     *
+     * @return Whether the triplet is near zero
+     */
     public boolean nearZero() {
-        return Math.abs(x) < EPSILON &&
-                Math.abs(y) < EPSILON &&
-                Math.abs(z) < EPSILON;
+        return Math.abs(getX()) < EPSILON &&
+                Math.abs(getY()) < EPSILON &&
+                Math.abs(getZ()) < EPSILON;
+    }
+
+    @SuppressWarnings("unchecked")
+    private T cast() {
+        return (T) this;
     }
 }

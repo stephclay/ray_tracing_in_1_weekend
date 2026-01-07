@@ -44,14 +44,14 @@ public class Camera {
             System.out.printf("\rRemaining: %d", imageHeight - y);
             System.out.flush();
             for (int x = 0; x < imageWidth; x++) {
-                Color color = new Color(0, 0, 0);
+                Color[] samples = new Color[samplesPerPixel];
                 for (int i = 0; i < samplesPerPixel; i++) {
                     Ray ray = getRay(x, y);
-                    color = color.add(getRayColor(ray, maxDepth, world));
+                    samples[i] = getRayColor(ray, maxDepth, world);
                 }
 
                 int index = (y * imageWidth + x) * 3;
-                color.mul(pixelSamplesScale).writeColor(imageData, index);
+                Color.average(samples).writeColor(imageData, index);
             }
         }
 
@@ -120,15 +120,16 @@ public class Camera {
         Vector3 viewportV = new Vector3(0, -viewportHeight, 0);
 
         // Calculate the horizontal and vertical deltas from pixel to pixel
-        pixelDU = viewportU.div(imageWidth);
-        pixelDV = viewportV.div(imageHeight);
+        pixelDU = viewportU.copy().div(imageWidth);
+        pixelDV = viewportV.copy().div(imageHeight);
 
         // Calculate the upper left pixel
         Point3 viewportUpperLeft = cameraCenter
+                .copy()
                 .sub(new Vector3(0, 0, focalLength))
                 .sub(viewportU.div(2))
                 .sub(viewportV.div(2));
-        Vector3 pixelOffset = pixelDU.add(pixelDV).div(2);
+        Vector3 pixelOffset = pixelDU.copy().add(pixelDV).div(2);
         pixelOrigin = viewportUpperLeft.add(pixelOffset);
     }
 
@@ -144,14 +145,15 @@ public class Camera {
                 MathUtils.randomDouble() - 0.5, 0);
 
         Point3 pixelCenter = pixelOrigin
-                .add(pixelDU.mul(x + offset.getX()))
-                .add(pixelDV.mul(y + offset.getY()));
-        Vector3 rayDirection = pixelCenter.vectorFrom(cameraCenter);
+                .copy()
+                .add(pixelDU.copy().mul(x + offset.getX()))
+                .add(pixelDV.copy().mul(y + offset.getY()));
+        Vector3 rayDirection = new Vector3(pixelCenter, cameraCenter);
         return new Ray(cameraCenter, rayDirection);
     }
 
     /**
-     * Get the color for a specific ray
+     * Get the color for a specific ray. Will always return a new instance
      *
      * @param ray   The ray to check
      * @param depth The depth of reflection
@@ -160,7 +162,7 @@ public class Camera {
      */
     private Color getRayColor(final Ray ray, final int depth, final AbstractObj world) {
         if (depth <= 0) {
-            return BLACK;
+            return BLACK.copy();
         }
 
         Intersection intersect = world.intersect(ray, new Interval(0.001, Double.POSITIVE_INFINITY));
@@ -170,12 +172,12 @@ public class Camera {
                 Color scatterColor = getRayColor(scatterData.ray(), depth - 1, world);
                 return scatterColor.mul(scatterData.attenuation());
             }
-            return BLACK;
+            return BLACK.copy();
         }
 
-        Vector3 unitDir = ray.direction().normalize();
+        Vector3 unitDir = ray.direction().copy().normalize();
         double a = 0.5 * (unitDir.getY() + 1.0);
 
-        return WHITE.lerp(BLUE, a);
+        return WHITE.copy().lerp(BLUE, a);
     }
 }

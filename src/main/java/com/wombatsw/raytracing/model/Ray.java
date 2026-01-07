@@ -1,7 +1,7 @@
 package com.wombatsw.raytracing.model;
 
 /**
- * A ray consisting of an origin an direction
+ * A ray consisting of an origin and direction
  */
 public record Ray(Point3 origin, Vector3 direction) {
     /**
@@ -12,6 +12,6 @@ public record Ray(Point3 origin, Vector3 direction) {
      * @return The point corresponding to that location
      */
     public Point3 at(final double t) {
-        return origin.add(direction.mul(t));
+        return origin.copy().translate(direction, t);
     }
 }

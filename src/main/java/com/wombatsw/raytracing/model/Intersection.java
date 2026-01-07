@@ -1,18 +1,38 @@
 package com.wombatsw.raytracing.model;
 
 import com.wombatsw.raytracing.material.Material;
+import lombok.Getter;
 
 import java.util.function.Function;
 
 /**
  * Data representing a ray intersection
  */
+@Getter
 public class Intersection {
+    /**
+     * The inbound ray
+     */
     private final Ray ray;
+    /**
+     * The intersection point
+     */
     private final Point3 p;
+    /**
+     * The intersection normal unit vector (can be pointing inwards)
+     */
     private final Vector3 n;
+    /**
+     * The material
+     */
     private final Material material;
+    /**
+     * The location of the intersection on the intersecting ray
+     */
     private final double t;
+    /**
+     * Whether the intersection was from the inside our outside
+     */
     private final boolean frontFace;
 
     /**
@@ -21,7 +41,8 @@ public class Intersection {
      * @param ray             The intersecting ray
      * @param t               The location of the intersection on the ray
      * @param material        The material at the intersection point
-     * @param outwardNormalFn The normal for the outside face of the intersection point
+     * @param outwardNormalFn The function to create the normal for the outside face of the intersection point.
+     *                        Must result in a unit vector
      */
     public Intersection(final Ray ray, final double t, final Material material,
                         final Function<Point3, Vector3> outwardNormalFn) {
@@ -30,51 +51,11 @@ public class Intersection {
         this.t = t;
         this.material = material;
 
-        Vector3 outwardNormal = outwardNormalFn.apply(p);
+        n = outwardNormalFn.apply(p);
 
-        frontFace = ray.direction().dot(outwardNormal) < 0;
-        n = frontFace ? outwardNormal : outwardNormal.negate();
-    }
-
-    /**
-     * @return The inbound ray
-     */
-    public Ray getRay() {
-        return ray;
-    }
-
-    /**
-     * @return The intersection point
-     */
-    public Point3 getP() {
-        return p;
-    }
-
-    /**
-     * @return The intersection normal (can be pointing inwards)
-     */
-    public Vector3 getN() {
-        return n;
-    }
-
-    /**
-     * @return The location of the intersection on the intersecting ray
-     */
-    public double getT() {
-        return t;
-    }
-
-    /**
-     * @return The material
-     */
-    public Material getMaterial() {
-        return material;
-    }
-
-    /**
-     * @return Whether the intersection was from the inside our outside
-     */
-    public boolean isFrontFace() {
-        return frontFace;
+        frontFace = ray.direction().dot(n) < 0;
+        if (frontFace) {
+            n.negate();
+        }
     }
 }

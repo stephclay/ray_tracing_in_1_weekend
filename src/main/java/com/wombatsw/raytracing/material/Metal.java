@@ -19,7 +19,7 @@ public class Metal extends Material {
     @Override
     public ScatterData scatter(final Intersection intersection) {
         Vector3 rayDir = intersection.getRay().direction();
-        Vector3 reflected = rayDir.reflect(intersection.getN());
+        Vector3 reflected = rayDir.copy().reflect(intersection.getN());
 
         Ray scattered = new Ray(intersection.getP(), reflected);
         return new ScatterData(scattered, albedo);

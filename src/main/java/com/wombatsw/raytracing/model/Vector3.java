@@ -3,20 +3,31 @@ package com.wombatsw.raytracing.model;
 import com.wombatsw.raytracing.engine.MathUtils;
 
 /**
- * A 3D Vector
+ * A mutable 3D Vector
  */
 public class Vector3 extends Triplet<Vector3> {
     public Vector3(final double x, final double y, final double z) {
-        super(x, y, z);
+        super(new Tuple(x, y, z));
+    }
+
+    Vector3(final Tuple tuple) {
+        super(tuple);
     }
 
     /**
-     * Normalize this triplet to a unit value
+     * Create a vector pointing from the provided tail to the provided head
      *
-     * @return A new triplet with the result
+     * @param head The tip or head of the vector
+     * @param tail The start or tail of the vector
+     * @return The new Vector3 formed from "head - tail"
      */
-    public Vector3 normalize() {
-        return div(len());
+    public Vector3(final Point3 head, final Point3 tail) {
+        this(head.copy().sub(tail).getTuple());
+    }
+
+    @Override
+    Vector3 create(Tuple t) {
+        return new Vector3(t);
     }
 
     /**
@@ -42,7 +53,7 @@ public class Vector3 extends Triplet<Vector3> {
             Vector3 v = random(-1, 1);
             double lenSq = v.lenSquared();
             if (lenSq > 1e-160 && lenSq <= 1.0) {
-                return v.div(lenSq);
+                return v.div(Math.sqrt(lenSq));
             }
         }
     }
@@ -55,26 +66,9 @@ public class Vector3 extends Triplet<Vector3> {
      */
     public static Vector3 randomOnHemisphere(final Vector3 normal) {
         Vector3 v = randomUnitVector();
-        if (v.dot(normal) > 0) { // same hemisphere
-            return v;
-        } else {
-            return v.negate();
+        if (v.dot(normal) < 0) { // other hemisphere
+            v.negate();
         }
-    }
-
-    @Override
-    public Vector3 create(final double x, final double y, final double z) {
-        return new Vector3(x, y, z);
-    }
-
-    /**
-     * Reflect the vector relative to the given surface normal
-     *
-     * @param n The surface normal
-     * @return The reflected vector
-     */
-    public Vector3 reflect(final Vector3 n) {
-        double scale = 2.0 * dot(n);
-        return sub(n.mul(scale));
+        return v;
     }
 }
