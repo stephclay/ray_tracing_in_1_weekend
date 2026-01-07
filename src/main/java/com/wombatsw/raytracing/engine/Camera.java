@@ -8,6 +8,10 @@ import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
 import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.AbstractObj;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Value;
+import lombok.experimental.Accessors;
 
 /**
  * Camera object, which also handles driving the rendering process
@@ -17,11 +21,31 @@ public class Camera {
     private final static Color BLACK = new Color(0, 0, 0);
     private final static Color BLUE = new Color(0.5, 0.7, 1);
 
+    /**
+     * The image aspect ratio
+     */
+    @Setter
     private double aspectRatio = 1.0;
+    /**
+      * The image width
+     */
+    @Getter
+    @Setter
     private int imageWidth = 100;
+    /**
+     * The image height
+     */
+    @Getter
     private int imageHeight;
+    /**
+     * The number of samples per pixel
+     */
+    @Setter
     private int samplesPerPixel = 10;
-    private double pixelSamplesScale;
+    /**
+     * The max depth of reflection
+     */
+    @Setter
     private int maxDepth = 10;
 
     private Vector3 pixelDU;
@@ -60,55 +84,17 @@ public class Camera {
     }
 
     /**
-     * @param aspectRatio the image aspect ratio
-     */
-    public void setAspectRatio(double aspectRatio) {
-        this.aspectRatio = aspectRatio;
-    }
-
-    /**
-     * @param imageWidth the image width
-     */
-    public void setImageWidth(int imageWidth) {
-        this.imageWidth = imageWidth;
-    }
-
-    /**
-     * @param samplesPerPixel the number of samples per pixel
-     */
-    public void setSamplesPerPixel(int samplesPerPixel) {
-        this.samplesPerPixel = samplesPerPixel;
-    }
-
-    /**
-     * @param maxDepth the max depth of reflection
-     */
-    public void setMaxDepth(int maxDepth) {
-        this.maxDepth = maxDepth;
-    }
-
-    /**
-     * @return The image width
-     */
-    public int getImageWidth() {
-        return imageWidth;
-    }
-
-    /**
-     * @return The image height
-     */
-    public int getImageHeight() {
-        return imageHeight;
-    }
-
-    /**
      * Initialize the camera for the current settings.
      */
     private void initialize() {
+        WHITE.setMutable(false);
+        BLACK.setMutable(false);
+        BLUE.setMutable(false);
+
         imageHeight = Math.max(1, (int) (imageWidth / aspectRatio));
-        pixelSamplesScale = 1.0 / samplesPerPixel;
 
         cameraCenter = new Point3(0, 0, 0);
+        cameraCenter.setMutable(false);
 
         // Viewport dimensions
         double focalLength = 1.0;
@@ -122,6 +108,8 @@ public class Camera {
         // Calculate the horizontal and vertical deltas from pixel to pixel
         pixelDU = viewportU.copy().div(imageWidth);
         pixelDV = viewportV.copy().div(imageHeight);
+        pixelDU.setMutable(false);
+        pixelDV.setMutable(false);
 
         // Calculate the upper left pixel
         Point3 viewportUpperLeft = cameraCenter
@@ -131,6 +119,7 @@ public class Camera {
                 .sub(viewportV.div(2));
         Vector3 pixelOffset = pixelDU.copy().add(pixelDV).div(2);
         pixelOrigin = viewportUpperLeft.add(pixelOffset);
+        pixelOrigin.setMutable(false);
     }
 
     /**

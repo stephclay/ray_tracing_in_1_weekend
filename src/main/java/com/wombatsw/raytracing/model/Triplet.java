@@ -3,6 +3,7 @@ package com.wombatsw.raytracing.model;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * An abstract type for points, vectors, and colors. Most methods mutate the triplet, which is done to limit object
@@ -19,6 +20,15 @@ public abstract class Triplet<T extends Triplet<T>> {
 
     Triplet(final Tuple t) {
         tuple = new Tuple(t);
+    }
+
+    /**
+     * Set the mutability of this triplet. Used to make sure specific values are not changed during computation
+     *
+     * @param mutable Whether this triplet should be mutable
+     */
+    public void setMutable(boolean mutable) {
+        this.tuple.setMutable(mutable);
     }
 
     /**
@@ -87,6 +97,12 @@ public abstract class Triplet<T extends Triplet<T>> {
         return cast();
     }
 
+    /**
+     * Multiply this triplet by the provided one. This is a mutating operation
+     *
+     * @param v The triplet to multiply into this one
+     * @return This triplet
+     */
     public T mul(final Triplet<?> v) {
         tuple.mul(v.tuple);
         return cast();

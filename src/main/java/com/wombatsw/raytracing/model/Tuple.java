@@ -1,19 +1,20 @@
 package com.wombatsw.raytracing.model;
 
 import com.wombatsw.raytracing.engine.MathUtils;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Value;
+import lombok.Setter;
 
 import java.util.Arrays;
 
 /**
  * A mutable tuple with vector operation methods. Operations can be chained
  */
-@Value
 class Tuple {
-    @Getter(AccessLevel.NONE)
-    double[] values;
+    private final double[] values;
+    /**
+     * Set the mutability of this tuple. Used to prevent changes on objects that need to be used repeatedly
+     */
+    @Setter
+    private boolean mutable = true;
 
     Tuple(final double... values) {
         this.values = Arrays.copyOf(values, values.length);
@@ -50,6 +51,7 @@ class Tuple {
      * @return This tuple
      */
     public Tuple add(final Tuple v) {
+        assertMutationAllowed();
         assertSize(v);
 
         for (int i = 0; i < values.length; i++) {
@@ -65,6 +67,7 @@ class Tuple {
      * @return This tuple
      */
     public Tuple sub(final Tuple v) {
+        assertMutationAllowed();
         assertSize(v);
 
         for (int i = 0; i < values.length; i++) {
@@ -80,6 +83,7 @@ class Tuple {
      * @return This tuple
      */
     public Tuple mul(final Tuple v) {
+        assertMutationAllowed();
         assertSize(v);
 
         for (int i = 0; i < values.length; i++) {
@@ -95,6 +99,7 @@ class Tuple {
      * @return This tuple
      */
     public Tuple mul(final double t) {
+        assertMutationAllowed();
         for (int i = 0; i < values.length; i++) {
             values[i] *= t;
         }
@@ -109,6 +114,7 @@ class Tuple {
      * @return This tuple
      */
     public Tuple translate(final Tuple dir, final double t) {
+        assertMutationAllowed();
         assertSize(dir);
 
         for (int i = 0; i < values.length; i++) {
@@ -126,6 +132,7 @@ class Tuple {
      * @return This tuple
      */
     public Tuple lerp(final Tuple end, final double a) {
+        assertMutationAllowed();
         assertSize(end);
 
         for (int i = 0; i < values.length; i++) {
@@ -144,6 +151,15 @@ class Tuple {
         if (values.length != v.values.length) {
             throw new IllegalArgumentException(
                     String.format("Tuples must have the same length (%d != %d)", values.length, v.values.length));
+        }
+    }
+
+    /**
+     * Make sure that this object can be mutated
+     */
+    private void assertMutationAllowed() {
+        if (!mutable) {
+            throw new IllegalStateException("This data is not mutable");
         }
     }
 }

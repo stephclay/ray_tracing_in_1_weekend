@@ -27,10 +27,10 @@ public class RayTracerApp implements CommandLineRunner {
         Camera camera = new Camera();
         camera.setAspectRatio(16.0 / 9.0);
         camera.setImageWidth(400);
-        camera.setSamplesPerPixel(10);
+        camera.setSamplesPerPixel(5);
         camera.setMaxDepth(5);
 
-        AbstractObj world = getWorld();
+        AbstractObj world = selectWorld(args);
 
         byte[] imageData = camera.render(world);
 
@@ -38,12 +38,33 @@ public class RayTracerApp implements CommandLineRunner {
         writer.write(new File("test.ppm"), camera.getImageWidth(), camera.getImageHeight(), imageData);
     }
 
+    private AbstractObj selectWorld(final String... args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("world1")) {
+            return getWorld1();
+        }
+        return getWorld2();
+    }
+
     /**
      * Create the world data
      *
      * @return The world data
      */
-    private AbstractObj getWorld() {
+    private AbstractObj getWorld1() {
+        Material matGrey = new Lambertian(new Color(0.5, 0.5, 0.5));
+
+        return new ObjectList(
+                new Sphere(new Point3(0, 0, -1), 0.5, matGrey),
+                new Sphere(new Point3(0, -100.5, -1), 100, matGrey)
+        );
+    }
+
+    /**
+     * Create the world data
+     *
+     * @return The world data
+     */
+    private AbstractObj getWorld2() {
         Material matGround = new Lambertian(new Color(0.8, 0.8, 0.0)); // yellow
         Material matCenter = new Lambertian(new Color(0.1, 0.2, 0.5)); // blue
         Material matLeft = new Metal(new Color(0.8, 0.8, 0.8)); // gray
