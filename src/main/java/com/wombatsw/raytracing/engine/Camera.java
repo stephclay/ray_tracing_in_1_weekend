@@ -62,7 +62,7 @@ public class Camera {
      * The camera-relative Up direction
      */
     @Setter
-    private Vector3 viewUp =  new Vector3(0, 1, 0);
+    private Vector3 viewUp = new Vector3(0, 1, 0);
     /**
      * The variation angle of rays through a pixel
      */
@@ -137,8 +137,7 @@ public class Camera {
         long start = System.currentTimeMillis();
         byte[] imageData = new byte[imageWidth * imageHeight * 3];
         for (int y = 0; y < imageHeight; y++) {
-            System.out.printf("\rRemaining: %d", imageHeight - y);
-            System.out.flush();
+            ProgressInfo.displayRemainingRowsMessage(start, y, imageHeight);
 
             Color[] row = renderRow(world, y);
 
@@ -148,8 +147,7 @@ public class Camera {
             }
         }
 
-        long millis = System.currentTimeMillis() - start;
-        System.out.printf("\rDone in %d seconds\n", millis / 1000);
+        ProgressInfo.displayCompletionMessage(start);
         return imageData;
     }
 
@@ -202,8 +200,7 @@ public class Camera {
         Point3 rayOrigin;
         if (defocusAngle <= 0) {
             rayOrigin = cameraCenter;
-        }
-        else {
+        } else {
             Vector3 v = Vector3.randomInUnitDisk();
             rayOrigin = cameraCenter.copy()
                     .add(defocusDiskU.copy().mul(v.getX()))
