@@ -25,6 +25,24 @@ public class Color extends Triplet<Color> {
     }
 
     /**
+     * Get a new instance of a white color
+     *
+     * @return The {@link Color} white
+     */
+    public static Color white() {
+        return new Color(1,1,1);
+    }
+
+    /**
+     * Get a new instance of a black color
+     *
+     * @return The {@link Color} black
+     */
+    public static Color black() {
+        return new Color(0, 0, 0);
+    }
+
+    /**
      * Average the provided color values
      *
      * @param samples The list of colors to average

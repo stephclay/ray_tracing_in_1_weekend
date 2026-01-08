@@ -152,6 +152,26 @@ public abstract class Triplet<T extends Triplet<T>> {
     }
 
     /**
+     * Refract this vector relative to the given normal and refraction ratio
+     *
+     * @param n The surface normal, which must be a unit vector
+     * @param etaRatio Ratio of refractive indices as eta/eta prime
+     * @return This triplet
+     */
+    public T refract(final Triplet<?> n,final double etaRatio) {
+        double cosTheta = Math.min(1.0, -dot(n));
+
+        // Compute the perpendicular component
+        add(n.copy().mul(cosTheta)).mul(etaRatio);
+
+        // Compute the parallel component
+        double scale = -Math.sqrt(Math.abs(1.0 - lenSquared()));
+        Triplet<?> parallel = n.copy().mul(scale);
+        // Create the parallel component and add to the perpendicular one
+        return add(parallel);
+    }
+
+    /**
      * Translate this triplet in the given direction according to the given scale. This is a mutating operation
      *
      * @param dir The direction of translation

@@ -15,8 +15,6 @@ import lombok.Setter;
  * Camera object, which also handles driving the rendering process
  */
 public class Camera {
-    private final static Color WHITE = new Color(1, 1, 1);
-    private final static Color BLACK = new Color(0, 0, 0);
     private final static Color BLUE = new Color(0.5, 0.7, 1);
 
     /**
@@ -25,7 +23,7 @@ public class Camera {
     @Setter
     private double aspectRatio = 1.0;
     /**
-      * The image width
+     * The image width
      */
     @Getter
     @Setter
@@ -36,57 +34,22 @@ public class Camera {
     @Getter
     private int imageHeight;
     /**
-     * The number of samples per pixel
+     * The antialiasing method. Default is a 2x2 grid
      */
     @Setter
-    private int samplesPerPixel = 10;
+    private AntiAlias antiAlias = new AntiAlias(2, 2);
     /**
      * The max depth of reflection
      */
     @Setter
     private int maxDepth = 10;
 
-    private Vector3 pixelDU;
-    private Vector3 pixelDV;
-
     private Point3 cameraCenter;
-    private Point3 pixelOrigin;
-
-    /**
-     * Render the scene for the provided world data
-     *
-     * @param world The world data
-     * @return The image raster of size "width x height x 3" as a row-major ordering of RGB triplets
-     */
-    public byte[] render(final AbstractObj world) {
-        initialize();
-
-        byte[] imageData = new byte[imageWidth * imageHeight * 3];
-        for (int y = 0; y < imageHeight; y++) {
-            System.out.printf("\rRemaining: %d", imageHeight - y);
-            System.out.flush();
-            for (int x = 0; x < imageWidth; x++) {
-                Color[] samples = new Color[samplesPerPixel];
-                for (int i = 0; i < samplesPerPixel; i++) {
-                    Ray ray = getRay(x, y);
-                    samples[i] = getRayColor(ray, maxDepth, world);
-                }
-
-                int index = (y * imageWidth + x) * 3;
-                Color.average(samples).writeColor(imageData, index);
-            }
-        }
-
-        System.out.println("\rDone");
-        return imageData;
-    }
 
     /**
      * Initialize the camera for the current settings.
      */
     private void initialize() {
-        WHITE.setMutable(false);
-        BLACK.setMutable(false);
         BLUE.setMutable(false);
 
         imageHeight = Math.max(1, (int) (imageWidth / aspectRatio));
@@ -104,8 +67,8 @@ public class Camera {
         Vector3 viewportV = new Vector3(0, -viewportHeight, 0);
 
         // Calculate the horizontal and vertical deltas from pixel to pixel
-        pixelDU = viewportU.copy().div(imageWidth);
-        pixelDV = viewportV.copy().div(imageHeight);
+        Vector3 pixelDU = viewportU.copy().div(imageWidth);
+        Vector3 pixelDV = viewportV.copy().div(imageHeight);
         pixelDU.setMutable(false);
         pixelDV.setMutable(false);
 
@@ -116,28 +79,78 @@ public class Camera {
                 .sub(viewportU.div(2))
                 .sub(viewportV.div(2));
         Vector3 pixelOffset = pixelDU.copy().add(pixelDV).div(2);
-        pixelOrigin = viewportUpperLeft.add(pixelOffset);
+        Point3 pixelOrigin = viewportUpperLeft.add(pixelOffset);
         pixelOrigin.setMutable(false);
+
+        antiAlias.initialize(pixelOrigin, pixelDU, pixelDV);
     }
 
     /**
-     * Get the ray for the provided x and y values
+     * Render the scene for the provided world data
      *
-     * @param x The x value of the resulting image
-     * @param y The y value of the resulting image
-     * @return The ray for the x and y location
+     * @param world The world data
+     * @return The image raster of size "width x height x 3" as a row-major ordering of RGB triplets
      */
-    private Ray getRay(final int x, final int y) {
-        Vector3 offset = new Vector3(MathUtils.randomDouble() - 0.5,
-                MathUtils.randomDouble() - 0.5, 0);
+    public byte[] render(final AbstractObj world) {
+        initialize();
 
-        Point3 pixelCenter = pixelOrigin
-                .copy()
-                .add(pixelDU.copy().mul(x + offset.getX()))
-                .add(pixelDV.copy().mul(y + offset.getY()));
-        Vector3 rayDirection = new Vector3(pixelCenter, cameraCenter);
-        rayDirection.setMutable(false);
-        return new Ray(cameraCenter, rayDirection);
+        long start = System.currentTimeMillis();
+        byte[] imageData = new byte[imageWidth * imageHeight * 3];
+        for (int y = 0; y < imageHeight; y++) {
+            System.out.printf("\rRemaining: %d", imageHeight - y);
+            System.out.flush();
+
+            Color[] row = renderRow(world, y);
+
+            int rowIndex = y * imageWidth * 3;
+            for (int x = 0; x < imageWidth; x++) {
+                row[x].writeColor(imageData, rowIndex + x * 3);
+            }
+        }
+
+        long millis = System.currentTimeMillis() - start;
+        System.out.printf("\rDone in %d seconds\n", millis / 1000);
+        return imageData;
+    }
+
+    /**
+     * Render a row of the image
+     *
+     * @param world The world data
+     * @param y     The row to render
+     */
+    private Color[] renderRow(final AbstractObj world, final int y) {
+        Color[] row = new Color[imageWidth];
+
+        // TODO: Parallelize this
+        for (int x = 0; x < imageWidth; x++) {
+            row[x] = getPixelColor(world, x, y);
+        }
+
+        return row;
+    }
+
+    /**
+     * Get the pixel color for the specified raster location
+     *
+     * @param world The world data
+     * @param x     The raster x coordinate
+     * @param y     The raster y coordinate
+     * @return The color of the pixel
+     */
+    private Color getPixelColor(final AbstractObj world, final int x, final int y) {
+        // TODO: May be able to reuse these points if they are returned as relative offsets from the pixel center
+        Point3[] viewportPoints = antiAlias.getPoints(x, y);
+        Color[] samples = new Color[viewportPoints.length];
+
+        for (int i = 0; i < viewportPoints.length; i++) {
+            Vector3 rayDirection = new Vector3(viewportPoints[i], cameraCenter);
+            rayDirection.setMutable(false);
+            Ray ray = new Ray(cameraCenter, rayDirection);
+            samples[i] = getRayColor(ray, maxDepth, world);
+        }
+
+        return Color.average(samples);
     }
 
     /**
@@ -150,7 +163,7 @@ public class Camera {
      */
     private Color getRayColor(final Ray ray, final int depth, final AbstractObj world) {
         if (depth <= 0) {
-            return BLACK.copy();
+            return Color.black();
         }
 
         Intersection intersect = world.intersect(ray, new Interval(0.001, Double.POSITIVE_INFINITY));
@@ -160,12 +173,12 @@ public class Camera {
                 Color scatterColor = getRayColor(scatterData.ray(), depth - 1, world);
                 return scatterColor.mul(scatterData.attenuation());
             }
-            return BLACK.copy();
+            return Color.black();
         }
 
         Vector3 unitDir = ray.direction().copy().normalize();
         double a = 0.5 * (unitDir.getY() + 1.0);
 
-        return WHITE.copy().lerp(BLUE, a);
+        return Color.white().lerp(BLUE, a);
     }
 }

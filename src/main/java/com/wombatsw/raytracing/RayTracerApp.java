@@ -1,6 +1,8 @@
 package com.wombatsw.raytracing;
 
+import com.wombatsw.raytracing.engine.AntiAlias;
 import com.wombatsw.raytracing.engine.Camera;
+import com.wombatsw.raytracing.material.Dielectric;
 import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.material.Metal;
@@ -24,11 +26,13 @@ import java.io.File;
 public class RayTracerApp implements CommandLineRunner {
     @Override
     public void run(final String @NonNull ... args) throws Exception {
+        AntiAlias antiAlias = new AntiAlias(4, 4);
+
         Camera camera = new Camera();
         camera.setAspectRatio(16.0 / 9.0);
         camera.setImageWidth(400);
-        camera.setSamplesPerPixel(5);
-        camera.setMaxDepth(5);
+        camera.setAntiAlias(antiAlias);
+        camera.setMaxDepth(20);
 
         AbstractObj world = selectWorld(args);
 
@@ -67,13 +71,15 @@ public class RayTracerApp implements CommandLineRunner {
     private AbstractObj getWorld2() {
         Material matGround = new Lambertian(new Color(0.8, 0.8, 0.0)); // yellow
         Material matCenter = new Lambertian(new Color(0.1, 0.2, 0.5)); // blue
-        Material matLeft = new Metal(new Color(0.8, 0.8, 0.8)); // gray
-        Material matRight = new Metal(new Color(0.8, 0.6, 0.2)); // slightly red-ish yellow
+        Material matLeft = new Dielectric(1.5); // transparent
+        Material matBubble = new Dielectric(1.0/1.5); // bubble
+        Material matRight = new Metal(new Color(0.8, 0.6, 0.2), 1.0); // slightly red-ish yellow
 
         return new ObjectList(
                 new Sphere(new Point3(0, -100.5, -1), 100, matGround),
                 new Sphere(new Point3(0, 0, -1.2), 0.5, matCenter),
                 new Sphere(new Point3(-1, 0, -1), 0.5, matLeft),
+                new Sphere(new Point3(-1, 0, -1), 0.4, matBubble),
                 new Sphere(new Point3(1, 0, -1), 0.5, matRight)
         );
     }
