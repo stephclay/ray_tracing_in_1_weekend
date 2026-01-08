@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.model;
 
+import com.wombatsw.raytracing.engine.MathUtils;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -17,6 +18,29 @@ public class Color extends Triplet<Color> {
 
     Color(final Tuple tuple) {
         super(tuple);
+    }
+
+
+    /**
+     * Generate a random Color
+     *
+     * @return The new Color
+     */
+    public static Color random() {
+        return random(0, 1);
+    }
+
+    /**
+     * Generate a random Color with the provided min and max values for each component
+     *
+     * @param min Min component value
+     * @param max Max component value
+     * @return The new Color
+     */
+    public static Color random(final double min, final double max) {
+        return new Color(MathUtils.randomDouble(min, max),
+                MathUtils.randomDouble(min, max),
+                MathUtils.randomDouble(min, max));
     }
 
     @Override

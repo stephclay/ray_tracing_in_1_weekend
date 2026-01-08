@@ -2,6 +2,7 @@ package com.wombatsw.raytracing;
 
 import com.wombatsw.raytracing.engine.AntiAlias;
 import com.wombatsw.raytracing.engine.Camera;
+import com.wombatsw.raytracing.engine.MathUtils;
 import com.wombatsw.raytracing.material.Dielectric;
 import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
@@ -29,17 +30,17 @@ public class RayTracerApp implements CommandLineRunner {
     public void run(final String @NonNull ... args) throws Exception {
         Camera camera = new Camera();
         camera.setAspectRatio(16.0 / 9.0);
-        camera.setImageWidth(400);
-        camera.setAntiAlias(new AntiAlias(100));
-        camera.setMaxDepth(30);
+        camera.setImageWidth(1200);
+        camera.setAntiAlias(new AntiAlias(500));
+        camera.setMaxDepth(50);
 
         camera.setFieldOfView(20);
-        camera.setCameraCenter(new Point3(-2, 2, 1));
-        camera.setViewportCenter(new Point3(0, 0, -1));
+        camera.setCameraCenter(new Point3(13, 2, 3));
+        camera.setViewportCenter(new Point3(0, 0, 0));
         camera.setViewUp(new Vector3(0, 1, 0));
 
-        camera.setDefocusAngle(10);
-        camera.setFocusDistance(3.4);
+        camera.setDefocusAngle(0.6);
+        camera.setFocusDistance(10.0);
 
         AbstractObj world = selectWorld(args);
 
@@ -50,12 +51,13 @@ public class RayTracerApp implements CommandLineRunner {
     }
 
     private AbstractObj selectWorld(final String... args) {
-        String selection = args.length > 0 ? args[0] : "world2";
+        String selection = args.length > 0 ? args[0] : "world4";
 
         return switch (selection) {
             case "world1" -> getWorld1();
             case "world2" -> getWorld2();
             case "world3" -> getWorld3();
+            case "world4" -> getWorld4();
             default -> throw new IllegalArgumentException("Unknown argument: " + selection);
         };
     }
@@ -109,5 +111,57 @@ public class RayTracerApp implements CommandLineRunner {
                 new Sphere(new Point3(-r, 0, -1), r, matLeft),
                 new Sphere(new Point3(r, 0, -1), r, matRight)
         );
+    }
+
+    /**
+     * Create the world data
+     *
+     * @return The world data
+     */
+    private AbstractObj getWorld4() {
+        ObjectList world = new ObjectList();
+
+        Material matGround = new Lambertian(new Color(0.5, 0.5, 0.5));
+        world.add(new Sphere(new Point3(0, -1000, 0), 1000, matGround));
+
+        for (int a = -11; a < 11; a++) {
+            for (int b = -11; b < 11; b++) {
+                double selection = MathUtils.randomDouble();
+                Point3 center = new Point3(a + 0.9 * MathUtils.randomDouble(),
+                        0.2, b + 0.9 * MathUtils.randomDouble());
+
+                if (center.copy().sub(new Point3(4, 0.2, 0)).len() < 0.9) {
+                    continue;
+                }
+                Material material;
+                if (selection < 0.8) {
+                    // diffuse
+                    Color albedo = Color.random().mul(Color.random());
+                    material = new Lambertian(albedo);
+                }
+                else if (selection < 0.95) {
+                    // metal
+                    Color albedo = Color.random(0.5, 1);
+                    double fuzz = MathUtils.randomDouble(0, 0.5);
+                    material = new Metal(albedo, fuzz);
+                }
+                else {
+                    // glass
+                    material = new Dielectric(1.5);
+                }
+                world.add(new Sphere(center, 0.2, material));
+            }
+        }
+
+        Material material1 = new Dielectric(1.5);
+        world.add(new Sphere(new Point3(0, 1, 0), 1.0, material1));
+
+        Material material2 = new Lambertian(new Color(0.4, 0.2, 0.1));
+        world.add(new Sphere(new Point3(-4, 1, 0), 1.0, material2));
+
+        Material material3 = new Metal(new Color(0.7, 0.6, 0.5), 0.0);
+        world.add(new Sphere(new Point3(4, 1, 0), 1.0, material3));
+
+        return world;
     }
 }

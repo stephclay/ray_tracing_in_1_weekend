@@ -34,7 +34,7 @@ public class Vector3 extends Triplet<Vector3> {
     }
 
     /**
-     * Generate a Vector3 with the provided min and max values for each vector component
+     * Generate a random Vector3 with the provided min and max values for each vector component
      *
      * @param min Min component value
      * @param max Max component value
