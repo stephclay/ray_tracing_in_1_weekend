@@ -23,7 +23,6 @@ public class Vector3 extends Triplet<Vector3> {
      *
      * @param head The tip or head of the vector
      * @param tail The start or tail of the vector
-     * @return The new Vector3 formed from "head - tail"
      */
     public Vector3(final Point3 head, final Point3 tail) {
         this(head.copy().sub(tail).getTuple());
@@ -74,5 +73,19 @@ public class Vector3 extends Triplet<Vector3> {
             v.negate();
         }
         return v;
+    }
+
+    /**
+     * Generate a random value within a unit disc. The disc is in the x/y plane with z = 0
+     *
+     * @return The new Vector3
+     */
+    public static Vector3 randomInUnitDisk() {
+        while (true) {
+            Vector3 v = new Vector3(MathUtils.randomDouble(-1 , 1), MathUtils.randomDouble(-1 , 1), 0);
+            if (v.lenSquared() < 1) {
+                return v;
+            }
+        }
     }
 }
