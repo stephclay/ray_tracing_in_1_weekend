@@ -1,8 +1,9 @@
 package com.wombatsw.raytracing;
 
-import com.wombatsw.raytracing.engine.AntiAlias;
 import com.wombatsw.raytracing.engine.Camera;
 import com.wombatsw.raytracing.engine.MathUtils;
+import com.wombatsw.raytracing.engine.Renderer;
+import com.wombatsw.raytracing.engine.Viewport;
 import com.wombatsw.raytracing.material.Dielectric;
 import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
@@ -28,23 +29,25 @@ import java.io.File;
 public class RayTracerApp implements CommandLineRunner {
     @Override
     public void run(final String @NonNull ... args) throws Exception {
-        Camera camera = new Camera();
+        Viewport viewport = new Viewport();
+        viewport.setFieldOfView(20);
+        viewport.setViewportCenter(new Point3(0, 0, 0));
+        viewport.setViewUp(new Vector3(0, 1, 0));
+
+        Camera camera = new Camera(viewport);
         camera.setAspectRatio(16.0 / 9.0);
-        camera.setImageWidth(1200);
-        camera.setAntiAlias(new AntiAlias(500));
-        camera.setMaxDepth(50);
-
-        camera.setFieldOfView(20);
+        camera.setImageWidth(600);
         camera.setCameraCenter(new Point3(13, 2, 3));
-        camera.setViewportCenter(new Point3(0, 0, 0));
-        camera.setViewUp(new Vector3(0, 1, 0));
-
         camera.setDefocusAngle(0.6);
         camera.setFocusDistance(10.0);
 
+        Renderer renderer = new Renderer();
+        renderer.setAntialiasRandom(20);
+        renderer.setMaxDepth(10);
+
         AbstractObj world = selectWorld(args);
 
-        byte[] imageData = camera.render(world);
+        byte[] imageData = renderer.render(world, camera);
 
         ImageWriter writer = new PPMImageWriter();
         writer.write(new File("test.ppm"), camera.getImageWidth(), camera.getImageHeight(), imageData);
@@ -138,14 +141,12 @@ public class RayTracerApp implements CommandLineRunner {
                     // diffuse
                     Color albedo = Color.random().mul(Color.random());
                     material = new Lambertian(albedo);
-                }
-                else if (selection < 0.95) {
+                } else if (selection < 0.95) {
                     // metal
                     Color albedo = Color.random(0.5, 1);
                     double fuzz = MathUtils.randomDouble(0, 0.5);
                     material = new Metal(albedo, fuzz);
-                }
-                else {
+                } else {
                     // glass
                     material = new Dielectric(1.5);
                 }

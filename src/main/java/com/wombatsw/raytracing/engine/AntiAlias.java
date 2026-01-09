@@ -41,14 +41,12 @@ public class AntiAlias {
     /**
      * Initialize this {@link AntiAlias} instance
      *
-     * @param pixelOrigin The origin of the viewport
-     * @param pixelDU The distance between pixels along the width of the viewport
-     * @param pixelDV The distance between pixels along the height of the viewport
+     * @param viewport The {@link Viewport}
      */
-    public void initialize(final Point3 pixelOrigin, final Vector3 pixelDU, final Vector3 pixelDV) {
-        this.pixelOrigin = pixelOrigin;
-        this.pixelDU = pixelDU;
-        this.pixelDV = pixelDV;
+    public void initialize(final Viewport viewport) {
+        this.pixelOrigin = viewport.getPixelOrigin();
+        this.pixelDU = viewport.getPixelDU();
+        this.pixelDV = viewport.getPixelDV();
     }
 
     /**

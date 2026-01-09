@@ -17,7 +17,7 @@ import lombok.ToString;
 public abstract class Triplet<T extends Triplet<T>> {
     private static final double EPSILON = 1e-8;
 
-    @Getter(AccessLevel.PACKAGE)
+    @Getter
     private final Tuple tuple;
 
     Triplet(final Tuple t) {
@@ -25,12 +25,13 @@ public abstract class Triplet<T extends Triplet<T>> {
     }
 
     /**
-     * Set the mutability of this triplet. Used to make sure specific values are not changed during computation
+     * Set the triplet to be immutable
      *
-     * @param mutable Whether this triplet should be mutable
+     * @return This triplet
      */
-    public void setMutable(boolean mutable) {
-        this.tuple.setMutable(mutable);
+    public T setImmutable() {
+        this.tuple.setMutable(false);
+        return cast();
     }
 
     /**

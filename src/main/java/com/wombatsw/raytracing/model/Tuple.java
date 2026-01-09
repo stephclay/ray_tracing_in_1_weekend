@@ -2,6 +2,7 @@ package com.wombatsw.raytracing.model;
 
 import com.wombatsw.raytracing.engine.MathUtils;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -12,12 +13,13 @@ import java.util.Arrays;
  */
 @EqualsAndHashCode(exclude = "mutable")
 @ToString
-class Tuple {
+public class Tuple {
     private final double[] values;
     /**
      * Set the mutability of this tuple. Used to prevent changes on objects that need to be used repeatedly
      */
     @Setter
+    @Getter
     private boolean mutable = true;
 
     Tuple(final double... values) {

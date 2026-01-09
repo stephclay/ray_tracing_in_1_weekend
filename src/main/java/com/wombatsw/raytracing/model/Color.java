@@ -4,6 +4,8 @@ import com.wombatsw.raytracing.engine.MathUtils;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.Collection;
+
 /**
  * A mutable color represented by an RGB triplet
  */
@@ -72,12 +74,12 @@ public class Color extends Triplet<Color> {
      * @param samples The list of colors to average
      * @return The averaged color
      */
-    public static Color average(Color... samples) {
+    public static Color average(final Collection<Color> samples) {
         Color color = new Color(0, 0, 0);
         for (Color sample : samples) {
             color.add(sample);
         }
-        color.div(samples.length);
+        color.div(samples.size());
         return color;
     }
 

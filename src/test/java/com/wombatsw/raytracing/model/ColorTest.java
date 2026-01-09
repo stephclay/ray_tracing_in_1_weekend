@@ -2,6 +2,8 @@ package com.wombatsw.raytracing.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ColorTest {
@@ -20,7 +22,7 @@ class ColorTest {
         Color c2 = new Color(2,3,3);
         Color c3 = new Color(0,4,-2);
 
-        Color result = Color.average(c1, c2, c3);
+        Color result = Color.average(Arrays.asList(c1, c2, c3));
         assertEquals(1, result.getX());
         assertEquals(3, result.getY());
         assertEquals(0, result.getZ());

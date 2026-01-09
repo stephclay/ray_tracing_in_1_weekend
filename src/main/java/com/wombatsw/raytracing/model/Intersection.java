@@ -57,10 +57,8 @@ public class Intersection {
         if (!frontFace) {
             n.negate();
         }
-        // Make sure all the intersection data cannot be updated
-        ray.direction().setMutable(false);
-        ray.origin().setMutable(false);
-        n.setMutable(false);
-        p.setMutable(false);
+
+        n.setImmutable();
+        p.setImmutable();
     }
 }

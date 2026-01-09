@@ -13,8 +13,7 @@ public class Lambertian extends Material {
     private final Color albedo;
 
     public Lambertian(final Color albedo) {
-        this.albedo = albedo.copy();
-        this.albedo.setMutable(false);
+        this.albedo = albedo.copy().setImmutable();
     }
 
     @Override

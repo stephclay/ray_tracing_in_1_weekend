@@ -38,11 +38,6 @@ public class Dielectric extends Material {
         } else {
             rayDir = unitDir.reflect(intersection.getN());
         }
-//        if (ri * sinTheta > 1.0) {
-//            rayDir = unitDir.reflect(intersection.getN());
-//        } else {
-//            rayDir = unitDir.refract(intersection.getN(), ri);
-//        }
 
         Ray scattered = new Ray(intersection.getP(), rayDir);
         return new ScatterData(scattered, Color.white());

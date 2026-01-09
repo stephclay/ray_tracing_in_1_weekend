@@ -17,7 +17,7 @@ public class Sphere extends AbstractObj {
 
     public Sphere(final Point3 center, final double radius, final Material material) {
         super(material);
-        this.center = center;
+        this.center = center.setImmutable();
         this.radius = Math.max(0, radius);
     }
 
