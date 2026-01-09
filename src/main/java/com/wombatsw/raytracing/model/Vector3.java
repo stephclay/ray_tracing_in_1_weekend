@@ -80,7 +80,7 @@ public class Vector3 extends Triplet<Vector3> {
      *
      * @return The new Vector3
      */
-    public static Vector3 randomInUnitDisk() {
+    public static Vector3 randomInUnitDisc() {
         while (true) {
             Vector3 v = new Vector3(MathUtils.randomDouble(-1 , 1), MathUtils.randomDouble(-1 , 1), 0);
             if (v.lenSquared() < 1) {

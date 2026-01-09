@@ -6,30 +6,26 @@ import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
-import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.AbstractObj;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
-@Setter
 public class Renderer {
     private final static Color BLUE = new Color(0.5, 0.7, 1).setImmutable();
 
     /**
-     * The antialiasing method. Default is a 2x2 grid
-     */
-    private AntiAlias antiAlias = new AntiAlias(2, 2);
-    /**
      * The max depth of reflection
      */
+    @Setter
     private int maxDepth = 10;
+
+    private AntiAlias antiAlias = new AntiAlias(2, 2);
 
     /**
      * Set the antialiasing to a random pattern
@@ -65,6 +61,7 @@ public class Renderer {
         final int width = camera.getImageWidth();
         final int height = camera.getImageHeight();
 
+        // TODO: Instead of going a row at a time, render in an even distribution to give better completion estimates
         long start = System.currentTimeMillis();
         byte[] imageData = new byte[width * height * 3];
         for (int y = 0; y < height; y++) {
@@ -112,23 +109,32 @@ public class Renderer {
      */
     private Color getPixelColor(final ExecutorService executor, final AbstractObj world, final Camera camera,
                                 final int x, final int y) {
-        // TODO: May be able to reuse these points if they are returned as relative offsets from the pixel center
-        Point3[] viewportPoints = antiAlias.getPoints(x, y);
+        List<Point3> viewportPoints = antiAlias.getSamplingPoints(x, y);
 
-        List<CompletableFuture<Color>> futures = new ArrayList<>(viewportPoints.length);
-
-        for (Point3 viewportPoint : viewportPoints) {
-            Ray ray = camera.getRayForPoint(viewportPoint);
-            Supplier<Color> supplier = () -> getRayColor(ray, maxDepth, world);
-            futures.add(executor == null ?
-                    CompletableFuture.completedFuture(supplier.get()) :
-                    CompletableFuture.supplyAsync(supplier, executor));
-        }
-
-        List<Color> samples = futures.stream()
+        List<Color> samples = viewportPoints.stream()
+                .parallel()
+                .map(camera::getRayForPoint)
+                .map(ray -> getColorAsync(executor, world, ray))
                 .map(CompletableFuture::join)
                 .toList();
+
         return Color.average(samples);
+    }
+
+    /**
+     * Asynchronously get the color for the given ray
+     *
+     * @param executor The executor service. Use {@code nulll} to execute synchronously
+     * @param world    The world data
+     * @param ray      The ray corresponding to the color
+     * @return A {@link CompletableFuture} returning a {@link Color}
+     */
+    private CompletableFuture<Color> getColorAsync(final ExecutorService executor, final AbstractObj world,
+                                                   final Ray ray) {
+        Supplier<Color> supplier = () -> getRayColor(ray, maxDepth, world);
+        return executor == null ?
+                CompletableFuture.completedFuture(supplier.get()) :
+                CompletableFuture.supplyAsync(supplier, executor);
     }
 
     /**

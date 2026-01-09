@@ -3,17 +3,20 @@ package com.wombatsw.raytracing.engine;
 import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Vector3;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
 /**
  * Antialiasing driver. Generates sets of points on the viewport for use in antialiasing
  */
 public class AntiAlias {
-    private final int xSamples;
-    private final int ySamples;
+    private final double[] xOffsets;
+    private final double[] yOffsets;
     private final int randomSamples;
 
-    private Point3 pixelOrigin;
-    private Vector3 pixelDU;
-    private Vector3 pixelDV;
+    private Viewport viewport;
+    private List<Vector3> viewportOffsets;
 
     /**
      * Create an {@link AntiAlias} using a grid
@@ -22,9 +25,9 @@ public class AntiAlias {
      * @param ySamples The number of samples along the height
      */
     public AntiAlias(final int xSamples, final int ySamples) {
-        this.xSamples = xSamples;
-        this.ySamples = ySamples;
-        this.randomSamples = 0;
+        xOffsets = getAxisOffsets(xSamples);
+        yOffsets = getAxisOffsets(ySamples);
+        randomSamples = 0;
     }
 
     /**
@@ -33,8 +36,8 @@ public class AntiAlias {
      * @param randomSamples The number of samples
      */
     public AntiAlias(final int randomSamples) {
-        this.xSamples = 0;
-        this.ySamples = 0;
+        xOffsets = null;
+        yOffsets = null;
         this.randomSamples = randomSamples;
     }
 
@@ -44,9 +47,22 @@ public class AntiAlias {
      * @param viewport The {@link Viewport}
      */
     public void initialize(final Viewport viewport) {
-        this.pixelOrigin = viewport.getPixelOrigin();
-        this.pixelDU = viewport.getPixelDU();
-        this.pixelDV = viewport.getPixelDV();
+        this.viewport = viewport;
+
+        if (randomSamples > 0) {
+            viewportOffsets = IntStream.range(0, randomSamples)
+                    .mapToObj(i -> getOffset(
+                            MathUtils.randomDouble() - 0.5,
+                            MathUtils.randomDouble() - 0.5))
+                    .toList();
+        } else {
+            viewportOffsets = new ArrayList<>(xOffsets.length * yOffsets.length);
+            for (double yOffset : yOffsets) {
+                for (double xOffset : xOffsets) {
+                    viewportOffsets.add(getOffset(xOffset, yOffset));
+                }
+            }
+        }
     }
 
     /**
@@ -56,54 +72,43 @@ public class AntiAlias {
      * @param y The y coordinate
      * @return The pixel locations in viewport coordinates
      */
-    public Point3[] getPoints(final int x, final int y) {
-        if (randomSamples > 0) {
-            Point3[] points = new Point3[randomSamples];
-            for (int i = 0; i < randomSamples; i++) {
-                points[i] = getRandomPoint(x, y);
-            }
-            return points;
-        }
+    public List<Point3> getSamplingPoints(final int x, final int y) {
+        Vector3 du = viewport.getPixelDU().copy().mul(x);
+        Vector3 dv = viewport.getPixelDV().copy().mul(y);
 
-        double dx = 1.0 / xSamples;
-        double xStart = x - 0.5 + dx / 2.0;
-        double dy = 1.0 / ySamples;
-        double yStart = y - 0.5 + dy / 2.0;
-
-        Point3[] points = new Point3[xSamples * ySamples];
-        for (int j = 0; j < ySamples; j++) {
-            double yOffset = yStart + j * dy;
-            for (int i = 0; i < xSamples; i++) {
-                double xOffset = xStart + i * dx;
-                points[j*xSamples + i] = getPointAtOffset(xOffset, yOffset);
-            }
-        }
-        return points;
+        return viewportOffsets.stream()
+                .map(offset -> viewport.getPixelOrigin().copy()
+                        .add(du)
+                        .add(dv)
+                        .add(offset)
+                        .setImmutable())
+                .toList();
     }
 
     /**
-     * Get a random point near the indicated pixel
+     * Get an array of samples evenly distributed along a unit interval
      *
-     * @param x The x coordinate
-     * @param y The y coordinate
-     * @return The pixel location in viewport coordinates
+     * @param numSamples Number of samples
+     * @return The array of samples
      */
-    private Point3 getRandomPoint(final int x, final int y) {
-        return getPointAtOffset(
-                x + MathUtils.randomDouble() - 0.5,
-                y + MathUtils.randomDouble() - 0.5);
+    private double[] getAxisOffsets(int numSamples) {
+        double delta = 1.0 / numSamples;
+        double start = -0.5 + delta / 2.0;
+        return IntStream.range(0, numSamples)
+                .mapToDouble(i -> start + i * delta)
+                .toArray();
     }
 
     /**
-     * Get a pixel offset from the origin
+     * Get a pixel offset relative in the viewport plane
      *
      * @param xOffset The x offset
      * @param yOffset The y offset
-     * @return The pixel location in viewport coordinates
+     * @return The offset
      */
-    private Point3 getPointAtOffset(final double xOffset, final double yOffset) {
-        Vector3 du = pixelDU.copy().mul(xOffset);
-        Vector3 dv = pixelDV.copy().mul(yOffset);
-        return pixelOrigin.copy().add(du).add(dv);
+    private Vector3 getOffset(final double xOffset, final double yOffset) {
+        Vector3 du = viewport.getPixelDU().copy().mul(xOffset);
+        Vector3 dv = viewport.getPixelDV().copy().mul(yOffset);
+        return du.add(dv).setImmutable();
     }
 }

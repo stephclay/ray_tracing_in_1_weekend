@@ -167,6 +167,7 @@ public abstract class Triplet<T extends Triplet<T>> {
 
         // Compute the parallel component
         double scale = -Math.sqrt(Math.abs(1.0 - lenSquared()));
+        // TODO: The pattern "add(x.copy().mul(scalar))" happens a lot. Maybe add "addScaled(x, scalar)"
         Triplet<?> parallel = n.copy().mul(scale);
         // Create the parallel component and add to the perpendicular one
         return add(parallel);

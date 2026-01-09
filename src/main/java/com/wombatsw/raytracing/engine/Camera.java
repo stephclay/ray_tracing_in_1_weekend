@@ -91,7 +91,7 @@ public class Camera {
             rayOrigin = cameraCenter;
         } else {
             // Defocus the image by moving the origin of the ray by a random amount
-            Vector3 v = Vector3.randomInUnitDisk();
+            Vector3 v = Vector3.randomInUnitDisc();
             rayOrigin = cameraCenter.copy()
                     .add(defocusDiskU.copy().mul(v.getX()))
                     .add(defocusDiskV.copy().mul(v.getY()));
