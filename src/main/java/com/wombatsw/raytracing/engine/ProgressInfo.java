@@ -10,19 +10,19 @@ public class ProgressInfo {
      * Print the remaining time in human-readable format. Will replace any previous message on the same display line
      *
      * @param start The start time in millis
-     * @param row The current row being processed
-     * @param numRows The total number of rows
+     * @param completed The number of completed elements (rows, pixels, etc)
+     * @param total The total number of elements
      */
-    public static void displayRemainingRowsMessage(final long start, int row, int numRows) {
-        int remainingRows = numRows - row;
-        if (row < 1) {
-            System.out.printf("\rRemaining: %d rows", remainingRows);
+    public static void displayProgress(final long start, int completed, int total) {
+        if (completed < 1) {
+            System.out.print("\rRemaining: 100.0%%");
         }
         else {
-            long elapsedTimeMs = System.currentTimeMillis() - start;
-            long remainingTimeMs = elapsedTimeMs * remainingRows / row;
+            double pctComplete = 100.0 * completed / total;
+            int remaining = total - completed;
+            long remainingTimeMs = (System.currentTimeMillis() - start) * remaining / completed;
 
-            System.out.printf("\rRemaining: %d rows - Est %s", remainingRows, getDuration(remainingTimeMs));
+            System.out.printf("\rProgress: %.1f%% - Est %s", pctComplete, getDuration(remainingTimeMs));
         }
         System.out.flush();
     }

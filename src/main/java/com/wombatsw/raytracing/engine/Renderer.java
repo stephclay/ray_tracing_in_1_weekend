@@ -61,15 +61,17 @@ public class Renderer {
         final int width = camera.getImageWidth();
         final int height = camera.getImageHeight();
 
-        // TODO: Instead of going a row at a time, render in an even distribution to give better completion estimates
         long start = System.currentTimeMillis();
         byte[] imageData = new byte[width * height * 3];
         for (int y = 0; y < height; y++) {
-            ProgressInfo.displayRemainingRowsMessage(start, y, height);
+            ProgressInfo.displayProgress(start, y, height);
 
-            Color[] row = renderRow(executor, world, camera, y);
+            // Mix the rows up to give a better time remaining estimation. The first few rows
+            // frequently run faster due to ray hitting the "sky", throwing off the estimation.
+            int yAlt = (y * 65537) % height;
+            Color[] row = renderRow(executor, world, camera, yAlt);
 
-            int rowIndex = y * width * 3;
+            int rowIndex = yAlt * width * 3;
             for (int x = 0; x < width; x++) {
                 row[x].writeColor(imageData, rowIndex + x * 3);
             }
