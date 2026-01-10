@@ -39,7 +39,7 @@ public class Dielectric extends Material {
             rayDir = unitDir.reflect(intersection.getN());
         }
 
-        Ray scattered = new Ray(intersection.getP(), rayDir);
+        Ray scattered = new Ray(intersection.getP(), rayDir, intersection.getRay().time());
         return new ScatterData(scattered, Color.white());
     }
 

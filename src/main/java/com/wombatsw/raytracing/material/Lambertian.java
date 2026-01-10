@@ -20,7 +20,8 @@ public class Lambertian extends Material {
     public ScatterData scatter(final Intersection intersection) {
         Vector3 scatterDir = Vector3.randomUnitVector().add(intersection.getN());
 
-        Ray scattered = new Ray(intersection.getP(), scatterDir.nearZero() ? intersection.getN() : scatterDir);
+        Vector3 rayDir = scatterDir.nearZero() ? intersection.getN() : scatterDir;
+        Ray scattered = new Ray(intersection.getP(), rayDir, intersection.getRay().time());
         return new ScatterData(scattered, albedo);
     }
 }

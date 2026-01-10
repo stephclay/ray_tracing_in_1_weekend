@@ -136,21 +136,23 @@ public class RayTracerApp implements CommandLineRunner {
                 if (center.copy().sub(new Point3(4, 0.2, 0)).len() < 0.9) {
                     continue;
                 }
-                Material material;
                 if (selection < 0.8) {
                     // diffuse
                     Color albedo = Color.random().mul(Color.random());
-                    material = new Lambertian(albedo);
+                    Material material = new Lambertian(albedo);
+                    Point3 center2 = new Point3(0, MathUtils.randomDouble(0, 0.5), 0).add(center);
+                    world.add(new Sphere(center, center2, 0.2, material));
                 } else if (selection < 0.95) {
                     // metal
                     Color albedo = Color.random(0.5, 1);
                     double fuzz = MathUtils.randomDouble(0, 0.5);
-                    material = new Metal(albedo, fuzz);
+                    Material material = new Metal(albedo, fuzz);
+                    world.add(new Sphere(center, 0.2, material));
                 } else {
                     // glass
-                    material = new Dielectric(1.5);
+                    Material material = new Dielectric(1.5);
+                    world.add(new Sphere(center, 0.2, material));
                 }
-                world.add(new Sphere(center, 0.2, material));
             }
         }
 

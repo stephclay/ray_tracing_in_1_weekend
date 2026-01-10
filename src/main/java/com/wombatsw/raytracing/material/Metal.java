@@ -30,7 +30,7 @@ public class Metal extends Material {
             return null;
         }
 
-        Ray scattered = new Ray(intersection.getP(), reflected);
+        Ray scattered = new Ray(intersection.getP(), reflected, intersection.getRay().time());
         return new ScatterData(scattered, albedo);
     }
 }

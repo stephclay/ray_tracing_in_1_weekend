@@ -96,7 +96,8 @@ public class Camera {
                     .addScaled(defocusDiskU, v.getX(), defocusDiskV, v.getY());
         }
         Vector3 rayDir = new Vector3(point, rayOrigin);
+        double rayTime = MathUtils.randomDouble();
 
-        return new Ray(rayOrigin, rayDir);
+        return new Ray(rayOrigin, rayDir, rayTime);
     }
 }

@@ -3,10 +3,14 @@ package com.wombatsw.raytracing.model;
 /**
  * A ray consisting of an origin and direction
  */
-public record Ray(Point3 origin, Vector3 direction) {
+public record Ray(Point3 origin, Vector3 direction, double time) {
     public Ray {
         origin.setImmutable();
         direction.setImmutable();
+    }
+
+    public Ray(final Point3 origin, final Vector3 direction) {
+        this(origin, direction, 0);
     }
 
     /**
