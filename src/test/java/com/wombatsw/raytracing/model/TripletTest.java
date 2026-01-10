@@ -59,6 +59,33 @@ class TripletTest {
     }
 
     @Test
+    public void testAddScaledOneVector() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> t2 = createTriplet(-1, 1, -2);
+        Triplet<?> t2orig = t2.copy();
+
+        Triplet<?> result = t1.addScaled(t2, 3);
+        assertVectorEquals(-2, 5, -3, result);
+        // Verify this didn't change
+        assertEquals(t2orig, t2);
+    }
+
+    @Test
+    public void testAddScaledTwoVectors() {
+        Triplet<?> t1 = createTriplet(1, 2, 3);
+        Triplet<?> t2 = createTriplet(-1, 1, -2);
+        Triplet<?> t3 = createTriplet(2, 2, 2);
+        Triplet<?> t2orig = t2.copy();
+        Triplet<?> t3orig = t3.copy();
+
+        Triplet<?> result = t1.addScaled(t2, 3, t3, 2);
+        assertVectorEquals(2, 9, 1, result);
+        // Verify these didn't change
+        assertEquals(t2orig, t2);
+        assertEquals(t3orig, t3);
+    }
+
+    @Test
     public void testNormalize() {
         Triplet<?> t1 = createTriplet(1, 2, 3);
 
@@ -74,6 +101,19 @@ class TripletTest {
 
         Triplet<?> result = t1.reflect(n);
         assertVectorEquals(1, -2, 3, result);
+    }
+
+    @Test
+    public void testRefract() {
+        Triplet<?> t1 = createTriplet(2, 2, 1/1.5);
+        Triplet<?> n = createTriplet(0, 1, 0); // Needs to be a unit vector
+
+        // cosTheta = -t1.n = -2
+        // Rperp = ([2,2,1/1.5] - 2*[0,-1,0]) * 1.5 = [3,0,1] (len = 10)
+        // Rparallel = -sqrt(|1 - 10|) * [0,1,0] = [0,-3,0]
+
+        Triplet<?> result = t1.refract(n, 1.5);
+        assertVectorEquals(3, -3, 1, result);
     }
 
     @Test

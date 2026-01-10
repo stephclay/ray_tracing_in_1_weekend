@@ -20,8 +20,8 @@ public class Metal extends Material {
 
     @Override
     public ScatterData scatter(final Intersection intersection) {
-        Vector3 rayDir = intersection.getRay().direction().copy();
-        Vector3 reflected = rayDir.reflect(intersection.getN())
+        Vector3 reflected = intersection.getRay().direction().copy()
+                .reflect(intersection.getN())
                 .normalize();
         if (fuzz > 0) {
             reflected.add(Vector3.randomUnitVector().mul(fuzz));

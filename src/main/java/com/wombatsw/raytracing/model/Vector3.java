@@ -10,6 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class Vector3 extends Triplet<Vector3> {
+
     public Vector3(final double x, final double y, final double z) {
         super(new Tuple(x, y, z));
     }
@@ -31,6 +32,24 @@ public class Vector3 extends Triplet<Vector3> {
     @Override
     Vector3 create(Tuple t) {
         return new Vector3(t);
+    }
+
+    /**
+     * Create a new zero-length vector
+     */
+    public static Vector3 newZeroVector() {
+        return new Vector3(0, 0, 0);
+    }
+
+    /**
+     * Create a new vector based on scaling the provided vector
+     *
+     * @param v The reference vector
+     * @param scale The scale factor
+     * @return The new {@link Vector3}
+     */
+    public static Vector3 newScaled(final Vector3 v, final double scale) {
+        return newZeroVector().addScaled(v, scale);
     }
 
     /**

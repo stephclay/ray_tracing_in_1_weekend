@@ -113,6 +113,21 @@ public class Tuple {
     }
 
     /**
+     * Add the provided tuple to this one after scaling it
+     *
+     * @param v The tuple to scale and add in
+     * @param scale The scaling factor
+     * @return This tuple
+     */
+    public Tuple addScaled(final Tuple v, final double scale) {
+        assertMutationAllowed();
+        for (int i = 0; i < values.length; i++) {
+            values[i] += v.values[i] * scale;
+        }
+        return this;
+    }
+
+    /**
      * Translate this tuple in the given direction according to the given scale
      *
      * @param dir The direction of translation

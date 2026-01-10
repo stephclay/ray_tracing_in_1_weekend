@@ -46,6 +46,18 @@ class TupleTest {
     }
 
     @Test
+    public void testAddScaledOneVector() {
+        Tuple t1 = new Tuple(1, 2, 3);
+        Tuple t2 = new Tuple(-1, 1, -2);
+        Tuple t2orig = t2.copy();
+
+        Tuple result = t1.addScaled(t2, 3);
+        assertEquals(new Tuple(-2, 5, -3), result);
+        // Verify this didn't change
+        assertEquals(t2orig, t2);
+    }
+
+    @Test
     public void testTranslate() {
         Tuple tuple = new Tuple(1, 2);
 
@@ -66,5 +78,22 @@ class TupleTest {
 
         Tuple result3 = t1.copy().lerp(t2, 1);
         assertEquals(new Tuple(3, 4), result3);
+    }
+
+    @Test
+    public void testCardinalityMismatch() {
+        Tuple t1 = new Tuple(1, 2);
+        Tuple t2 = new Tuple(1);
+        assertThrows(IllegalArgumentException.class, () -> t1.add(t2));
+    }
+
+    @Test
+    public void testImmutableTuple() {
+        Tuple t1 = new Tuple(1, 2);
+        Tuple t2 = new Tuple(1, 2);
+        t1.setMutable(false);
+
+        t2.add(t1);
+        assertThrows(IllegalStateException.class, () -> t1.add(t2));
     }
 }

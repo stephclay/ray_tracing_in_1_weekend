@@ -73,13 +73,9 @@ public class AntiAlias {
      * @return The pixel locations in viewport coordinates
      */
     public List<Point3> getSamplingPoints(final int x, final int y) {
-        Vector3 du = viewport.getPixelDU().copy().mul(x);
-        Vector3 dv = viewport.getPixelDV().copy().mul(y);
-
         return viewportOffsets.stream()
                 .map(offset -> viewport.getPixelOrigin().copy()
-                        .add(du)
-                        .add(dv)
+                        .addScaled(viewport.getPixelDU(), x, viewport.getPixelDV(), y)
                         .add(offset)
                         .setImmutable())
                 .toList();
@@ -100,15 +96,14 @@ public class AntiAlias {
     }
 
     /**
-     * Get a pixel offset relative in the viewport plane
+     * Get a pixel offset relative to the viewport plane
      *
      * @param xOffset The x offset
      * @param yOffset The y offset
      * @return The offset
      */
     private Vector3 getOffset(final double xOffset, final double yOffset) {
-        Vector3 du = viewport.getPixelDU().copy().mul(xOffset);
-        Vector3 dv = viewport.getPixelDV().copy().mul(yOffset);
-        return du.add(dv).setImmutable();
+        return Vector3.newZeroVector()
+                .addScaled(viewport.getPixelDU(), xOffset, viewport.getPixelDV(), yOffset);
     }
 }

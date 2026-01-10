@@ -73,20 +73,20 @@ public class Viewport {
         viewBasisV = viewBasisW.cross(viewBasisU).normalize().setImmutable();
 
         // Calculate vectors across the horizontal and vertical viewport edges
-        Vector3 viewportU = viewBasisU.copy().mul(viewportWidth);
-        Vector3 viewportV = viewBasisV.copy().mul(-viewportHeight);
+        Vector3 viewportU = Vector3.newScaled(viewBasisU, viewportWidth);
+        Vector3 viewportV = Vector3.newScaled(viewBasisV, -viewportHeight);
 
         // Calculate the horizontal and vertical deltas from pixel to pixel
-        pixelDU = viewportU.copy().div(imageWidth).setImmutable();
-        pixelDV = viewportV.copy().div(imageHeight).setImmutable();
+        pixelDU = Vector3.newScaled(viewportU, 1.0/imageWidth).setImmutable();
+        pixelDV = Vector3.newScaled(viewportV, 1.0/imageHeight).setImmutable();
 
         // Calculate the upper left pixel
         Point3 viewportUpperLeft = cameraCenter
                 .copy()
-                .sub(viewBasisW.copy().mul(focusDistance))
-                .sub(viewportU.div(2))
-                .sub(viewportV.div(2));
-        Vector3 pixelOffset = pixelDU.copy().add(pixelDV).div(2);
+                .addScaled(viewBasisW, -focusDistance)
+                .addScaled(viewportU, -0.5)
+                .addScaled(viewportV, -0.5);
+        Vector3 pixelOffset = Vector3.newScaled(pixelDU, 0.5).addScaled(pixelDV, 0.5);
         pixelOrigin = viewportUpperLeft.add(pixelOffset).setImmutable();
     }
 }

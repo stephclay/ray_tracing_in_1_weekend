@@ -43,7 +43,8 @@ public abstract class Triplet<T extends Triplet<T>> {
     abstract T create(final Tuple t);
 
     public T copy() {
-        return create(tuple.copy());
+        // Tuple data is copied in the constructor
+        return create(tuple);
     }
 
     /**
@@ -131,6 +132,31 @@ public abstract class Triplet<T extends Triplet<T>> {
     }
 
     /**
+     * Add the provided triplet to this one after scaling it. This is a mutating operation
+     *
+     * @param v The value to add
+     * @param scale The scaling factor
+     * @return This triplet
+     */
+    public T addScaled(final Triplet<?> v, final double scale) {
+        tuple.addScaled(v.tuple, scale);
+        return cast();
+    }
+
+    /**
+     * Add the provided triplets to this one after scaling them. This is a mutating operation
+     *
+     * @param u The first value to add
+     * @param uScale The scaling factor for u
+     * @param v The second value to add
+     * @param vScale The scaling factor for v
+     * @return This triplet
+     */
+    public T addScaled(final Triplet<?> u, final double uScale, final Triplet<?> v, final double vScale) {
+        return addScaled(u, uScale).addScaled(v, vScale);
+    }
+
+    /**
      * Normalize this triplet to a unit value. This is a mutating operation
      *
      * @return This triplet
@@ -146,9 +172,8 @@ public abstract class Triplet<T extends Triplet<T>> {
      * @return This triplet
      */
     public T reflect(final Triplet<?> n) {
-        double scale = 2.0 * dot(n);
-        Tuple t = n.tuple.copy().mul(scale);
-        tuple.sub(t);
+        // V - 2.0 * V.N
+        addScaled(n, -2.0 * dot(n));
         return cast();
     }
 
@@ -160,17 +185,16 @@ public abstract class Triplet<T extends Triplet<T>> {
      * @return This triplet
      */
     public T refract(final Triplet<?> n,final double etaRatio) {
-        double cosTheta = Math.min(1.0, -dot(n));
-
         // Compute the perpendicular component
-        add(n.copy().mul(cosTheta)).mul(etaRatio);
+        // Rperp = (Rorig + cosTheta * N) * etaRatio
+        double cosTheta = Math.min(1.0, -dot(n));
+        addScaled(n, cosTheta).mul(etaRatio);
+        // This triplet now contains the perpendicular component of the result
 
-        // Compute the parallel component
-        double scale = -Math.sqrt(Math.abs(1.0 - lenSquared()));
-        // TODO: The pattern "add(x.copy().mul(scalar))" happens a lot. Maybe add "addScaled(x, scalar)"
-        Triplet<?> parallel = n.copy().mul(scale);
-        // Create the parallel component and add to the perpendicular one
-        return add(parallel);
+        // Compute the parallel component and add to perpendicular one
+        // Rparallel = -sqrt(|1 - Rperp.Rperp|) * N
+        double scale = Math.sqrt(Math.abs(1.0 - dot(this)));
+        return addScaled(n, -scale);
     }
 
     /**

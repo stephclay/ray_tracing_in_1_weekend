@@ -74,8 +74,8 @@ public class Camera {
 
         double defocusRadius = focusDistance * Math.tan(Math.toRadians(defocusAngle / 2));
 
-        defocusDiskU = viewport.getViewBasisU().copy().mul(defocusRadius);
-        defocusDiskV = viewport.getViewBasisV().copy().mul(-defocusRadius);
+        defocusDiskU = Vector3.newScaled(viewport.getViewBasisU(), defocusRadius);
+        defocusDiskV = Vector3.newScaled(viewport.getViewBasisV(), -defocusRadius);
     }
 
     /**
@@ -93,8 +93,7 @@ public class Camera {
             // Defocus the image by moving the origin of the ray by a random amount
             Vector3 v = Vector3.randomInUnitDisc();
             rayOrigin = cameraCenter.copy()
-                    .add(defocusDiskU.copy().mul(v.getX()))
-                    .add(defocusDiskV.copy().mul(v.getY()));
+                    .addScaled(defocusDiskU, v.getX(), defocusDiskV, v.getY());
         }
         Vector3 rayDir = new Vector3(point, rayOrigin);
 
