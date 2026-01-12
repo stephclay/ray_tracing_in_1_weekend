@@ -1,9 +1,7 @@
 package com.wombatsw.raytracing.model;
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -51,21 +49,31 @@ public abstract class Triplet<T extends Triplet<T>> {
      * @return the first component
      */
     public double getX() {
-        return tuple.getValue(0);
+        return getValue(0);
     }
 
     /**
      * @return the second component
      */
     public double getY() {
-        return tuple.getValue(1);
+        return getValue(1);
     }
 
     /**
      * @return the third component
      */
     public double getZ() {
-        return tuple.getValue(2);
+        return getValue(2);
+    }
+
+    /**
+     * Get the component by index
+     *
+     * @param index The index to access
+     * @return The value
+     */
+    public double getValue(final int index) {
+        return tuple.getValue(index);
     }
 
     /**
@@ -134,7 +142,7 @@ public abstract class Triplet<T extends Triplet<T>> {
     /**
      * Add the provided triplet to this one after scaling it. This is a mutating operation
      *
-     * @param v The value to add
+     * @param v     The value to add
      * @param scale The scaling factor
      * @return This triplet
      */
@@ -146,9 +154,9 @@ public abstract class Triplet<T extends Triplet<T>> {
     /**
      * Add the provided triplets to this one after scaling them. This is a mutating operation
      *
-     * @param u The first value to add
+     * @param u      The first value to add
      * @param uScale The scaling factor for u
-     * @param v The second value to add
+     * @param v      The second value to add
      * @param vScale The scaling factor for v
      * @return This triplet
      */
@@ -180,11 +188,11 @@ public abstract class Triplet<T extends Triplet<T>> {
     /**
      * Refract this vector relative to the given normal and refraction ratio
      *
-     * @param n The surface normal, which must be a unit vector
+     * @param n        The surface normal, which must be a unit vector
      * @param etaRatio Ratio of refractive indices as eta/eta prime
      * @return This triplet
      */
-    public T refract(final Triplet<?> n,final double etaRatio) {
+    public T refract(final Triplet<?> n, final double etaRatio) {
         // Compute the perpendicular component
         // Rperp = (Rorig + cosTheta * N) * etaRatio
         double cosTheta = Math.min(1.0, -dot(n));

@@ -77,8 +77,8 @@ public class Viewport {
         Vector3 viewportV = Vector3.newScaled(viewBasisV, -viewportHeight);
 
         // Calculate the horizontal and vertical deltas from pixel to pixel
-        pixelDU = Vector3.newScaled(viewportU, 1.0/imageWidth).setImmutable();
-        pixelDV = Vector3.newScaled(viewportV, 1.0/imageHeight).setImmutable();
+        pixelDU = Vector3.newScaled(viewportU, 1.0 / imageWidth).setImmutable();
+        pixelDV = Vector3.newScaled(viewportV, 1.0 / imageHeight).setImmutable();
 
         // Calculate the upper left pixel
         Point3 viewportUpperLeft = cameraCenter

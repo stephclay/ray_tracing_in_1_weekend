@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.obj;
 
+import com.wombatsw.raytracing.engine.BoundingBox;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
@@ -23,6 +24,13 @@ public abstract class AbstractObj {
      * @return The {@link Intersection} data or {@code null} if no intersection exists, or it was outside the interval
      */
     public abstract Intersection intersect(final Ray ray, final Interval tRange);
+
+    /**
+     * Get the bounding box for this object
+     *
+     * @return The bounding box for this object
+     */
+    public abstract BoundingBox getBoundingBox();
 
     /**
      * @return The material, or {@code null} if this object does not have a material (such as the object list)

@@ -1,20 +1,25 @@
 package com.wombatsw.raytracing.obj;
 
+import com.wombatsw.raytracing.engine.BoundingBox;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A list of scene objects
  */
 public class ObjectList extends AbstractObj {
-    private final ArrayList<AbstractObj> list = new ArrayList<AbstractObj>();
+    @Getter(AccessLevel.PACKAGE)
+    private final ArrayList<AbstractObj> list = new ArrayList<>();
+    private BoundingBox boundingBox;
 
     public ObjectList() {
         super(null);
+        boundingBox = new BoundingBox();
     }
 
     public ObjectList(AbstractObj... objs) {
@@ -29,7 +34,10 @@ public class ObjectList extends AbstractObj {
      * @return this
      */
     public ObjectList add(AbstractObj... objs) {
-        list.addAll(Arrays.asList(objs));
+        for (AbstractObj obj : objs) {
+            list.add(obj);
+            boundingBox = new BoundingBox(boundingBox, obj.getBoundingBox());
+        }
         return this;
     }
 
@@ -53,5 +61,10 @@ public class ObjectList extends AbstractObj {
             }
         }
         return returnVal;
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
     }
 }

@@ -44,7 +44,7 @@ public class Vector3 extends Triplet<Vector3> {
     /**
      * Create a new vector based on scaling the provided vector
      *
-     * @param v The reference vector
+     * @param v     The reference vector
      * @param scale The scale factor
      * @return The new {@link Vector3}
      */
@@ -101,7 +101,7 @@ public class Vector3 extends Triplet<Vector3> {
      */
     public static Vector3 randomInUnitDisc() {
         while (true) {
-            Vector3 v = new Vector3(MathUtils.randomDouble(-1 , 1), MathUtils.randomDouble(-1 , 1), 0);
+            Vector3 v = new Vector3(MathUtils.randomDouble(-1, 1), MathUtils.randomDouble(-1, 1), 0);
             if (v.lenSquared() < 1) {
                 return v;
             }

@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.obj;
 
+import com.wombatsw.raytracing.engine.BoundingBox;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
@@ -12,8 +13,9 @@ import org.jspecify.annotations.NonNull;
  * A sphere
  */
 public class Sphere extends AbstractObj {
-    private final Ray center;
+    private final Ray centerPath;
     private final double radius;
+    private final BoundingBox boundingBox;
 
     /**
      * Stationary sphere
@@ -24,8 +26,11 @@ public class Sphere extends AbstractObj {
      */
     public Sphere(final Point3 center, final double radius, final Material material) {
         super(material);
-        this.center = new Ray(center, Vector3.newZeroVector());
+        this.centerPath = new Ray(center, Vector3.newZeroVector());
         this.radius = Math.max(0, radius);
+
+        Vector3 rVec = new Vector3(radius, radius, radius);
+        boundingBox = new BoundingBox(center.copy().sub(rVec), center.copy().add(rVec));
     }
 
     /**
@@ -38,13 +43,18 @@ public class Sphere extends AbstractObj {
      */
     public Sphere(final Point3 center1, final Point3 center2, final double radius, final Material material) {
         super(material);
-        this.center = new Ray(center1, new Vector3(center2, center1));
+        this.centerPath = new Ray(center1, new Vector3(center2, center1));
         this.radius = Math.max(0, radius);
+
+        Vector3 rVec = new Vector3(radius, radius, radius);
+        BoundingBox bbox1 = new BoundingBox(center1.copy().sub(rVec), center1.copy().add(rVec));
+        BoundingBox bbox2 = new BoundingBox(center2.copy().sub(rVec), center2.copy().add(rVec));
+        this.boundingBox = new BoundingBox(bbox1, bbox2);
     }
 
     @Override
     public Intersection intersect(final Ray ray, final Interval tRange) {
-        Point3 curCenter = center.at(ray.time());
+        Point3 curCenter = centerPath.at(ray.time());
         Point3 oc = curCenter.copy().sub(ray.origin());
         double a = ray.direction().lenSquared();
         double h = ray.direction().dot(oc);
@@ -69,6 +79,11 @@ public class Sphere extends AbstractObj {
         }
 
         return null;
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
     }
 
     /**

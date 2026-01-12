@@ -12,6 +12,7 @@ import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.AbstractObj;
+import com.wombatsw.raytracing.obj.BVHNode;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Sphere;
 import com.wombatsw.raytracing.output.ImageWriter;
@@ -36,16 +37,16 @@ public class RayTracerApp implements CommandLineRunner {
 
         Camera camera = new Camera(viewport);
         camera.setAspectRatio(16.0 / 9.0);
-        camera.setImageWidth(600);
+        camera.setImageWidth(800);
         camera.setCameraCenter(new Point3(13, 2, 3));
         camera.setDefocusAngle(0.6);
         camera.setFocusDistance(10.0);
 
         Renderer renderer = new Renderer();
-        renderer.setAntialiasRandom(20);
-        renderer.setMaxDepth(10);
+        renderer.setAntialiasRandom(30);
+        renderer.setMaxDepth(15);
 
-        AbstractObj world = selectWorld(args);
+        AbstractObj world = new BVHNode(selectWorld(args));
 
         byte[] imageData = renderer.render(world, camera);
 
@@ -53,7 +54,7 @@ public class RayTracerApp implements CommandLineRunner {
         writer.write(new File("test.ppm"), camera.getImageWidth(), camera.getImageHeight(), imageData);
     }
 
-    private AbstractObj selectWorld(final String... args) {
+    private ObjectList selectWorld(final String... args) {
         String selection = args.length > 0 ? args[0] : "world4";
 
         return switch (selection) {
@@ -70,7 +71,7 @@ public class RayTracerApp implements CommandLineRunner {
      *
      * @return The world data
      */
-    private AbstractObj getWorld1() {
+    private ObjectList getWorld1() {
         Material matGrey = new Lambertian(new Color(0.5, 0.5, 0.5));
 
         return new ObjectList(
@@ -84,7 +85,7 @@ public class RayTracerApp implements CommandLineRunner {
      *
      * @return The world data
      */
-    private AbstractObj getWorld2() {
+    private ObjectList getWorld2() {
         Material matGround = new Lambertian(new Color(0.8, 0.8, 0.0)); // yellow
         Material matCenter = new Lambertian(new Color(0.1, 0.2, 0.5)); // blue
         Material matLeft = new Dielectric(1.5); // transparent
@@ -105,7 +106,7 @@ public class RayTracerApp implements CommandLineRunner {
      *
      * @return The world data
      */
-    private AbstractObj getWorld3() {
+    private ObjectList getWorld3() {
         Material matLeft = new Lambertian(new Color(0, 0, 1));
         Material matRight = new Lambertian(new Color(1, 0, 0));
         double r = Math.cos(Math.PI / 4.0);
@@ -121,7 +122,7 @@ public class RayTracerApp implements CommandLineRunner {
      *
      * @return The world data
      */
-    private AbstractObj getWorld4() {
+    private ObjectList getWorld4() {
         ObjectList world = new ObjectList();
 
         Material matGround = new Lambertian(new Color(0.5, 0.5, 0.5));

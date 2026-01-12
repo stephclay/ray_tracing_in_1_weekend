@@ -115,7 +115,7 @@ public class Tuple {
     /**
      * Add the provided tuple to this one after scaling it
      *
-     * @param v The tuple to scale and add in
+     * @param v     The tuple to scale and add in
      * @param scale The scaling factor
      * @return This tuple
      */

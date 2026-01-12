@@ -56,7 +56,7 @@ public class Color extends Triplet<Color> {
      * @return The {@link Color} white
      */
     public static Color white() {
-        return new Color(1,1,1);
+        return new Color(1, 1, 1);
     }
 
     /**

@@ -7,6 +7,13 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class MathUtils {
     /**
+     * @return A random number in the range [min, max)
+     */
+    public static int randomInt(final int min, final int max) {
+        return ThreadLocalRandom.current().nextInt(min, max);
+    }
+
+    /**
      * @return A random number in the range [0, 1)
      */
     public static double randomDouble() {

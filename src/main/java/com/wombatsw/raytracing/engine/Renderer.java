@@ -66,7 +66,7 @@ public class Renderer {
         for (int y = 0; y < height; y++) {
             ProgressInfo.displayProgress(start, y, height);
 
-            // Mix the rows up to give a better time remaining estimation. The first few rows
+            // Mix the rows up to give a better estimation of time remaining. The first few rows
             // frequently run faster due to ray hitting the "sky", throwing off the estimation.
             int yAlt = (y * 65537) % height;
             Color[] row = renderRow(executor, world, camera, yAlt);

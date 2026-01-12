@@ -1,7 +1,6 @@
 package com.wombatsw.raytracing.material;
 
 import com.wombatsw.raytracing.model.Intersection;
-import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
 
 /**
