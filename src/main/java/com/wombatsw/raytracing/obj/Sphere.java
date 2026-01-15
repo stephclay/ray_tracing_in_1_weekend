@@ -95,6 +95,6 @@ public class Sphere extends AbstractObj {
      * @return The {@link Intersection}
      */
     private @NonNull Intersection getIntersection(final Point3 curCenter, final Ray ray, final double t) {
-        return new Intersection(ray, t, getMaterial(), p -> new Vector3(p, curCenter).div(radius));
+        return new Intersection(ray, t, 0, 0, getMaterial(), p -> new Vector3(p, curCenter).div(radius));
     }
 }

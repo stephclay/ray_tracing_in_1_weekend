@@ -14,8 +14,8 @@ import java.util.Collection;
 public class Color extends Triplet<Color> {
     private static final Interval RANGE = new Interval(0, 0.999999);
 
-    public Color(final double x, final double y, final double z) {
-        super(new Tuple(x, y, z));
+    public Color(final double red, final double green, final double blue) {
+        super(new Tuple(red, green, blue));
     }
 
     Color(final Tuple tuple) {

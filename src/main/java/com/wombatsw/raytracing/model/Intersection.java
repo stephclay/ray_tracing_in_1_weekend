@@ -31,6 +31,14 @@ public class Intersection {
      */
     private final double t;
     /**
+     * The horizontal coordinate on the texture map
+     */
+    private final double u;
+    /**
+     * The vertical coordinate on the texture map
+     */
+    private final double v;
+    /**
      * Whether the intersection was from the inside our outside
      */
     private final boolean frontFace;
@@ -44,11 +52,13 @@ public class Intersection {
      * @param outwardNormalFn The function to create the normal for the outside face of the intersection point.
      *                        Must result in a unit vector
      */
-    public Intersection(final Ray ray, final double t, final Material material,
+    public Intersection(final Ray ray, final double t, final double u, final double v, final Material material,
                         final Function<Point3, Vector3> outwardNormalFn) {
         this.ray = ray;
         p = ray.at(t);
         this.t = t;
+        this.u = 0;
+        this.v = 0;
         this.material = material;
 
         n = outwardNormalFn.apply(p);

@@ -5,11 +5,13 @@ import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
+import lombok.Getter;
 
 /**
  * Base class for all scene objects
  */
 public abstract class AbstractObj {
+    @Getter
     private final Material material;
 
     AbstractObj(final Material material) {
@@ -31,11 +33,4 @@ public abstract class AbstractObj {
      * @return The bounding box for this object
      */
     public abstract BoundingBox getBoundingBox();
-
-    /**
-     * @return The material, or {@code null} if this object does not have a material (such as the object list)
-     */
-    public Material getMaterial() {
-        return material;
-    }
 }

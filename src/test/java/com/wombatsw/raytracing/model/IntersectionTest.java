@@ -14,7 +14,7 @@ class IntersectionTest {
         Ray ray = new Ray(origin, dir);
         double t = 2.0;
 
-        Intersection intersection = new Intersection(ray, t, null, p -> Y_UNIT.copy());
+        Intersection intersection = new Intersection(ray, t, 0, 0, null, p -> Y_UNIT.copy());
 
         assertEquals(Y_UNIT, intersection.getN());
         assertEquals(new Point3(2, 0, 0), intersection.getP());
@@ -28,7 +28,7 @@ class IntersectionTest {
         Ray ray = new Ray(origin, dir);
         double t = 3.0;
 
-        Intersection intersection = new Intersection(ray, t, null, p -> Y_UNIT.copy());
+        Intersection intersection = new Intersection(ray, t, 0, 0, null, p -> Y_UNIT.copy());
 
         assertEquals(Y_UNIT.copy().negate(), intersection.getN());
         assertEquals(new Point3(3, 0, 0), intersection.getP());
