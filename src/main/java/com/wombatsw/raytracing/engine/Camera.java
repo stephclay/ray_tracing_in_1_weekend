@@ -60,8 +60,8 @@ public class Camera {
     @Getter(AccessLevel.NONE)
     private Vector3 defocusDiskV;
 
-    public Camera(final Viewport viewport) {
-        this.viewport = viewport;
+    public Camera() {
+        this.viewport = new Viewport();
     }
 
     /**

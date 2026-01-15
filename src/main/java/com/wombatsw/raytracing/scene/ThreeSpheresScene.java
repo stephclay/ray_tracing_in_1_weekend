@@ -1,17 +1,33 @@
 package com.wombatsw.raytracing.scene;
 
+import com.wombatsw.raytracing.engine.Camera;
+import com.wombatsw.raytracing.engine.Viewport;
 import com.wombatsw.raytracing.material.Dielectric;
 import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.material.Metal;
 import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Point3;
+import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Sphere;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ThreeSpheresScene implements Scene {
+    @Override
+    public Camera getCamera() {
+        Camera camera = new Camera();
+        camera.setCameraCenter(new Point3(-2, 2, 1));
+
+        Viewport viewport = camera.getViewport();
+        viewport.setFieldOfView(20);
+        viewport.setViewportCenter(new Point3(0, 0, -1));
+        viewport.setViewUp(new Vector3(0, 1, 0));
+
+        return camera;
+    }
+
     @Override
     public ObjectList getWorld() {
         Material matGround = new Lambertian(new Color(0.8, 0.8, 0.0)); // yellow

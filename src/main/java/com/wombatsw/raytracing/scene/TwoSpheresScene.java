@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.scene;
 
+import com.wombatsw.raytracing.engine.Camera;
 import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Color;
@@ -10,6 +11,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TwoSpheresScene implements Scene {
+    @Override
+    public Camera getCamera() {
+        return new Camera();
+    }
+
     @Override
     public ObjectList getWorld() {
         Material matLeft = new Lambertian(new Color(0, 0, 1));
