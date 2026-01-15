@@ -95,6 +95,31 @@ public class Sphere extends AbstractObj {
      * @return The {@link Intersection}
      */
     private @NonNull Intersection getIntersection(final Point3 curCenter, final Ray ray, final double t) {
-        return new Intersection(ray, t, 0, 0, getMaterial(), p -> new Vector3(p, curCenter).div(radius));
+        Point3 p = ray.at(t);
+        Vector3 n = new Vector3(p, curCenter).div(radius);
+
+        return new Intersection(ray, t, p, n, getU(n), getV(n), getMaterial());
+    }
+
+    /**
+     * Get the phi coordinate of the provided unit vector
+     *
+     * @param v The unit vector
+     * @return the PHI coordinate normalized to the range 0-1
+     */
+    private double getU(final Vector3 v) {
+        double phi = Math.atan2(-v.getZ(), v.getX()) + Math.PI;
+        return phi / (2.0 * Math.PI);
+    }
+
+    /**
+     * Get the theta coordinate of the provided unit vector
+     *
+     * @param v The unit vector
+     * @return the theta coordinate normalized to the range 0-1
+     */
+    private double getV(final Vector3 v) {
+        double theta = Math.acos(-v.getY());
+        return theta / Math.PI;
     }
 }

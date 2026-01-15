@@ -23,8 +23,6 @@ public class RandomSpheresScene implements Scene {
         camera.setDefocusAngle(0.6);
         camera.setFocusDistance(10.0);
         camera.setCameraCenter(new Point3(13, 2, 3));
-        camera.setDefocusAngle(0.6);
-        camera.setFocusDistance(10.0);
 
         Viewport viewport = camera.getViewport();
         viewport.setFieldOfView(20);

@@ -31,7 +31,7 @@ public class RayTracerApp implements CommandLineRunner {
     @Override
     public void run(final String @NonNull ... args) throws Exception {
 
-        String selection = args.length > 0 ? args[0] : RandomSpheresScene.class.getSimpleName();
+        String selection = args.length > 0 ? args[0] : "EarthScene";
         Scene scene = sceneSelector.getScene(selection);
 
         AbstractObj world = new BVHNode(scene.getWorld());

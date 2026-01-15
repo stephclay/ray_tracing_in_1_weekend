@@ -48,20 +48,21 @@ public class Intersection {
      *
      * @param ray             The intersecting ray
      * @param t               The location of the intersection on the ray
+     * @param p               The location of the intersection in world coordinates
+     * @param n               The surface normal at the point of intersection
+     * @param u               The U mapping coordinate
+     * @param v               The V mapping coordinate
      * @param material        The material at the intersection point
-     * @param outwardNormalFn The function to create the normal for the outside face of the intersection point.
-     *                        Must result in a unit vector
      */
-    public Intersection(final Ray ray, final double t, final double u, final double v, final Material material,
-                        final Function<Point3, Vector3> outwardNormalFn) {
+    public Intersection(final Ray ray, final double t, final Point3 p, final Vector3 n,
+                        final double u, final double v, final Material material) {
         this.ray = ray;
-        p = ray.at(t);
         this.t = t;
-        this.u = 0;
-        this.v = 0;
+        this.p = p;
+        this.n = n;
+        this.u = u;
+        this.v = v;
         this.material = material;
-
-        n = outwardNormalFn.apply(p);
 
         frontFace = ray.direction().dot(n) < 0;
         if (!frontFace) {
