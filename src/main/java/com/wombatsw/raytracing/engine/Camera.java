@@ -1,6 +1,5 @@
 package com.wombatsw.raytracing.engine;
 
-import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.Vector3;
 import lombok.AccessLevel;
@@ -30,7 +29,7 @@ public class Camera {
      * The location of the camera
      */
     @Setter
-    private Point3 cameraCenter = new Point3(0, 0, 0);
+    private Vector3 cameraCenter = new Vector3(0, 0, 0);
 
     /**
      * The variation angle of rays through a pixel
@@ -85,8 +84,8 @@ public class Camera {
      * @param point The point on the viewport
      * @return The defocused ray
      */
-    public Ray getRayForPoint(final Point3 point) {
-        Point3 rayOrigin;
+    public Ray getRayForPoint(final Vector3 point) {
+        Vector3 rayOrigin;
         if (defocusAngle <= 0) {
             rayOrigin = cameraCenter;
         } else {

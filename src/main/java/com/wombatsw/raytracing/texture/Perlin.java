@@ -1,7 +1,6 @@
 package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.engine.MathUtils;
-import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Vector3;
 
 /**
@@ -30,7 +29,7 @@ public class Perlin {
      * @param p The point
      * @return The noise value
      */
-    public double noise(final Point3 p, final double scale) {
+    public double noise(final Vector3 p, final double scale) {
         double xs = p.getX() * scale;
         double ys = p.getY() * scale;
         double zs = p.getZ() * scale;

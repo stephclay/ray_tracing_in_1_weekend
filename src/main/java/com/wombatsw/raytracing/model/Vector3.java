@@ -25,7 +25,7 @@ public class Vector3 extends Triplet<Vector3> {
      * @param head The tip or head of the vector
      * @param tail The start or tail of the vector
      */
-    public Vector3(final Point3 head, final Point3 tail) {
+    public Vector3(final Triplet<?> head, final Triplet<?> tail) {
         this(head.copy().sub(tail).getTuple());
     }
 

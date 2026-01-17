@@ -3,7 +3,6 @@ package com.wombatsw.raytracing.engine;
 import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
-import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
 import com.wombatsw.raytracing.model.Vector3;
@@ -111,7 +110,7 @@ public class Renderer {
      */
     private Color getPixelColor(final ExecutorService executor, final AbstractObj world, final Camera camera,
                                 final int x, final int y) {
-        List<Point3> viewportPoints = antiAlias.getSamplingPoints(x, y);
+        List<Vector3> viewportPoints = antiAlias.getSamplingPoints(x, y);
 
         List<Color> samples = viewportPoints.stream()
                 .parallel()

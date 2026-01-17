@@ -1,7 +1,7 @@
 package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.model.Color;
-import com.wombatsw.raytracing.model.Point3;
+import com.wombatsw.raytracing.model.Vector3;
 
 public class SolidColor implements Texture {
     private Color color;
@@ -15,7 +15,7 @@ public class SolidColor implements Texture {
     }
 
     @Override
-    public Color value(final double u, final double v, final Point3 p) {
+    public Color value(final double u, final double v, final Vector3 p) {
         return color;
     }
 }

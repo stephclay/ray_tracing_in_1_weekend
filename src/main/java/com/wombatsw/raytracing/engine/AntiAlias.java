@@ -1,6 +1,5 @@
 package com.wombatsw.raytracing.engine;
 
-import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Vector3;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class AntiAlias {
      * @param y The y coordinate
      * @return The pixel locations in viewport coordinates
      */
-    public List<Point3> getSamplingPoints(final int x, final int y) {
+    public List<Vector3> getSamplingPoints(final int x, final int y) {
         return viewportOffsets.stream()
                 .map(offset -> viewport.getPixelOrigin().copy()
                         .addScaled(viewport.getPixelDU(), x, viewport.getPixelDV(), y)

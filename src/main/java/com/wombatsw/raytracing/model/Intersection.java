@@ -3,8 +3,6 @@ package com.wombatsw.raytracing.model;
 import com.wombatsw.raytracing.material.Material;
 import lombok.Getter;
 
-import java.util.function.Function;
-
 /**
  * Data representing a ray intersection
  */
@@ -17,7 +15,7 @@ public class Intersection {
     /**
      * The intersection point
      */
-    private final Point3 p;
+    private final Vector3 p;
     /**
      * The intersection normal unit vector (can be pointing inwards)
      */
@@ -54,7 +52,7 @@ public class Intersection {
      * @param v               The V mapping coordinate
      * @param material        The material at the intersection point
      */
-    public Intersection(final Ray ray, final double t, final Point3 p, final Vector3 n,
+    public Intersection(final Ray ray, final double t, final Vector3 p, final Vector3 n,
                         final double u, final double v, final Material material) {
         this.ray = ray;
         this.t = t;

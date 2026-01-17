@@ -8,7 +8,6 @@ import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.material.Metal;
 import com.wombatsw.raytracing.model.Color;
-import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Sphere;
@@ -22,11 +21,11 @@ public class RandomSpheresScene implements Scene {
         Camera camera = new Camera();
         camera.setDefocusAngle(0.6);
         camera.setFocusDistance(10.0);
-        camera.setCameraCenter(new Point3(13, 2, 3));
+        camera.setCameraCenter(new Vector3(13, 2, 3));
 
         Viewport viewport = camera.getViewport();
         viewport.setFieldOfView(20);
-        viewport.setViewportCenter(new Point3(0, 0, 0));
+        viewport.setViewportCenter(new Vector3(0, 0, 0));
         viewport.setViewUp(new Vector3(0, 1, 0));
 
         return camera;
@@ -39,22 +38,22 @@ public class RandomSpheresScene implements Scene {
         CheckerTexture checkered = new CheckerTexture(0.32, new Color(.2, .3, .1),
                 new Color(.9, .9, .9));
         Material matGround = new Lambertian(checkered);
-        world.add(new Sphere(new Point3(0, -1000, 0), 1000, matGround));
+        world.add(new Sphere(new Vector3(0, -1000, 0), 1000, matGround));
 
         for (int a = -11; a < 11; a++) {
             for (int b = -11; b < 11; b++) {
                 double selection = MathUtils.randomDouble();
-                Point3 center = new Point3(a + 0.9 * MathUtils.randomDouble(),
+                Vector3 center = new Vector3(a + 0.9 * MathUtils.randomDouble(),
                         0.2, b + 0.9 * MathUtils.randomDouble());
 
-                if (center.copy().sub(new Point3(4, 0.2, 0)).len() < 0.9) {
+                if (center.copy().sub(new Vector3(4, 0.2, 0)).len() < 0.9) {
                     continue;
                 }
                 if (selection < 0.8) {
                     // diffuse
                     Color albedo = Color.random().mul(Color.random());
                     Material material = new Lambertian(albedo);
-                    Point3 center2 = new Point3(0, MathUtils.randomDouble(0, 0.5), 0).add(center);
+                    Vector3 center2 = new Vector3(0, MathUtils.randomDouble(0, 0.5), 0).add(center);
                     world.add(new Sphere(center, center2, 0.2, material));
                 } else if (selection < 0.95) {
                     // metal
@@ -71,13 +70,13 @@ public class RandomSpheresScene implements Scene {
         }
 
         Material material1 = new Dielectric(1.5);
-        world.add(new Sphere(new Point3(0, 1, 0), 1.0, material1));
+        world.add(new Sphere(new Vector3(0, 1, 0), 1.0, material1));
 
         Material material2 = new Lambertian(new Color(0.4, 0.2, 0.1));
-        world.add(new Sphere(new Point3(-4, 1, 0), 1.0, material2));
+        world.add(new Sphere(new Vector3(-4, 1, 0), 1.0, material2));
 
         Material material3 = new Metal(new Color(0.7, 0.6, 0.5), 0.0);
-        world.add(new Sphere(new Point3(4, 1, 0), 1.0, material3));
+        world.add(new Sphere(new Vector3(4, 1, 0), 1.0, material3));
 
         return world;
     }

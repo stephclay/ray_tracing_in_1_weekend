@@ -1,7 +1,6 @@
 package com.wombatsw.raytracing.engine;
 
 import com.wombatsw.raytracing.model.Interval;
-import com.wombatsw.raytracing.model.Point3;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.Vector3;
 
@@ -26,7 +25,7 @@ public class BoundingBox {
      * @param a First point
      * @param b Second point
      */
-    public BoundingBox(final Point3 a, final Point3 b) {
+    public BoundingBox(final Vector3 a, final Vector3 b) {
         this.x = Interval.createOrdered(a.getX(), b.getX());
         this.y = Interval.createOrdered(a.getY(), b.getY());
         this.z = Interval.createOrdered(a.getZ(), b.getZ());
@@ -67,7 +66,7 @@ public class BoundingBox {
      * @return The interval of intersection, or {@code null} if there is no intersection
      */
     public Interval intersect(final Ray ray, final Interval tRange) {
-        Point3 origin = ray.origin();
+        Vector3 origin = ray.origin();
         Vector3 dir = ray.direction();
 
         double min = tRange.min();

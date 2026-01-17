@@ -2,7 +2,7 @@ package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Interval;
-import com.wombatsw.raytracing.model.Point3;
+import com.wombatsw.raytracing.model.Vector3;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -34,7 +34,7 @@ public class ImageTexture implements Texture {
     }
 
     @Override
-    public Color value(final double u, final double v, final Point3 p) {
+    public Color value(final double u, final double v, final Vector3 p) {
         int x = (int) (BOUNDS.clamp(u) * width);
         int y = (int) ((1 - BOUNDS.clamp(v)) * height);
         int color = image.getRGB(x, y);

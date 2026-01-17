@@ -8,17 +8,17 @@ class RayTest {
 
     @Test
     public void testAt() {
-        Point3 origin = new Point3(0, 2, 0);
+        Vector3 origin = new Vector3(0, 2, 0);
         Vector3 dir = new Vector3(1, -1, 0);
         Ray ray = new Ray(origin, dir);
 
-        Point3 result = ray.at(4);
-        assertEquals(new Point3(4, -2, 0), result);
+        Vector3 result = ray.at(4);
+        assertEquals(new Vector3(4, -2, 0), result);
     }
 
     @Test
     public void testImmutableRay() {
-        Point3 origin = new Point3(0, 2, 0);
+        Vector3 origin = new Vector3(0, 2, 0);
         Vector3 dir = new Vector3(1, -1, 0);
         Ray ray = new Ray(origin, dir);
 
