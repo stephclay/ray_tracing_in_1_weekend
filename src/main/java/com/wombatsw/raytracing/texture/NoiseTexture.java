@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.texture;
 
-import com.wombatsw.raytracing.model.Color;
+import com.wombatsw.raytracing.engine.ColorUtils;
 import com.wombatsw.raytracing.model.Vector3;
 
 /**
@@ -16,8 +16,8 @@ public class NoiseTexture implements Texture {
     }
 
     @Override
-    public Color value(double u, double v, Vector3 p) {
+    public Vector3 value(double u, double v, Vector3 p) {
         double colorScale = 0.5 * (1.0 + perlin.noise(p, scale));
-        return Color.white().mul(colorScale);
+        return ColorUtils.white().mul(colorScale);
     }
 }

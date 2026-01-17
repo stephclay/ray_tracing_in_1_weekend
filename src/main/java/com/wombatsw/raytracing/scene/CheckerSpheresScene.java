@@ -3,7 +3,6 @@ package com.wombatsw.raytracing.scene;
 import com.wombatsw.raytracing.engine.Camera;
 import com.wombatsw.raytracing.engine.Viewport;
 import com.wombatsw.raytracing.material.Lambertian;
-import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Vector3;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Sphere;
@@ -30,8 +29,8 @@ public class CheckerSpheresScene implements Scene {
     public ObjectList getWorld() {
         ObjectList world = new ObjectList();
 
-        CheckerTexture checker = new CheckerTexture(0.32, new Color(.2, .3, .1),
-                new Color(.9, .9, .9));
+        CheckerTexture checker = new CheckerTexture(0.32, new Vector3(.2, .3, .1),
+                new Vector3(.9, .9, .9));
 
         world.add(new Sphere(new Vector3(0, -10, 0), 10, new Lambertian(checker)));
         world.add(new Sphere(new Vector3(0, 10, 0), 10, new Lambertian(checker)));

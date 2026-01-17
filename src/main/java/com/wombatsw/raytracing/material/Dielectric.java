@@ -1,7 +1,7 @@
 package com.wombatsw.raytracing.material;
 
+import com.wombatsw.raytracing.engine.ColorUtils;
 import com.wombatsw.raytracing.engine.MathUtils;
-import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
@@ -40,7 +40,7 @@ public class Dielectric extends Material {
         }
 
         Ray scattered = new Ray(intersection.getP(), rayDir, intersection.getRay().time());
-        return new ScatterData(scattered, Color.white());
+        return new ScatterData(scattered, ColorUtils.white());
     }
 
     /**

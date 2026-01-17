@@ -1,6 +1,5 @@
 package com.wombatsw.raytracing.material;
 
-import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
@@ -18,7 +17,7 @@ public class Lambertian extends Material {
         this.texture = texture;
     }
 
-    public Lambertian(final Color albedo) {
+    public Lambertian(final Vector3 albedo) {
         this(new SolidColor(albedo.copy().setImmutable()));
     }
 
@@ -28,7 +27,7 @@ public class Lambertian extends Material {
 
         Vector3 rayDir = scatterDir.nearZero() ? intersection.getN() : scatterDir;
         Ray scattered = new Ray(intersection.getP(), rayDir, intersection.getRay().time());
-        Color attenuation = texture.value(intersection.getU(), intersection.getV(), intersection.getP());
+        Vector3 attenuation = texture.value(intersection.getU(), intersection.getV(), intersection.getP());
         return new ScatterData(scattered, attenuation);
     }
 }

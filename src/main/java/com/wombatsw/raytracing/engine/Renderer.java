@@ -1,6 +1,5 @@
 package com.wombatsw.raytracing.engine;
 
-import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
@@ -16,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 public class Renderer {
-    private final static Color BLUE = new Color(0.5, 0.7, 1).setImmutable();
+    private final static Vector3 BLUE = new Vector3(0.5, 0.7, 1).setImmutable();
 
     /**
      * The max depth of reflection
@@ -68,11 +67,11 @@ public class Renderer {
             // Mix the rows up to give a better estimation of time remaining. The first few rows
             // frequently run faster due to ray hitting the "sky", throwing off the estimation.
             int yAlt = (y * 65537) % height;
-            Color[] row = renderRow(executor, world, camera, yAlt);
+            Vector3[] row = renderRow(executor, world, camera, yAlt);
 
             int rowIndex = yAlt * width * 3;
             for (int x = 0; x < width; x++) {
-                row[x].writeColor(imageData, rowIndex + x * 3);
+                ColorUtils.writeColor(row[x], imageData, rowIndex + x * 3);
             }
         }
 
@@ -88,8 +87,8 @@ public class Renderer {
      * @param camera   The {@link Camera}
      * @param y        The row to render
      */
-    private Color[] renderRow(final ExecutorService executor, final AbstractObj world, final Camera camera, final int y) {
-        Color[] row = new Color[camera.getImageWidth()];
+    private Vector3[] renderRow(final ExecutorService executor, final AbstractObj world, final Camera camera, final int y) {
+        Vector3[] row = new Vector3[camera.getImageWidth()];
 
         for (int x = 0; x < row.length; x++) {
             row[x] = getPixelColor(executor, world, camera, x, y);
@@ -108,18 +107,18 @@ public class Renderer {
      * @param y        The raster y coordinate
      * @return The color of the pixel
      */
-    private Color getPixelColor(final ExecutorService executor, final AbstractObj world, final Camera camera,
+    private Vector3 getPixelColor(final ExecutorService executor, final AbstractObj world, final Camera camera,
                                 final int x, final int y) {
         List<Vector3> viewportPoints = antiAlias.getSamplingPoints(x, y);
 
-        List<Color> samples = viewportPoints.stream()
+        List<Vector3> samples = viewportPoints.stream()
                 .parallel()
                 .map(camera::getRayForPoint)
                 .map(ray -> getColorAsync(executor, world, ray))
                 .map(CompletableFuture::join)
                 .toList();
 
-        return Color.average(samples);
+        return Vector3.average(samples);
     }
 
     /**
@@ -128,11 +127,11 @@ public class Renderer {
      * @param executor The executor service. Use {@code nulll} to execute synchronously
      * @param world    The world data
      * @param ray      The ray corresponding to the color
-     * @return A {@link CompletableFuture} returning a {@link Color}
+     * @return A {@link CompletableFuture} returning a {@link Vector3}
      */
-    private CompletableFuture<Color> getColorAsync(final ExecutorService executor, final AbstractObj world,
+    private CompletableFuture<Vector3> getColorAsync(final ExecutorService executor, final AbstractObj world,
                                                    final Ray ray) {
-        Supplier<Color> supplier = () -> getRayColor(ray, maxDepth, world);
+        Supplier<Vector3> supplier = () -> getRayColor(ray, maxDepth, world);
         return executor == null ?
                 CompletableFuture.completedFuture(supplier.get()) :
                 CompletableFuture.supplyAsync(supplier, executor);
@@ -146,24 +145,24 @@ public class Renderer {
      * @param world The world data
      * @return The color for this ray
      */
-    private Color getRayColor(final Ray ray, final int depth, final AbstractObj world) {
+    private Vector3 getRayColor(final Ray ray, final int depth, final AbstractObj world) {
         if (depth <= 0) {
-            return Color.black();
+            return ColorUtils.black();
         }
 
         Intersection intersect = world.intersect(ray, new Interval(0.001, Double.POSITIVE_INFINITY));
         if (intersect != null) {
             ScatterData scatterData = intersect.getMaterial().scatter(intersect);
             if (scatterData != null) {
-                Color scatterColor = getRayColor(scatterData.ray(), depth - 1, world);
+                Vector3 scatterColor = getRayColor(scatterData.ray(), depth - 1, world);
                 return scatterColor.mul(scatterData.attenuation());
             }
-            return Color.black();
+            return ColorUtils.black();
         }
 
         Vector3 unitDir = ray.direction().copy().normalize();
         double a = 0.5 * (unitDir.getY() + 1.0);
 
-        return Color.white().lerp(BLUE, a);
+        return ColorUtils.white().lerp(BLUE, a);
     }
 }

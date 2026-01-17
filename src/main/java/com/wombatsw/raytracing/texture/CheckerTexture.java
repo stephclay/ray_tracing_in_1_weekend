@@ -1,6 +1,5 @@
 package com.wombatsw.raytracing.texture;
 
-import com.wombatsw.raytracing.model.Color;
 import com.wombatsw.raytracing.model.Vector3;
 
 /**
@@ -17,12 +16,12 @@ public class CheckerTexture implements Texture {
         this.odd = odd;
     }
 
-    public CheckerTexture(final double scale, final Color even, final Color odd) {
+    public CheckerTexture(final double scale, final Vector3 even, final Vector3 odd) {
         this(scale, new SolidColor(even), new SolidColor(odd));
     }
 
     @Override
-    public Color value(final double u, final double v, final Vector3 p) {
+    public Vector3 value(final double u, final double v, final Vector3 p) {
         int xInt = (int) Math.floor(invScale * p.getX());
         int yInt = (int) Math.floor(invScale * p.getY());
         int zInt = (int) Math.floor(invScale * p.getZ());
