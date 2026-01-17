@@ -241,6 +241,16 @@ class Vector3Test {
         assertTrue(v1.nearZero());
     }
 
+    @Test
+    public void testImmutable() {
+        Vector3 v1 = new Vector3(1, 2, 3);
+        Vector3 v2 = new Vector3(1, 2, 3);
+        v1.setMutable(false);
+
+        v2.add(v1);
+        assertThrows(IllegalStateException.class, () -> v1.add(v2));
+    }
+
     private Vector3 createVector(final double x, final double y, final double z) {
         // The type does not really matter, so use Vector3
         return new Vector3(x, y, z);

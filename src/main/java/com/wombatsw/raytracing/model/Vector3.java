@@ -3,27 +3,35 @@ package com.wombatsw.raytracing.model;
 import com.wombatsw.raytracing.engine.MathUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
  * A mutable 3D Vector
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "mutable")
 @ToString(callSuper = true)
 public class Vector3 {
     private static final double EPSILON = 1e-8;
 
+    private final double[] values;
+
+    /**
+     * Set the mutability of this tuple. Used to prevent changes on objects that need to be used repeatedly
+     */
+    @Setter
     @Getter
-    private final Tuple tuple;
+    private boolean mutable = true;
 
     public Vector3(final double x, final double y, final double z) {
-        this(new Tuple(x, y, z));
+        values = new double[]{x, y, z};
     }
 
-    Vector3(final Tuple tuple) {
-        this.tuple = new Tuple(tuple);
+    private Vector3(final double[] values) {
+        this.values = Arrays.copyOf(values, values.length);
     }
 
     /**
@@ -33,7 +41,7 @@ public class Vector3 {
      * @param tail The start or tail of the vector
      */
     public Vector3(final Vector3 head, final Vector3 tail) {
-        this(head.copy().sub(tail).getTuple());
+        this(head.copy().sub(tail).values);
     }
 
     /**
@@ -140,13 +148,13 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 setImmutable() {
-        this.tuple.setMutable(false);
+        setMutable(false);
         return this;
     }
 
     public Vector3 copy() {
         // Tuple data is copied in the constructor
-        return new Vector3(tuple);
+        return new Vector3(values);
     }
 
     /**
@@ -177,7 +185,7 @@ public class Vector3 {
      * @return The value
      */
     public double getValue(final int index) {
-        return tuple.getValue(index);
+        return values[index];
     }
 
     /**
@@ -187,7 +195,11 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 add(final Vector3 v) {
-        tuple.add(v.tuple);
+        assertMutationAllowed();
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] += v.values[i];
+        }
         return this;
     }
 
@@ -198,7 +210,11 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 sub(final Vector3 v) {
-        tuple.sub(v.tuple);
+        assertMutationAllowed();
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] -= v.values[i];
+        }
         return this;
     }
 
@@ -209,7 +225,11 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 mul(final double t) {
-        tuple.mul(t);
+        assertMutationAllowed();
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] *= t;
+        }
         return this;
     }
 
@@ -220,7 +240,11 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 mul(final Vector3 v) {
-        tuple.mul(v.tuple);
+        assertMutationAllowed();
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] *= v.values[i];
+        }
         return this;
     }
 
@@ -251,7 +275,11 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 addScaled(final Vector3 v, final double scale) {
-        tuple.addScaled(v.tuple, scale);
+        assertMutationAllowed();
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] += v.values[i] * scale;
+        }
         return this;
     }
 
@@ -317,7 +345,11 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 translate(final Vector3 dir, final double t) {
-        tuple.translate(dir.tuple, t);
+        assertMutationAllowed();
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] += dir.values[i] * t;
+        }
         return this;
     }
 
@@ -329,7 +361,11 @@ public class Vector3 {
      * @return This vector
      */
     public Vector3 lerp(final Vector3 end, final double a) {
-        tuple.lerp(end.tuple, a);
+        assertMutationAllowed();
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] = MathUtils.lerp(a, values[i], end.values[i]);
+        }
         return this;
     }
 
@@ -350,10 +386,10 @@ public class Vector3 {
      * @return A new vector with the result
      */
     public Vector3 cross(final Vector3 v) {
-        return new Vector3(new Tuple(
+        return new Vector3(
                 getY() * v.getZ() - getZ() * v.getY(),
                 getZ() * v.getX() - getX() * v.getZ(),
-                getX() * v.getY() - getY() * v.getX()));
+                getX() * v.getY() - getY() * v.getX());
     }
 
     /**
@@ -383,5 +419,14 @@ public class Vector3 {
         return Math.abs(getX()) < EPSILON &&
                 Math.abs(getY()) < EPSILON &&
                 Math.abs(getZ()) < EPSILON;
+    }
+
+    /**
+     * Make sure that this object can be mutated
+     */
+    private void assertMutationAllowed() {
+        if (!mutable) {
+            throw new IllegalStateException("This data is not mutable");
+        }
     }
 }
