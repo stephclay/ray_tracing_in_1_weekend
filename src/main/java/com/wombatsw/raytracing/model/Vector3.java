@@ -338,22 +338,6 @@ public class Vector3 {
     }
 
     /**
-     * Translate this vector in the given direction according to the given scale. This is a mutating operation
-     *
-     * @param dir The direction of translation
-     * @param t   The scaling factor for the given direction
-     * @return This vector
-     */
-    public Vector3 translate(final Vector3 dir, final double t) {
-        assertMutationAllowed();
-
-        for (int i = 0; i < values.length; i++) {
-            values[i] += dir.values[i] * t;
-        }
-        return this;
-    }
-
-    /**
      * Perform linear interpolation between this vector and the provided one
      *
      * @param end The other vector. This is a mutating operation

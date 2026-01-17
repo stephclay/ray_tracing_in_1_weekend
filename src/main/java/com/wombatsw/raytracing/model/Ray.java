@@ -21,6 +21,6 @@ public record Ray(Vector3 origin, Vector3 direction, double time) {
      * @return The point corresponding to that location
      */
     public Vector3 at(final double t) {
-        return origin.copy().translate(direction, t);
+        return origin.copy().addScaled(direction, t);
     }
 }

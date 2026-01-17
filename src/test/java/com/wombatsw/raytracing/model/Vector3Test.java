@@ -173,15 +173,6 @@ class Vector3Test {
     }
 
     @Test
-    public void testTranslate() {
-        Vector3 v1 = createVector(1, 2, 3);
-        Vector3 v2 = createVector(-1, 0, 5);
-
-        Vector3 result = v1.translate(v2, 2);
-        assertVectorEquals(-1, 2, 13, result);
-    }
-
-    @Test
     public void testLerp() {
         Vector3 v1 = createVector(1, 2, 3);
         Vector3 v2 = createVector(2, 3, 4);
