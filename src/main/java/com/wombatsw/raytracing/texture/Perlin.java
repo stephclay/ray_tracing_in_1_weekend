@@ -29,18 +29,15 @@ public class Perlin {
      * @param p The point
      * @return The noise value
      */
-    public double noise(final Vector3 p, final double scale) {
-        double xs = p.getX() * scale;
-        double ys = p.getY() * scale;
-        double zs = p.getZ() * scale;
+    public double noise(final Vector3 p) {
 
-        double u = xs - Math.floor(xs);
-        double v = ys - Math.floor(ys);
-        double w = zs - Math.floor(zs);
+        double u = p.getX() - Math.floor(p.getX());
+        double v = p.getY() - Math.floor(p.getY());
+        double w = p.getZ() - Math.floor(p.getZ());
 
-        int i = (int) Math.floor(xs);
-        int j = (int) Math.floor(ys);
-        int k = (int) Math.floor(zs);
+        int i = (int) Math.floor(p.getX());
+        int j = (int) Math.floor(p.getY());
+        int k = (int) Math.floor(p.getZ());
 
         Vector3[][][] c = new Vector3[2][2][2];
         for (int di = 0; di < 2; di++) {
@@ -53,6 +50,20 @@ public class Perlin {
             }
         }
         return perlinInterp(c, u, v, w);
+    }
+
+    public double turbulence(final Vector3 p, final int depth) {
+        double accum = 0.0;
+        Vector3 tempP = p.copy();
+        double weight = 1.0;
+
+        for (int i = 0; i < depth; i++) {
+            accum += weight * noise(tempP);
+            weight *= 0.5;
+            tempP.mul(2.0);
+        }
+
+        return Math.abs(accum);
     }
 
     /**
