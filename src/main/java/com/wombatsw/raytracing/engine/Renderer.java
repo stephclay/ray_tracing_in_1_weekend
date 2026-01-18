@@ -14,6 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
+import static com.wombatsw.raytracing.Constants.EPSILON;
+
 public class Renderer {
     private final static Vector3 BLUE = new Vector3(0.5, 0.7, 1).setImmutable();
 
@@ -150,7 +152,7 @@ public class Renderer {
             return ColorUtils.black();
         }
 
-        Intersection intersect = world.intersect(ray, new Interval(0.001, Double.POSITIVE_INFINITY));
+        Intersection intersect = world.intersect(ray, new Interval(EPSILON, Double.POSITIVE_INFINITY));
         if (intersect != null) {
             ScatterData scatterData = intersect.getMaterial().scatter(intersect);
             if (scatterData != null) {

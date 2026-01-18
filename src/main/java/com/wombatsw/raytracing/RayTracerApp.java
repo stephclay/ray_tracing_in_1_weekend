@@ -31,7 +31,7 @@ public class RayTracerApp implements CommandLineRunner {
     @Override
     public void run(final String @NonNull ... args) throws Exception {
 
-        String selection = args.length > 0 ? args[0] : "PerlinSpheresScene";
+        String selection = args.length > 0 ? args[0] : "QuadsScene";
         Scene scene = sceneSelector.getScene(selection);
 
         AbstractObj world = new BVHNode(scene.getWorld());

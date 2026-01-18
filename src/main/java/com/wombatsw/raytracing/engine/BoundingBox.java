@@ -4,6 +4,8 @@ import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.Vector3;
 
+import static com.wombatsw.raytracing.Constants.EPSILON;
+
 /**
  * An Axis-Aligned Bounding Box
  */
@@ -26,9 +28,9 @@ public class BoundingBox {
      * @param b Second point
      */
     public BoundingBox(final Vector3 a, final Vector3 b) {
-        this.x = Interval.createOrdered(a.getX(), b.getX());
-        this.y = Interval.createOrdered(a.getY(), b.getY());
-        this.z = Interval.createOrdered(a.getZ(), b.getZ());
+        this.x = padToMin(Interval.createOrdered(a.getX(), b.getX()));
+        this.y = padToMin(Interval.createOrdered(a.getY(), b.getY()));
+        this.z = padToMin(Interval.createOrdered(a.getZ(), b.getZ()));
     }
 
     /**
@@ -38,9 +40,9 @@ public class BoundingBox {
      * @param b Second bounding box
      */
     public BoundingBox(final BoundingBox a, final BoundingBox b) {
-        x = new Interval(a.x, b.x);
-        y = new Interval(a.y, b.y);
-        z = new Interval(a.z, b.z);
+        x = padToMin(new Interval(a.x, b.x));
+        y = padToMin(new Interval(a.y, b.y));
+        z = padToMin(new Interval(a.z, b.z));
     }
 
     /**
@@ -104,5 +106,9 @@ public class BoundingBox {
         } else {
             return y.size() > z.size() ? 1 : 2;
         }
+    }
+
+    private Interval padToMin(final Interval interval) {
+        return interval.size() < EPSILON ? interval.expand(EPSILON) : interval;
     }
 }

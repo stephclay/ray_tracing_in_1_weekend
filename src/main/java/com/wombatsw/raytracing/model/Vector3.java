@@ -9,14 +9,14 @@ import lombok.ToString;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static com.wombatsw.raytracing.Constants.EPSILON;
+
 /**
  * A mutable 3D Vector
  */
 @EqualsAndHashCode(exclude = "mutable")
 @ToString(callSuper = true)
 public class Vector3 {
-    private static final double EPSILON = 1e-8;
-
     private final double[] values;
 
     /**
