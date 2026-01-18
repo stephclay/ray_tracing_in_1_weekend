@@ -26,6 +26,12 @@ public class Camera {
     private int imageWidth = 100;
 
     /**
+     * The background color
+     */
+    @Setter
+    private Vector3 background = ColorUtils.black();
+
+    /**
      * The location of the camera
      */
     @Setter

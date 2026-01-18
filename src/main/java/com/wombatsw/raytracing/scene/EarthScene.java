@@ -17,6 +17,7 @@ public class EarthScene implements Scene {
     public Camera getCamera() {
         Camera camera = new Camera();
         camera.setCameraCenter(new Vector3(0, 0, 12));
+        camera.setBackground(new Vector3(0.70, 0.80, 1.00));
 
         Viewport viewport = camera.getViewport();
         viewport.setFieldOfView(20);

@@ -12,7 +12,10 @@ import org.springframework.stereotype.Component;
 public class TwoSpheresScene implements Scene {
     @Override
     public Camera getCamera() {
-        return new Camera();
+        Camera camera = new Camera();
+        camera.setBackground(new Vector3(0.70, 0.80, 1.00));
+
+        return camera;
     }
 
     @Override

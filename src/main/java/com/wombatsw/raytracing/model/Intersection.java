@@ -44,13 +44,13 @@ public class Intersection {
     /**
      * Intersection constructor
      *
-     * @param ray             The intersecting ray
-     * @param t               The location of the intersection on the ray
-     * @param p               The location of the intersection in world coordinates
-     * @param n               The surface normal at the point of intersection
-     * @param u               The U mapping coordinate
-     * @param v               The V mapping coordinate
-     * @param material        The material at the intersection point
+     * @param ray      The intersecting ray
+     * @param t        The location of the intersection on the ray
+     * @param p        The location of the intersection in world coordinates
+     * @param n        The surface normal at the point of intersection
+     * @param u        The U mapping coordinate
+     * @param v        The V mapping coordinate
+     * @param material The material at the intersection point
      */
     public Intersection(final Ray ray, final double t, final Vector3 p, final Vector3 n,
                         final double u, final double v, final Material material) {
@@ -69,5 +69,14 @@ public class Intersection {
 
         n.setImmutable();
         p.setImmutable();
+    }
+
+    /**
+     * Get the color is emitted by the surface at this intersection point. Returns black for none.
+     *
+     * @return The emitted light color, or black for none
+     */
+    public Vector3 emitted() {
+        return material.emitted(u, v, p);
     }
 }

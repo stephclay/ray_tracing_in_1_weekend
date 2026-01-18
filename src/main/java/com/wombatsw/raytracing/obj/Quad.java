@@ -71,7 +71,7 @@ public class Quad extends AbstractObj {
             return null;
         }
 
-        return new Intersection(ray, t, p, n, a, b, getMaterial());
+        return new Intersection(ray, t, p, n.copy(), a, b, getMaterial());
     }
 
     @Override
