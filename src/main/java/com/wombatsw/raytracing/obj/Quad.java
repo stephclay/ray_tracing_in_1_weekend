@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.obj;
 
-import com.wombatsw.raytracing.engine.BoundingBox;
+import com.wombatsw.raytracing.model.BoundingBox;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;

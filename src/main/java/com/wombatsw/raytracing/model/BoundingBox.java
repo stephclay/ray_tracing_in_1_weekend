@@ -1,9 +1,4 @@
-package com.wombatsw.raytracing.engine;
-
-import com.wombatsw.raytracing.model.Affine;
-import com.wombatsw.raytracing.model.Interval;
-import com.wombatsw.raytracing.model.Ray;
-import com.wombatsw.raytracing.model.Vector3;
+package com.wombatsw.raytracing.model;
 
 import static com.wombatsw.raytracing.Constants.EPSILON;
 import static java.lang.Double.NEGATIVE_INFINITY;
