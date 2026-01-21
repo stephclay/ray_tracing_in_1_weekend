@@ -46,7 +46,7 @@ public class Dielectric extends Material {
     /**
      * Calculate the reflectance using the Schlick Approximation
      *
-     * @param cosTheta        The angle from the normal
+     * @param cosTheta        The cosine of the angle from the normal
      * @param refractionIndex The refraction index
      * @return The reflectance
      */

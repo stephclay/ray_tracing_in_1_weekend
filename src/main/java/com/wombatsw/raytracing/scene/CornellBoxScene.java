@@ -6,9 +6,12 @@ import com.wombatsw.raytracing.engine.Viewport;
 import com.wombatsw.raytracing.material.DiffuseLight;
 import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
+import com.wombatsw.raytracing.model.Affine;
 import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.obj.AbstractObj;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Quad;
+import com.wombatsw.raytracing.obj.Transform;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -48,13 +51,25 @@ public class CornellBoxScene implements Scene {
         Vector3 vu = new Vector3(-555, 0, 0);
         Vector3 vv = new Vector3(0, 0, -555);
 
+        AbstractObj box1 = Quad.createBox(new Vector3(0, 0, 0), new Vector3(165, 330, 165), white);
+        Affine affine1 = new Affine()
+                .rotateY(15)
+                .translate(new Vector3(265, 0, 295));
+
+        AbstractObj box2 = Quad.createBox(new Vector3(0, 0, 0), new Vector3(165, 165, 165), white);
+        Affine affine2 = new Affine()
+                .rotateY(-18)
+                .translate(new Vector3(130, 0, 65));
+
         return new ObjectList(
                 new Quad(lightQ, lightU, lightV, light),
                 new Quad(vx, vy, vz, green),
                 new Quad(v0, vy, vz, red),
                 new Quad(v0, vx, vz, white),
                 new Quad(vq, vu, vv, white),
-                new Quad(vz, vx, vy, white)
+                new Quad(vz, vx, vy, white),
+                new Transform(box1, affine1),
+                new Transform(box2, affine2)
         );
     }
 }

@@ -1,10 +1,13 @@
 package com.wombatsw.raytracing.engine;
 
+import com.wombatsw.raytracing.model.Affine;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.Vector3;
 
 import static com.wombatsw.raytracing.Constants.EPSILON;
+import static java.lang.Double.NEGATIVE_INFINITY;
+import static java.lang.Double.POSITIVE_INFINITY;
 
 /**
  * An Axis-Aligned Bounding Box
@@ -43,6 +46,38 @@ public class BoundingBox {
         x = padToMin(new Interval(a.x, b.x));
         y = padToMin(new Interval(a.y, b.y));
         z = padToMin(new Interval(a.z, b.z));
+    }
+
+    /**
+     * Create a new BoundingBox that fits the transformation of the provided bounding box
+     *
+     * @param orig   The original {@link BoundingBox}
+     * @param affine The transformation matrix
+     */
+    public BoundingBox(final BoundingBox orig, final Affine affine) {
+        double[] min = new double[]{POSITIVE_INFINITY, POSITIVE_INFINITY, POSITIVE_INFINITY};
+        double[] max = new double[]{NEGATIVE_INFINITY, NEGATIVE_INFINITY, NEGATIVE_INFINITY};
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 2; k++) {
+                    double x = i == 0 ? orig.x.min() : orig.x.max();
+                    double y = i == 0 ? orig.y.min() : orig.y.max();
+                    double z = i == 0 ? orig.z.min() : orig.z.max();
+
+                    Vector3 p = affine.apply(new Vector3(x, y, z), true);
+
+                    for (int c = 0; c < 3; c++) {
+                        min[c] = Math.min(min[c], p.getValue(c));
+                        max[c] = Math.max(max[c], p.getValue(c));
+                    }
+                }
+            }
+        }
+
+        this.x = new Interval(min[0], max[0]);
+        this.y = new Interval(min[1], max[1]);
+        this.z = new Interval(min[2], max[2]);
     }
 
     /**

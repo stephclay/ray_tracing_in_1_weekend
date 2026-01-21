@@ -47,6 +47,37 @@ public class Quad extends AbstractObj {
         this.boundingBox = createBoundingBox();
     }
 
+    /**
+     * Create a box aligned with world coordinates and opposite vertexes at the indicated points
+     *
+     * @param a        The first vertex
+     * @param b        The second vertex
+     * @param material The material for the box
+     * @return The new box
+     */
+    public static AbstractObj createBox(final Vector3 a, final Vector3 b, final Material material) {
+        double minZ = Math.min(a.getZ(), b.getZ());
+        double minX = Math.min(a.getX(), b.getX());
+        double minY = Math.min(a.getY(), b.getY());
+        double maxX = Math.max(a.getX(), b.getX());
+        double maxY = Math.max(a.getY(), b.getY());
+        double maxZ = Math.max(a.getZ(), b.getZ());
+
+        Vector3 dx = new Vector3(maxX - minX, 0, 0);
+        Vector3 dy = new Vector3(0, maxY - minY, 0);
+        Vector3 dz = new Vector3(0, 0, maxZ - minZ);
+        Vector3 negDx = dx.copy().negate();
+        Vector3 negDz = dz.copy().negate();
+
+        return new ObjectList(
+                new Quad(new Vector3(minX, minY, maxZ), dx, dy, material), // Front
+                new Quad(new Vector3(maxX, minY, maxZ), negDz, dy, material), // Right
+                new Quad(new Vector3(maxX, minY, minZ), negDx, dy, material), // Back
+                new Quad(new Vector3(minX, minY, minZ), dz, dy, material), // Left
+                new Quad(new Vector3(minX, maxY, maxZ), dx, negDz, material), // Top
+                new Quad(new Vector3(minX, minY, minZ), dx, dz, material)); // Bottom
+    }
+
     @Override
     public Intersection intersect(final Ray ray, final Interval tRange) {
         double nd = n.dot(ray.direction());
@@ -56,7 +87,7 @@ public class Quad extends AbstractObj {
             return null;
         }
 
-        // Plane interection is out of range
+        // Plane intersection is out of range
         double t = (d - ray.origin().dot(n)) / nd;
         if (!tRange.contains(t)) {
             return null;

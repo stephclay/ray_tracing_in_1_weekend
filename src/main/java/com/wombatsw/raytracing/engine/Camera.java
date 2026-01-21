@@ -38,7 +38,7 @@ public class Camera {
     private Vector3 cameraCenter = new Vector3(0, 0, 0);
 
     /**
-     * The variation angle of rays through a pixel
+     * The variation angle in degrees of rays through a pixel
      */
     @Setter
     private double defocusAngle = 0;

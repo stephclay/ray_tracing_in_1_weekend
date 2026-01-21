@@ -72,6 +72,27 @@ public class Intersection {
     }
 
     /**
+     * Create a new intersection from the existing one and new intersection point and normal values
+     *
+     * @param intersection The existing intersection
+     * @param p            The new point of intersection
+     * @param n            The new normal vector
+     */
+    public Intersection(final Intersection intersection, final Vector3 p, final Vector3 n) {
+        this.ray = intersection.ray;
+        this.t = intersection.t;
+        this.p = p;
+        this.n = n;
+        this.u = intersection.u;
+        this.v = intersection.v;
+        this.material = intersection.material;
+        this.frontFace = intersection.frontFace;
+
+        p.setImmutable();
+        n.setImmutable();
+    }
+
+    /**
      * Get the color is emitted by the surface at this intersection point. Returns black for none.
      *
      * @return The emitted light color, or black for none
