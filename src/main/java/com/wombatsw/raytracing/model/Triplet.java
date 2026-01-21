@@ -12,7 +12,7 @@ import java.util.Collection;
 import static com.wombatsw.raytracing.Constants.EPSILON;
 
 /**
- * A mutable 3D Vector
+ * A mutable Triplet
  */
 @EqualsAndHashCode(exclude = "mutable")
 @ToString(callSuper = true)
@@ -78,7 +78,7 @@ public class Triplet {
     }
 
     /**
-     * Generate a random Vector3
+     * Generate a random {@link Triplet}
      *
      * @return The new {@link Triplet}
      */
@@ -87,7 +87,7 @@ public class Triplet {
     }
 
     /**
-     * Generate a random Vector3 with the provided min and max values for each vector component
+     * Generate a random triplet with the provided min and max values for each triplet component
      *
      * @param min Min component value
      * @param max Max component value
@@ -115,7 +115,7 @@ public class Triplet {
     }
 
     /**
-     * Generate a random unit Vector3 within 90 degrees of the provided normal
+     * Generate a random unit vector within 90 degrees of the provided normal
      *
      * @param normal The normal vector
      * @return The new {@link Triplet}
@@ -143,9 +143,9 @@ public class Triplet {
     }
 
     /**
-     * Set the vector to be immutable
+     * Set the triplet to be immutable
      *
-     * @return This vector
+     * @return This triplet
      */
     public Triplet setImmutable() {
         setMutable(false);
@@ -189,40 +189,40 @@ public class Triplet {
     }
 
     /**
-     * Add the provided vector into this one. This is a mutating operation
+     * Add the provided triplet into this one. This is a mutating operation
      *
-     * @param v The value to add
-     * @return This vector
+     * @param t The value to add
+     * @return This triplet
      */
-    public Triplet add(final Triplet v) {
+    public Triplet add(final Triplet t) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
-            values[i] += v.values[i];
+            values[i] += t.values[i];
         }
         return this;
     }
 
     /**
-     * Subtract this vector from the provided one. This is a mutating operation
+     * Subtract the provided triplet from this one. This is a mutating operation
      *
-     * @param v The value to subtract
-     * @return This vector
+     * @param t The value to subtract
+     * @return This triplet
      */
-    public Triplet sub(final Triplet v) {
+    public Triplet sub(final Triplet t) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
-            values[i] -= v.values[i];
+            values[i] -= t.values[i];
         }
         return this;
     }
 
     /**
-     * Multiply this vector by a scalar value. This is a mutating operation
+     * Multiply this triplet by a scalar value. This is a mutating operation
      *
      * @param t The value to multiply
-     * @return This vector
+     * @return This triplet
      */
     public Triplet mul(final double t) {
         assertMutationAllowed();
@@ -234,72 +234,72 @@ public class Triplet {
     }
 
     /**
-     * Multiply this vector by the provided one. This is a mutating operation
+     * Multiply this triplet by the provided one. This is a mutating operation
      *
-     * @param v The vector to multiply into this one
-     * @return This vector
+     * @param t The triplet to multiply into this one
+     * @return This triplet
      */
-    public Triplet mul(final Triplet v) {
+    public Triplet mul(final Triplet t) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
-            values[i] *= v.values[i];
+            values[i] *= t.values[i];
         }
         return this;
     }
 
     /**
-     * Divide this vector by a scalar value. This is a mutating operation
+     * Divide this triplet by a scalar value. This is a mutating operation
      *
      * @param t The value to divide
-     * @return This vector
+     * @return This triplet
      */
     public Triplet div(final double t) {
         return mul(1 / t);
     }
 
     /**
-     * Negate this vector. This is a mutating operation
+     * Negate this triplet. This is a mutating operation
      *
-     * @return This vector
+     * @return This triplet
      */
     public Triplet negate() {
         return mul(-1);
     }
 
     /**
-     * Add the provided vector to this one after scaling it. This is a mutating operation
+     * Add the provided triplet to this one after scaling it. This is a mutating operation
      *
-     * @param v     The value to add
+     * @param t     The value to add
      * @param scale The scaling factor
-     * @return This vector
+     * @return This triplet
      */
-    public Triplet addScaled(final Triplet v, final double scale) {
+    public Triplet addScaled(final Triplet t, final double scale) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
-            values[i] += v.values[i] * scale;
+            values[i] += t.values[i] * scale;
         }
         return this;
     }
 
     /**
-     * Add the provided vectors to this one after scaling them. This is a mutating operation
+     * Add the provided triplets to this one after scaling them. This is a mutating operation
      *
      * @param u      The first value to add
      * @param uScale The scaling factor for u
      * @param v      The second value to add
      * @param vScale The scaling factor for v
-     * @return This vector
+     * @return This triplet
      */
     public Triplet addScaled(final Triplet u, final double uScale, final Triplet v, final double vScale) {
         return addScaled(u, uScale).addScaled(v, vScale);
     }
 
     /**
-     * Normalize this vector to a unit value. This is a mutating operation
+     * Normalize this vector to have unit length. This is a mutating operation
      *
-     * @return This vector
+     * @return This triplet
      */
     public Triplet normalize() {
         return div(len());
@@ -309,7 +309,7 @@ public class Triplet {
      * Reflect this vector relative to the given surface normal. This is a mutating operation
      *
      * @param n The surface normal, which must be a unit vector
-     * @return This vector
+     * @return This triplet
      */
     public Triplet reflect(final Triplet n) {
         // V - 2.0 * V.N
@@ -322,7 +322,7 @@ public class Triplet {
      *
      * @param n        The surface normal, which must be a unit vector
      * @param etaRatio Ratio of refractive indices as eta/eta prime
-     * @return This vector
+     * @return This triplet
      */
     public Triplet refract(final Triplet n, final double etaRatio) {
         // Compute the perpendicular component
@@ -338,11 +338,11 @@ public class Triplet {
     }
 
     /**
-     * Perform linear interpolation between this vector and the provided one
+     * Perform linear interpolation between this triplet and the provided one
      *
-     * @param end The other vector. This is a mutating operation
+     * @param end The other triplet. This is a mutating operation
      * @param a   The scaling value in the range [0, 1]
-     * @return This vector
+     * @return This triplet
      */
     public Triplet lerp(final Triplet end, final double a) {
         assertMutationAllowed();
@@ -354,13 +354,13 @@ public class Triplet {
     }
 
     /**
-     * Take the dot product of this and the provided vector
+     * Take the dot product of this and the provided triplet
      *
-     * @param v The other vector
+     * @param t The other triplet
      * @return The dot product
      */
-    public double dot(final Triplet v) {
-        return getX() * v.getX() + getY() * v.getY() + getZ() * v.getZ();
+    public double dot(final Triplet t) {
+        return getX() * t.getX() + getY() * t.getY() + getZ() * t.getZ();
     }
 
     /**
@@ -377,27 +377,27 @@ public class Triplet {
     }
 
     /**
-     * Get the length of this vector squared
+     * Get the length of this triplet squared
      *
-     * @return The length of this vector squared
+     * @return The length of this triplet squared
      */
     public double lenSquared() {
         return dot(this);
     }
 
     /**
-     * Get the length of this vector
+     * Get the length of this triplet
      *
-     * @return The length of this vector
+     * @return The length of this triplet
      */
     public double len() {
         return Math.sqrt(lenSquared());
     }
 
     /**
-     * Check if the vector value is near zero for all components
+     * Check if the triplet value is near zero for all components
      *
-     * @return Whether the vector is near zero
+     * @return Whether the triplet is near zero
      */
     public boolean nearZero() {
         return Math.abs(getX()) < EPSILON &&
