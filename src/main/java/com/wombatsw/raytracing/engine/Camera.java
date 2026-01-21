@@ -1,7 +1,7 @@
 package com.wombatsw.raytracing.engine;
 
 import com.wombatsw.raytracing.model.Ray;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,13 +29,13 @@ public class Camera {
      * The background color
      */
     @Setter
-    private Vector3 background = ColorUtils.black();
+    private Triplet background = ColorUtils.black();
 
     /**
      * The location of the camera
      */
     @Setter
-    private Vector3 cameraCenter = new Vector3(0, 0, 0);
+    private Triplet cameraCenter = new Triplet(0, 0, 0);
 
     /**
      * The variation angle in degrees of rays through a pixel
@@ -60,10 +60,10 @@ public class Camera {
     private final Viewport viewport;
 
     @Getter(AccessLevel.NONE)
-    private Vector3 defocusDiskU;
+    private Triplet defocusDiskU;
 
     @Getter(AccessLevel.NONE)
-    private Vector3 defocusDiskV;
+    private Triplet defocusDiskV;
 
     public Camera() {
         this.viewport = new Viewport();
@@ -79,8 +79,8 @@ public class Camera {
 
         double defocusRadius = focusDistance * Math.tan(Math.toRadians(defocusAngle / 2));
 
-        defocusDiskU = Vector3.newScaled(viewport.getViewBasisU(), defocusRadius);
-        defocusDiskV = Vector3.newScaled(viewport.getViewBasisV(), -defocusRadius);
+        defocusDiskU = Triplet.newScaled(viewport.getViewBasisU(), defocusRadius);
+        defocusDiskV = Triplet.newScaled(viewport.getViewBasisV(), -defocusRadius);
     }
 
     /**
@@ -90,17 +90,17 @@ public class Camera {
      * @param point The point on the viewport
      * @return The defocused ray
      */
-    public Ray getRayForPoint(final Vector3 point) {
-        Vector3 rayOrigin;
+    public Ray getRayForPoint(final Triplet point) {
+        Triplet rayOrigin;
         if (defocusAngle <= 0) {
             rayOrigin = cameraCenter;
         } else {
             // Defocus the image by moving the origin of the ray by a random amount
-            Vector3 v = Vector3.randomInUnitDisc();
+            Triplet v = Triplet.randomInUnitDisc();
             rayOrigin = cameraCenter.copy()
                     .addScaled(defocusDiskU, v.getX(), defocusDiskV, v.getY());
         }
-        Vector3 rayDir = new Vector3(point, rayOrigin);
+        Triplet rayDir = new Triplet(point, rayOrigin);
         double rayTime = MathUtils.randomDouble();
 
         return new Ray(rayOrigin, rayDir, rayTime);

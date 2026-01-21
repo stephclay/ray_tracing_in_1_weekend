@@ -15,11 +15,11 @@ public class Intersection {
     /**
      * The intersection point
      */
-    private final Vector3 p;
+    private final Triplet p;
     /**
      * The intersection normal unit vector (can be pointing inwards)
      */
-    private final Vector3 n;
+    private final Triplet n;
     /**
      * The material
      */
@@ -52,7 +52,7 @@ public class Intersection {
      * @param v        The V mapping coordinate
      * @param material The material at the intersection point
      */
-    public Intersection(final Ray ray, final double t, final Vector3 p, final Vector3 n,
+    public Intersection(final Ray ray, final double t, final Triplet p, final Triplet n,
                         final double u, final double v, final Material material) {
         this.ray = ray;
         this.t = t;
@@ -78,7 +78,7 @@ public class Intersection {
      * @param p            The new point of intersection
      * @param n            The new normal vector
      */
-    public Intersection(final Intersection intersection, final Vector3 p, final Vector3 n) {
+    public Intersection(final Intersection intersection, final Triplet p, final Triplet n) {
         this.ray = intersection.ray;
         this.t = intersection.t;
         this.p = p;
@@ -97,7 +97,7 @@ public class Intersection {
      *
      * @return The emitted light color, or black for none
      */
-    public Vector3 emitted() {
+    public Triplet emitted() {
         return material.emitted(u, v, p);
     }
 }

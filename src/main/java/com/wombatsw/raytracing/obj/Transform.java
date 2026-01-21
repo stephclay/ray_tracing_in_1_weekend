@@ -5,7 +5,7 @@ import com.wombatsw.raytracing.model.Affine;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 /**
  * An object made from transforming another object.
@@ -25,8 +25,8 @@ public class Transform extends AbstractObj {
     @Override
     public Intersection intersect(final Ray ray, final Interval tRange) {
         // Transform ray to object space
-        Vector3 newOrigin = affine.invert(ray.origin(), true);
-        Vector3 newDir = affine.invert(ray.direction(), false);
+        Triplet newOrigin = affine.invert(ray.origin(), true);
+        Triplet newDir = affine.invert(ray.direction(), false);
 
         Ray rotatedRay = new Ray(newOrigin, newDir, ray.time());
 
@@ -37,8 +37,8 @@ public class Transform extends AbstractObj {
         }
 
         // Transform intersection from object space to world space
-        Vector3 p = affine.apply(intersection.getP(), true);
-        Vector3 n = affine.invert(intersection.getN(), false);
+        Triplet p = affine.apply(intersection.getP(), true);
+        Triplet n = affine.invert(intersection.getN(), false);
 
         return new Intersection(intersection, p, n);
     }

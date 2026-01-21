@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.texture;
 
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 /**
  * A checker texture based on world coordinates
@@ -16,12 +16,12 @@ public class CheckerTexture implements Texture {
         this.odd = odd;
     }
 
-    public CheckerTexture(final double scale, final Vector3 even, final Vector3 odd) {
+    public CheckerTexture(final double scale, final Triplet even, final Triplet odd) {
         this(scale, new SolidColor(even), new SolidColor(odd));
     }
 
     @Override
-    public Vector3 value(final double u, final double v, final Vector3 p) {
+    public Triplet value(final double u, final double v, final Triplet p) {
         int xInt = (int) Math.floor(invScale * p.getX());
         int yInt = (int) Math.floor(invScale * p.getY());
         int zInt = (int) Math.floor(invScale * p.getZ());

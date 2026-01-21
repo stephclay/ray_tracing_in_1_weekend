@@ -22,7 +22,7 @@ public class Affine {
      * @param isPoint Whether the triplet is a point
      * @return The new triplet
      */
-    public Vector3 apply(final Vector3 triplet, final boolean isPoint) {
+    public Triplet apply(final Triplet triplet, final boolean isPoint) {
         return apply(matrix, triplet, isPoint);
     }
 
@@ -33,7 +33,7 @@ public class Affine {
      * @param isPoint Whether the triplet is a point
      * @return The new triplet
      */
-    public Vector3 invert(final Vector3 triplet, final boolean isPoint) {
+    public Triplet invert(final Triplet triplet, final boolean isPoint) {
         return apply(inverse, triplet, isPoint);
     }
 
@@ -43,7 +43,7 @@ public class Affine {
      * @param vector The translation vector
      * @return This Affine matrix
      */
-    public Affine translate(final Vector3 vector) {
+    public Affine translate(final Triplet vector) {
         double[][] translation = createIdentity();
         for (int i = 0; i < DIM - 1; i++) {
             translation[i][DIM - 1] = vector.getValue(i);
@@ -64,7 +64,7 @@ public class Affine {
      * @return This Affine matrix
      */
     public Affine rotateX(final double angle) {
-        return rotate(new Vector3(1, 0, 0), angle);
+        return rotate(new Triplet(1, 0, 0), angle);
     }
 
     /**
@@ -74,7 +74,7 @@ public class Affine {
      * @return This Affine matrix
      */
     public Affine rotateY(final double angle) {
-        return rotate(new Vector3(0, 1, 0), angle);
+        return rotate(new Triplet(0, 1, 0), angle);
     }
 
     /**
@@ -84,7 +84,7 @@ public class Affine {
      * @return This Affine matrix
      */
     public Affine rotateZ(final double angle) {
-        return rotate(new Vector3(0, 0, 1), angle);
+        return rotate(new Triplet(0, 0, 1), angle);
     }
 
     /**
@@ -94,8 +94,8 @@ public class Affine {
      * @param angle The angle of rotation in degrees
      * @return This Affine matrix
      */
-    public Affine rotate(final Vector3 axis, final double angle) {
-        Vector3 axisNorm = axis.copy().normalize();
+    public Affine rotate(final Triplet axis, final double angle) {
+        Triplet axisNorm = axis.copy().normalize();
 
         double[][] rotation = createRotation(axisNorm, angle);
         matrix = multiply(rotation, matrix);
@@ -112,7 +112,7 @@ public class Affine {
      * @param angle The angle of rotation in degrees
      * @return The rotation matrix
      */
-    private static double[][] createRotation(final Vector3 axis, final double angle) {
+    private static double[][] createRotation(final Triplet axis, final double angle) {
         double theta = Math.toRadians(angle);
         double[][] result = new double[DIM][DIM];
         double x = axis.getX();
@@ -145,7 +145,7 @@ public class Affine {
      * @param isPoint Whether the triplet is a point
      * @return The new triplet
      */
-    private Vector3 apply(final double[][] mat, final Vector3 triplet, final boolean isPoint) {
+    private Triplet apply(final double[][] mat, final Triplet triplet, final boolean isPoint) {
         double x = 0;
         double y = 0;
         double z = 0;
@@ -163,7 +163,7 @@ public class Affine {
             z += mat[2][DIM - 1];
         }
 
-        return new Vector3(x, y, z);
+        return new Triplet(x, y, z);
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.wombatsw.raytracing.engine;
 
 import com.wombatsw.raytracing.model.Interval;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 /**
  * Utilities for handling color
@@ -16,7 +16,7 @@ public class ColorUtils {
      * @param imageData The byte array
      * @param offset    The offset
      */
-    public static void writeColor(final Vector3 color, final byte[] imageData, final int offset) {
+    public static void writeColor(final Triplet color, final byte[] imageData, final int offset) {
         double r = gamma(color.getX());
         double g = gamma(color.getY());
         double b = gamma(color.getZ());
@@ -33,19 +33,19 @@ public class ColorUtils {
     /**
      * Get a new instance of a white color
      *
-     * @return The {@link Vector3} white
+     * @return The {@link Triplet} white
      */
-    public static Vector3 white() {
-        return new Vector3(1, 1, 1);
+    public static Triplet white() {
+        return new Triplet(1, 1, 1);
     }
 
     /**
      * Get a new instance of a black color
      *
-     * @return The {@link Vector3} black
+     * @return The {@link Triplet} black
      */
-    public static Vector3 black() {
-        return new Vector3(0, 0, 0);
+    public static Triplet black() {
+        return new Triplet(0, 0, 0);
     }
 
     /**

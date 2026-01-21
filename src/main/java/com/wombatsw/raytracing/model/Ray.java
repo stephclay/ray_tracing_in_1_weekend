@@ -3,13 +3,13 @@ package com.wombatsw.raytracing.model;
 /**
  * A ray consisting of an origin and direction
  */
-public record Ray(Vector3 origin, Vector3 direction, double time) {
+public record Ray(Triplet origin, Triplet direction, double time) {
     public Ray {
         origin.setImmutable();
         direction.setImmutable();
     }
 
-    public Ray(final Vector3 origin, final Vector3 direction) {
+    public Ray(final Triplet origin, final Triplet direction) {
         this(origin, direction, 0);
     }
 
@@ -20,7 +20,7 @@ public record Ray(Vector3 origin, Vector3 direction, double time) {
      * @param t The location along the ray
      * @return The point corresponding to that location
      */
-    public Vector3 at(final double t) {
+    public Triplet at(final double t) {
         return origin.copy().addScaled(direction, t);
     }
 }

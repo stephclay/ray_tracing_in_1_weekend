@@ -8,18 +8,18 @@ class RayTest {
 
     @Test
     public void testAt() {
-        Vector3 origin = new Vector3(0, 2, 0);
-        Vector3 dir = new Vector3(1, -1, 0);
+        Triplet origin = new Triplet(0, 2, 0);
+        Triplet dir = new Triplet(1, -1, 0);
         Ray ray = new Ray(origin, dir);
 
-        Vector3 result = ray.at(4);
-        assertEquals(new Vector3(4, -2, 0), result);
+        Triplet result = ray.at(4);
+        assertEquals(new Triplet(4, -2, 0), result);
     }
 
     @Test
     public void testImmutableRay() {
-        Vector3 origin = new Vector3(0, 2, 0);
-        Vector3 dir = new Vector3(1, -1, 0);
+        Triplet origin = new Triplet(0, 2, 0);
+        Triplet dir = new Triplet(1, -1, 0);
         Ray ray = new Ray(origin, dir);
 
         assertThrows(IllegalStateException.class, () -> ray.origin().mul(2));

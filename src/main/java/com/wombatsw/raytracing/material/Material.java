@@ -3,7 +3,7 @@ package com.wombatsw.raytracing.material;
 import com.wombatsw.raytracing.engine.ColorUtils;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.ScatterData;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 /**
  * Base class for materials
@@ -27,7 +27,7 @@ public abstract class Material {
      * @param p The location of the intersection
      * @return The emitted light color, or black for none
      */
-    public Vector3 emitted(final double u, final double v, final Vector3 p) {
+    public Triplet emitted(final double u, final double v, final Triplet p) {
         return ColorUtils.black();
     }
 }

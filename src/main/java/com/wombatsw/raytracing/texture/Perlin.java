@@ -1,21 +1,21 @@
 package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.engine.MathUtils;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 /**
  * Perlin noise generator
  */
 public class Perlin {
     private final static int POINT_COUNT = 256;
-    private final Vector3[] randVec = new Vector3[POINT_COUNT];
+    private final Triplet[] randVec = new Triplet[POINT_COUNT];
     private final int[] permX = new int[POINT_COUNT];
     private final int[] permY = new int[POINT_COUNT];
     private final int[] permZ = new int[POINT_COUNT];
 
     public Perlin() {
         for (int i = 0; i < POINT_COUNT; i++) {
-            randVec[i] = Vector3.random(-1, 1);
+            randVec[i] = Triplet.random(-1, 1);
         }
 
         perlinGeneratePerm(permX);
@@ -29,7 +29,7 @@ public class Perlin {
      * @param p The point
      * @return The noise value
      */
-    public double noise(final Vector3 p) {
+    public double noise(final Triplet p) {
 
         double u = p.getX() - Math.floor(p.getX());
         double v = p.getY() - Math.floor(p.getY());
@@ -39,7 +39,7 @@ public class Perlin {
         int j = (int) Math.floor(p.getY());
         int k = (int) Math.floor(p.getZ());
 
-        Vector3[][][] c = new Vector3[2][2][2];
+        Triplet[][][] c = new Triplet[2][2][2];
         for (int di = 0; di < 2; di++) {
             for (int dj = 0; dj < 2; dj++) {
                 for (int dk = 0; dk < 2; dk++) {
@@ -52,9 +52,9 @@ public class Perlin {
         return perlinInterp(c, u, v, w);
     }
 
-    public double turbulence(final Vector3 p, final int depth) {
+    public double turbulence(final Triplet p, final int depth) {
         double accum = 0.0;
-        Vector3 tempP = p.copy();
+        Triplet tempP = p.copy();
         double weight = 1.0;
 
         for (int i = 0; i < depth; i++) {
@@ -103,7 +103,7 @@ public class Perlin {
      * @param w Z-axis
      * @return The noise output
      */
-    private double perlinInterp(Vector3[][][] c, double u, double v, double w) {
+    private double perlinInterp(Triplet[][][] c, double u, double v, double w) {
         double accum = 0;
 
         double uu = u * u * (3 - 2 * u);
@@ -113,7 +113,7 @@ public class Perlin {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 2; k++) {
-                    Vector3 weight = new Vector3(u - i, v - j, w - k);
+                    Triplet weight = new Triplet(u - i, v - j, w - k);
                     accum += c[i][j][k].dot(weight) *
                             (i * uu + (1 - i) * (1 - uu)) *
                             (j * vv + (1 - j) * (1 - vv)) *

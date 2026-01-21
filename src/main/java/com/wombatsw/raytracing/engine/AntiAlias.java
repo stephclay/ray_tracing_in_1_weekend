@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.engine;
 
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class AntiAlias {
     private final int randomSamples;
 
     private Viewport viewport;
-    private List<Vector3> viewportOffsets;
+    private List<Triplet> viewportOffsets;
 
     /**
      * Create an {@link AntiAlias} using a grid
@@ -71,7 +71,7 @@ public class AntiAlias {
      * @param y The y coordinate
      * @return The pixel locations in viewport coordinates
      */
-    public List<Vector3> getSamplingPoints(final int x, final int y) {
+    public List<Triplet> getSamplingPoints(final int x, final int y) {
         return viewportOffsets.stream()
                 .map(offset -> viewport.getPixelOrigin().copy()
                         .addScaled(viewport.getPixelDU(), x, viewport.getPixelDV(), y)
@@ -101,8 +101,8 @@ public class AntiAlias {
      * @param yOffset The y offset
      * @return The offset
      */
-    private Vector3 getOffset(final double xOffset, final double yOffset) {
-        return Vector3.newZeroVector()
+    private Triplet getOffset(final double xOffset, final double yOffset) {
+        return Triplet.newZeroVector()
                 .addScaled(viewport.getPixelDU(), xOffset, viewport.getPixelDV(), yOffset);
     }
 }

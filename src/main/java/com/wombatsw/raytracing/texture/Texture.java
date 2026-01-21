@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.texture;
 
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 public interface Texture {
     /**
@@ -11,5 +11,5 @@ public interface Texture {
      * @param p The location of the intersection
      * @return The color at that point
      */
-    Vector3 value(double u, double v, Vector3 p);
+    Triplet value(double u, double v, Triplet p);
 }

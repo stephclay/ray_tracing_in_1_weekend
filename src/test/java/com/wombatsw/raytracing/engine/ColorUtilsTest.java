@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.engine;
 
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +14,7 @@ class ColorUtilsTest {
 
     @Test
     public void writeColor() {
-        Vector3 c1 = new Vector3(1, 0.25, 0);
+        Triplet c1 = new Triplet(1, 0.25, 0);
         byte[] data = new byte[6];
 
         ColorUtils.writeColor(c1, data, 3);

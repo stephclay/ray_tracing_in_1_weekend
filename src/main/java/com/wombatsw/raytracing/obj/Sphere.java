@@ -5,7 +5,7 @@ import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -23,12 +23,12 @@ public class Sphere extends AbstractObj {
      * @param radius   Radius of sphere
      * @param material Material sphere is made of
      */
-    public Sphere(final Vector3 center, final double radius, final Material material) {
+    public Sphere(final Triplet center, final double radius, final Material material) {
         super(material);
-        this.centerPath = new Ray(center, Vector3.newZeroVector());
+        this.centerPath = new Ray(center, Triplet.newZeroVector());
         this.radius = Math.max(0, radius);
 
-        Vector3 rVec = new Vector3(radius, radius, radius);
+        Triplet rVec = new Triplet(radius, radius, radius);
         boundingBox = new BoundingBox(center.copy().sub(rVec), center.copy().add(rVec));
     }
 
@@ -40,12 +40,12 @@ public class Sphere extends AbstractObj {
      * @param radius   Radius of sphere
      * @param material Material sphere is made of
      */
-    public Sphere(final Vector3 center1, final Vector3 center2, final double radius, final Material material) {
+    public Sphere(final Triplet center1, final Triplet center2, final double radius, final Material material) {
         super(material);
-        this.centerPath = new Ray(center1, new Vector3(center2, center1));
+        this.centerPath = new Ray(center1, new Triplet(center2, center1));
         this.radius = Math.max(0, radius);
 
-        Vector3 rVec = new Vector3(radius, radius, radius);
+        Triplet rVec = new Triplet(radius, radius, radius);
         BoundingBox bbox1 = new BoundingBox(center1.copy().sub(rVec), center1.copy().add(rVec));
         BoundingBox bbox2 = new BoundingBox(center2.copy().sub(rVec), center2.copy().add(rVec));
         this.boundingBox = new BoundingBox(bbox1, bbox2);
@@ -53,8 +53,8 @@ public class Sphere extends AbstractObj {
 
     @Override
     public Intersection intersect(final Ray ray, final Interval tRange) {
-        Vector3 curCenter = centerPath.at(ray.time());
-        Vector3 oc = curCenter.copy().sub(ray.origin());
+        Triplet curCenter = centerPath.at(ray.time());
+        Triplet oc = curCenter.copy().sub(ray.origin());
         double a = ray.direction().lenSquared();
         double h = ray.direction().dot(oc);
         double c = oc.lenSquared() - radius * radius;
@@ -93,9 +93,9 @@ public class Sphere extends AbstractObj {
      * @param t         the location on the ray
      * @return The {@link Intersection}
      */
-    private @NonNull Intersection getIntersection(final Vector3 curCenter, final Ray ray, final double t) {
-        Vector3 p = ray.at(t);
-        Vector3 n = new Vector3(p, curCenter).div(radius);
+    private @NonNull Intersection getIntersection(final Triplet curCenter, final Ray ray, final double t) {
+        Triplet p = ray.at(t);
+        Triplet n = new Triplet(p, curCenter).div(radius);
 
         return new Intersection(ray, t, p, n, getU(n), getV(n), getMaterial());
     }
@@ -106,7 +106,7 @@ public class Sphere extends AbstractObj {
      * @param v The unit vector
      * @return the PHI coordinate normalized to the range 0-1
      */
-    private double getU(final Vector3 v) {
+    private double getU(final Triplet v) {
         double phi = Math.atan2(-v.getZ(), v.getX()) + Math.PI;
         return phi / (2.0 * Math.PI);
     }
@@ -117,7 +117,7 @@ public class Sphere extends AbstractObj {
      * @param v The unit vector
      * @return the theta coordinate normalized to the range 0-1
      */
-    private double getV(final Vector3 v) {
+    private double getV(final Triplet v) {
         double theta = Math.acos(-v.getY());
         return theta / Math.PI;
     }

@@ -25,7 +25,7 @@ public class BoundingBox {
      * @param a First point
      * @param b Second point
      */
-    public BoundingBox(final Vector3 a, final Vector3 b) {
+    public BoundingBox(final Triplet a, final Triplet b) {
         this.x = padToMin(Interval.createOrdered(a.getX(), b.getX()));
         this.y = padToMin(Interval.createOrdered(a.getY(), b.getY()));
         this.z = padToMin(Interval.createOrdered(a.getZ(), b.getZ()));
@@ -60,7 +60,7 @@ public class BoundingBox {
                     double y = i == 0 ? orig.y.min() : orig.y.max();
                     double z = i == 0 ? orig.z.min() : orig.z.max();
 
-                    Vector3 p = affine.apply(new Vector3(x, y, z), true);
+                    Triplet p = affine.apply(new Triplet(x, y, z), true);
 
                     for (int c = 0; c < 3; c++) {
                         min[c] = Math.min(min[c], p.getValue(c));
@@ -98,8 +98,8 @@ public class BoundingBox {
      * @return The interval of intersection, or {@code null} if there is no intersection
      */
     public Interval intersect(final Ray ray, final Interval tRange) {
-        Vector3 origin = ray.origin();
-        Vector3 dir = ray.direction();
+        Triplet origin = ray.origin();
+        Triplet dir = ray.direction();
 
         double min = tRange.min();
         double max = tRange.max();

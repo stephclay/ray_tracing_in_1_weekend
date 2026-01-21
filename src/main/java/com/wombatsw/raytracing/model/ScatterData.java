@@ -6,5 +6,5 @@ package com.wombatsw.raytracing.model;
  * @param ray         The outbound ray
  * @param attenuation The attenuation color
  */
-public record ScatterData(Ray ray, Vector3 attenuation) {
+public record ScatterData(Ray ray, Triplet attenuation) {
 }

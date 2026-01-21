@@ -5,7 +5,7 @@ import com.wombatsw.raytracing.engine.MathUtils;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 /**
  * A dielectric (transparent) material
@@ -27,12 +27,12 @@ public class Dielectric extends Material {
     public ScatterData scatter(final Intersection intersection) {
         double ri = intersection.isFrontFace() ? 1.0 / refractionIndex : refractionIndex;
 
-        Vector3 unitDir = intersection.getRay().direction().copy().normalize();
+        Triplet unitDir = intersection.getRay().direction().copy().normalize();
         double cosTheta = Math.min(1.0, -unitDir.dot(intersection.getN()));
         double sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta);
         boolean canRefract = ri * sinTheta <= 1.0;
 
-        Vector3 rayDir;
+        Triplet rayDir;
         if (canRefract && reflectance(cosTheta, ri) < MathUtils.randomDouble()) {
             rayDir = unitDir.refract(intersection.getN(), ri);
         } else {

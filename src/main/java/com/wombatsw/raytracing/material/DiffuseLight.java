@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.material;
 
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.texture.SolidColor;
 import com.wombatsw.raytracing.texture.Texture;
 
@@ -14,12 +14,12 @@ public class DiffuseLight extends Material {
         this.texture = texture;
     }
 
-    public DiffuseLight(final Vector3 color) {
+    public DiffuseLight(final Triplet color) {
         this(new SolidColor(color));
     }
 
     @Override
-    public Vector3 emitted(double u, double v, Vector3 p) {
+    public Triplet emitted(double u, double v, Triplet p) {
         return texture.value(u, v, p);
     }
 }

@@ -1,6 +1,6 @@
 package com.wombatsw.raytracing.texture;
 
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 /**
  * Noise texture
@@ -15,8 +15,8 @@ public class NoiseTexture implements Texture {
     }
 
     @Override
-    public Vector3 value(double u, double v, Vector3 p) {
+    public Triplet value(double u, double v, Triplet p) {
         double adj = (1 + Math.sin(scale * p.getZ() + 10 * perlin.turbulence(p, 7)));
-        return new Vector3(.5, .5, .5).mul(adj);
+        return new Triplet(.5, .5, .5).mul(adj);
     }
 }

@@ -16,7 +16,7 @@ import static com.wombatsw.raytracing.Constants.EPSILON;
  */
 @EqualsAndHashCode(exclude = "mutable")
 @ToString(callSuper = true)
-public class Vector3 {
+public class Triplet {
     private final double[] values;
 
     /**
@@ -26,11 +26,11 @@ public class Vector3 {
     @Getter
     private boolean mutable = true;
 
-    public Vector3(final double x, final double y, final double z) {
+    public Triplet(final double x, final double y, final double z) {
         values = new double[]{x, y, z};
     }
 
-    private Vector3(final double[] values) {
+    private Triplet(final double[] values) {
         this.values = Arrays.copyOf(values, values.length);
     }
 
@@ -40,15 +40,15 @@ public class Vector3 {
      * @param head The tip or head of the vector
      * @param tail The start or tail of the vector
      */
-    public Vector3(final Vector3 head, final Vector3 tail) {
+    public Triplet(final Triplet head, final Triplet tail) {
         this(head.copy().sub(tail).values);
     }
 
     /**
      * Create a new zero-length vector
      */
-    public static Vector3 newZeroVector() {
-        return new Vector3(0, 0, 0);
+    public static Triplet newZeroVector() {
+        return new Triplet(0, 0, 0);
     }
 
     /**
@@ -56,21 +56,21 @@ public class Vector3 {
      *
      * @param v     The reference vector
      * @param scale The scale factor
-     * @return The new {@link Vector3}
+     * @return The new {@link Triplet}
      */
-    public static Vector3 newScaled(final Vector3 v, final double scale) {
+    public static Triplet newScaled(final Triplet v, final double scale) {
         return newZeroVector().addScaled(v, scale);
     }
 
     /**
-     * Average the provided {@link Vector3} values
+     * Average the provided {@link Triplet} values
      *
-     * @param samples The list of {@link Vector3} to average
-     * @return The averaged {@link Vector3}
+     * @param samples The list of {@link Triplet} to average
+     * @return The averaged {@link Triplet}
      */
-    public static Vector3 average(final Collection<Vector3> samples) {
-        Vector3 v = new Vector3(0, 0, 0);
-        for (Vector3 sample : samples) {
+    public static Triplet average(final Collection<Triplet> samples) {
+        Triplet v = new Triplet(0, 0, 0);
+        for (Triplet sample : samples) {
             v.add(sample);
         }
         v.div(samples.size());
@@ -80,10 +80,10 @@ public class Vector3 {
     /**
      * Generate a random Vector3
      *
-     * @return The new {@link Vector3}
+     * @return The new {@link Triplet}
      */
-    public static Vector3 random() {
-        return Vector3.random(0, 1);
+    public static Triplet random() {
+        return Triplet.random(0, 1);
     }
 
     /**
@@ -91,10 +91,10 @@ public class Vector3 {
      *
      * @param min Min component value
      * @param max Max component value
-     * @return The new {@link Vector3}
+     * @return The new {@link Triplet}
      */
-    public static Vector3 random(final double min, final double max) {
-        return new Vector3(MathUtils.randomDouble(min, max),
+    public static Triplet random(final double min, final double max) {
+        return new Triplet(MathUtils.randomDouble(min, max),
                 MathUtils.randomDouble(min, max),
                 MathUtils.randomDouble(min, max));
     }
@@ -102,11 +102,11 @@ public class Vector3 {
     /**
      * Generate a random unit vector
      *
-     * @return The new {@link Vector3}
+     * @return The new {@link Triplet}
      */
-    public static Vector3 randomUnitVector() {
+    public static Triplet randomUnitVector() {
         while (true) {
-            Vector3 v = random(-1, 1);
+            Triplet v = random(-1, 1);
             double lenSq = v.lenSquared();
             if (lenSq > 1e-160 && lenSq <= 1.0) {
                 return v.div(Math.sqrt(lenSq));
@@ -118,10 +118,10 @@ public class Vector3 {
      * Generate a random unit Vector3 within 90 degrees of the provided normal
      *
      * @param normal The normal vector
-     * @return The new {@link Vector3}
+     * @return The new {@link Triplet}
      */
-    public static Vector3 randomOnHemisphere(final Vector3 normal) {
-        Vector3 v = randomUnitVector();
+    public static Triplet randomOnHemisphere(final Triplet normal) {
+        Triplet v = randomUnitVector();
         if (v.dot(normal) < 0) { // other hemisphere
             v.negate();
         }
@@ -131,11 +131,11 @@ public class Vector3 {
     /**
      * Generate a random value within a unit disc. The disc is in the x/y plane with z = 0
      *
-     * @return The new {@link Vector3}
+     * @return The new {@link Triplet}
      */
-    public static Vector3 randomInUnitDisc() {
+    public static Triplet randomInUnitDisc() {
         while (true) {
-            Vector3 v = new Vector3(MathUtils.randomDouble(-1, 1), MathUtils.randomDouble(-1, 1), 0);
+            Triplet v = new Triplet(MathUtils.randomDouble(-1, 1), MathUtils.randomDouble(-1, 1), 0);
             if (v.lenSquared() < 1) {
                 return v;
             }
@@ -147,14 +147,14 @@ public class Vector3 {
      *
      * @return This vector
      */
-    public Vector3 setImmutable() {
+    public Triplet setImmutable() {
         setMutable(false);
         return this;
     }
 
-    public Vector3 copy() {
+    public Triplet copy() {
         // Tuple data is copied in the constructor
-        return new Vector3(values);
+        return new Triplet(values);
     }
 
     /**
@@ -194,7 +194,7 @@ public class Vector3 {
      * @param v The value to add
      * @return This vector
      */
-    public Vector3 add(final Vector3 v) {
+    public Triplet add(final Triplet v) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
@@ -209,7 +209,7 @@ public class Vector3 {
      * @param v The value to subtract
      * @return This vector
      */
-    public Vector3 sub(final Vector3 v) {
+    public Triplet sub(final Triplet v) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
@@ -224,7 +224,7 @@ public class Vector3 {
      * @param t The value to multiply
      * @return This vector
      */
-    public Vector3 mul(final double t) {
+    public Triplet mul(final double t) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
@@ -239,7 +239,7 @@ public class Vector3 {
      * @param v The vector to multiply into this one
      * @return This vector
      */
-    public Vector3 mul(final Vector3 v) {
+    public Triplet mul(final Triplet v) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
@@ -254,7 +254,7 @@ public class Vector3 {
      * @param t The value to divide
      * @return This vector
      */
-    public Vector3 div(final double t) {
+    public Triplet div(final double t) {
         return mul(1 / t);
     }
 
@@ -263,7 +263,7 @@ public class Vector3 {
      *
      * @return This vector
      */
-    public Vector3 negate() {
+    public Triplet negate() {
         return mul(-1);
     }
 
@@ -274,7 +274,7 @@ public class Vector3 {
      * @param scale The scaling factor
      * @return This vector
      */
-    public Vector3 addScaled(final Vector3 v, final double scale) {
+    public Triplet addScaled(final Triplet v, final double scale) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
@@ -292,7 +292,7 @@ public class Vector3 {
      * @param vScale The scaling factor for v
      * @return This vector
      */
-    public Vector3 addScaled(final Vector3 u, final double uScale, final Vector3 v, final double vScale) {
+    public Triplet addScaled(final Triplet u, final double uScale, final Triplet v, final double vScale) {
         return addScaled(u, uScale).addScaled(v, vScale);
     }
 
@@ -301,7 +301,7 @@ public class Vector3 {
      *
      * @return This vector
      */
-    public Vector3 normalize() {
+    public Triplet normalize() {
         return div(len());
     }
 
@@ -311,7 +311,7 @@ public class Vector3 {
      * @param n The surface normal, which must be a unit vector
      * @return This vector
      */
-    public Vector3 reflect(final Vector3 n) {
+    public Triplet reflect(final Triplet n) {
         // V - 2.0 * V.N
         addScaled(n, -2.0 * dot(n));
         return this;
@@ -324,7 +324,7 @@ public class Vector3 {
      * @param etaRatio Ratio of refractive indices as eta/eta prime
      * @return This vector
      */
-    public Vector3 refract(final Vector3 n, final double etaRatio) {
+    public Triplet refract(final Triplet n, final double etaRatio) {
         // Compute the perpendicular component
         // Rperp = (Rorig + cosTheta * N) * etaRatio
         double cosTheta = Math.min(1.0, -dot(n));
@@ -344,7 +344,7 @@ public class Vector3 {
      * @param a   The scaling value in the range [0, 1]
      * @return This vector
      */
-    public Vector3 lerp(final Vector3 end, final double a) {
+    public Triplet lerp(final Triplet end, final double a) {
         assertMutationAllowed();
 
         for (int i = 0; i < values.length; i++) {
@@ -359,7 +359,7 @@ public class Vector3 {
      * @param v The other vector
      * @return The dot product
      */
-    public double dot(final Vector3 v) {
+    public double dot(final Triplet v) {
         return getX() * v.getX() + getY() * v.getY() + getZ() * v.getZ();
     }
 
@@ -369,8 +369,8 @@ public class Vector3 {
      * @param v The other vector
      * @return A new vector with the result
      */
-    public Vector3 cross(final Vector3 v) {
-        return new Vector3(
+    public Triplet cross(final Triplet v) {
+        return new Triplet(
                 getY() * v.getZ() - getZ() * v.getY(),
                 getZ() * v.getX() - getX() * v.getZ(),
                 getX() * v.getY() - getY() * v.getX());

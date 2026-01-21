@@ -1,20 +1,20 @@
 package com.wombatsw.raytracing.texture;
 
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 public class SolidColor implements Texture {
-    private Vector3 color;
+    private Triplet color;
 
-    public SolidColor(final Vector3 color) {
+    public SolidColor(final Triplet color) {
         this.color = color;
     }
 
     SolidColor(final double red, final double green, final double blue) {
-        this(new Vector3(red, green, blue));
+        this(new Triplet(red, green, blue));
     }
 
     @Override
-    public Vector3 value(final double u, final double v, final Vector3 p) {
+    public Triplet value(final double u, final double v, final Triplet p) {
         return color;
     }
 }

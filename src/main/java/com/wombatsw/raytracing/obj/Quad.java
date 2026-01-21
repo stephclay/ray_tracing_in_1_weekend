@@ -5,7 +5,7 @@ import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
-import com.wombatsw.raytracing.model.Vector3;
+import com.wombatsw.raytracing.model.Triplet;
 
 import static com.wombatsw.raytracing.Constants.EPSILON;
 import static com.wombatsw.raytracing.Constants.UNIT_INTERVAL;
@@ -14,11 +14,11 @@ import static com.wombatsw.raytracing.Constants.UNIT_INTERVAL;
  * A quadrilateral
  */
 public class Quad extends AbstractObj {
-    private final Vector3 q;
-    private final Vector3 u;
-    private final Vector3 v;
-    private final Vector3 n;
-    private final Vector3 w;
+    private final Triplet q;
+    private final Triplet u;
+    private final Triplet v;
+    private final Triplet n;
+    private final Triplet w;
     private final double d;
     private final BoundingBox boundingBox;
 
@@ -30,7 +30,7 @@ public class Quad extends AbstractObj {
      * @param v        Second vector to adjacent vertex of q
      * @param material Material sphere is made of
      */
-    public Quad(final Vector3 q, final Vector3 u, final Vector3 v, final Material material) {
+    public Quad(final Triplet q, final Triplet u, final Triplet v, final Material material) {
         super(material);
         this.q = q;
         this.u = u;
@@ -55,7 +55,7 @@ public class Quad extends AbstractObj {
      * @param material The material for the box
      * @return The new box
      */
-    public static AbstractObj createBox(final Vector3 a, final Vector3 b, final Material material) {
+    public static AbstractObj createBox(final Triplet a, final Triplet b, final Material material) {
         double minZ = Math.min(a.getZ(), b.getZ());
         double minX = Math.min(a.getX(), b.getX());
         double minY = Math.min(a.getY(), b.getY());
@@ -63,19 +63,19 @@ public class Quad extends AbstractObj {
         double maxY = Math.max(a.getY(), b.getY());
         double maxZ = Math.max(a.getZ(), b.getZ());
 
-        Vector3 dx = new Vector3(maxX - minX, 0, 0);
-        Vector3 dy = new Vector3(0, maxY - minY, 0);
-        Vector3 dz = new Vector3(0, 0, maxZ - minZ);
-        Vector3 negDx = dx.copy().negate();
-        Vector3 negDz = dz.copy().negate();
+        Triplet dx = new Triplet(maxX - minX, 0, 0);
+        Triplet dy = new Triplet(0, maxY - minY, 0);
+        Triplet dz = new Triplet(0, 0, maxZ - minZ);
+        Triplet negDx = dx.copy().negate();
+        Triplet negDz = dz.copy().negate();
 
         return new ObjectList(
-                new Quad(new Vector3(minX, minY, maxZ), dx, dy, material), // Front
-                new Quad(new Vector3(maxX, minY, maxZ), negDz, dy, material), // Right
-                new Quad(new Vector3(maxX, minY, minZ), negDx, dy, material), // Back
-                new Quad(new Vector3(minX, minY, minZ), dz, dy, material), // Left
-                new Quad(new Vector3(minX, maxY, maxZ), dx, negDz, material), // Top
-                new Quad(new Vector3(minX, minY, minZ), dx, dz, material)); // Bottom
+                new Quad(new Triplet(minX, minY, maxZ), dx, dy, material), // Front
+                new Quad(new Triplet(maxX, minY, maxZ), negDz, dy, material), // Right
+                new Quad(new Triplet(maxX, minY, minZ), negDx, dy, material), // Back
+                new Quad(new Triplet(minX, minY, minZ), dz, dy, material), // Left
+                new Quad(new Triplet(minX, maxY, maxZ), dx, negDz, material), // Top
+                new Quad(new Triplet(minX, minY, minZ), dx, dz, material)); // Bottom
     }
 
     @Override
@@ -93,8 +93,8 @@ public class Quad extends AbstractObj {
             return null;
         }
 
-        Vector3 p = ray.at(t);
-        Vector3 planarHit = p.copy().sub(q);
+        Triplet p = ray.at(t);
+        Triplet planarHit = p.copy().sub(q);
         double a = w.dot(planarHit.cross(v));
         double b = w.dot(u.cross(planarHit));
 
