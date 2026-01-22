@@ -159,13 +159,13 @@ public class Renderer {
             return camera.getBackground();
         }
 
-        Triplet emisson = intersect.emitted();
+        Triplet emission = intersect.emitted();
         ScatterData scatterData = intersect.getMaterial().scatter(intersect);
         if (scatterData == null) {
-            return emisson;
+            return emission;
         }
 
         Triplet scatterColor = getRayColor(scatterData.ray(), depth - 1, world, camera);
-        return scatterColor.copy().mul(scatterData.attenuation()).add(emisson);
+        return scatterColor.copy().mul(scatterData.attenuation()).add(emission);
     }
 }

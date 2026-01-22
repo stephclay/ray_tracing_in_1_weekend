@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A list of scene objects
@@ -25,6 +26,11 @@ public class ObjectList extends AbstractObj {
     public ObjectList(AbstractObj... objs) {
         this();
         add(objs);
+    }
+
+    public ObjectList(List<AbstractObj> objs) {
+        this();
+        objs.forEach(this::add);
     }
 
     /**
