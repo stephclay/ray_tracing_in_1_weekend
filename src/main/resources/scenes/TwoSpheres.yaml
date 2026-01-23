@@ -1,0 +1,18 @@
+camera:
+  background: [ 0.70, 0.80, 1.00 ]
+  defocusAngle: 0
+
+triplets:
+  blue: [ 0, 0, 1 ]
+  red: [ 1, 0, 0 ]
+  c1: [ -0.785398, 0, -1 ]
+  c2: [ 0.785398, 0, -1 ]
+
+materials:
+  matLeft: { Lambertian: { albedo: blue } }
+  matRight: { Lambertian: { albedo: red } }
+
+world:
+  - Sphere: { center: c1, radius: 0.785398, material: matLeft }
+  - Sphere: { center: c2, radius: 0.785398, material: matRight }
+

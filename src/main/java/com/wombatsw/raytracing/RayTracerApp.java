@@ -6,7 +6,6 @@ import com.wombatsw.raytracing.obj.AbstractObj;
 import com.wombatsw.raytracing.obj.BVHNode;
 import com.wombatsw.raytracing.output.ImageWriter;
 import com.wombatsw.raytracing.output.PPMImageWriter;
-import com.wombatsw.raytracing.scene.RandomSpheresScene;
 import com.wombatsw.raytracing.scene.Scene;
 import com.wombatsw.raytracing.scene.SceneSelector;
 import org.jspecify.annotations.NonNull;
@@ -21,6 +20,11 @@ import java.io.File;
  */
 @Component
 public class RayTracerApp implements CommandLineRunner {
+    private static final String[] SCENES = {
+            "scenes/ThreeSpheres.yaml",
+            "scenes/TwoSpheres.yaml",
+            "CornellBoxScene",
+    };
     private final SceneSelector sceneSelector;
 
     @Autowired
@@ -31,7 +35,7 @@ public class RayTracerApp implements CommandLineRunner {
     @Override
     public void run(final String @NonNull ... args) throws Exception {
 
-        String selection = args.length > 0 ? args[0] : "CornellBoxScene";
+        String selection = SCENES[0];
         Scene scene = sceneSelector.getScene(selection);
 
         AbstractObj world = new BVHNode(scene.getWorld());

@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot-version>4.0.1</spring-boot-version>
         <lombok-version>1.18.42</lombok-version>
+        <jackson-version>2.17.0</jackson-version>
         <junit-version>5.11.4</junit-version>
     </properties>
 
@@ -29,7 +30,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombok-version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
