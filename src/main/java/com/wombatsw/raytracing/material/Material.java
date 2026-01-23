@@ -4,10 +4,12 @@ import com.wombatsw.raytracing.engine.ColorUtils;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.ScatterData;
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.ToString;
 
 /**
  * Base class for materials
  */
+@ToString
 public abstract class Material {
     /**
      * Scatter the inbound ray

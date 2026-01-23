@@ -1,8 +1,12 @@
 package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
-public class SolidColor implements Texture {
+@Getter
+@ToString(callSuper = true)
+public class SolidColor extends Texture {
     private final Triplet color;
 
     public SolidColor(final Triplet color) {

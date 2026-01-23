@@ -6,15 +6,18 @@ import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 import org.jspecify.annotations.NonNull;
 
 /**
  * A sphere
  */
+@Getter
+@ToString(callSuper = true)
 public class Sphere extends AbstractObj {
     private final Ray centerPath;
     private final double radius;
-    private final BoundingBox boundingBox;
 
     /**
      * Stationary sphere
@@ -24,12 +27,10 @@ public class Sphere extends AbstractObj {
      * @param material Material sphere is made of
      */
     public Sphere(final Triplet center, final double radius, final Material material) {
-        super(material);
+        super(material, createBoundingBox(center, center, Math.max(0, radius)));
+
         this.centerPath = new Ray(center, Triplet.newZeroVector());
         this.radius = Math.max(0, radius);
-
-        Triplet rVec = new Triplet(radius, radius, radius);
-        boundingBox = new BoundingBox(center.copy().sub(rVec), center.copy().add(rVec));
     }
 
     /**
@@ -41,14 +42,11 @@ public class Sphere extends AbstractObj {
      * @param material Material sphere is made of
      */
     public Sphere(final Triplet center1, final Triplet center2, final double radius, final Material material) {
-        super(material);
+        super(material, createBoundingBox(center1, center2, Math.max(0, radius)));
+
+        // TODO: Extract movement into a separate class which would reference this one (similar to Transform)
         this.centerPath = new Ray(center1, new Triplet(center2, center1));
         this.radius = Math.max(0, radius);
-
-        Triplet rVec = new Triplet(radius, radius, radius);
-        BoundingBox bbox1 = new BoundingBox(center1.copy().sub(rVec), center1.copy().add(rVec));
-        BoundingBox bbox2 = new BoundingBox(center2.copy().sub(rVec), center2.copy().add(rVec));
-        this.boundingBox = new BoundingBox(bbox1, bbox2);
     }
 
     @Override
@@ -78,11 +76,6 @@ public class Sphere extends AbstractObj {
         }
 
         return null;
-    }
-
-    @Override
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
     }
 
     /**
@@ -120,5 +113,20 @@ public class Sphere extends AbstractObj {
     private double getV(final Triplet v) {
         double theta = Math.acos(-v.getY());
         return theta / Math.PI;
+    }
+
+    /**
+     * Create the bounding box for this object
+     *
+     * @param center1 The center of the Sphere at t=0, or just center if not moving
+     * @param center2 The center of the Sphere at t=1, or same as center1 if not moving
+     * @param radius  The radius of the sphere
+     * @return The {@link BoundingBox}
+     */
+    private static @NonNull BoundingBox createBoundingBox(Triplet center1, Triplet center2, double radius) {
+        Triplet rVec = new Triplet(radius, radius, radius);
+        BoundingBox bbox1 = new BoundingBox(center1.copy().sub(rVec), center1.copy().add(rVec));
+        BoundingBox bbox2 = new BoundingBox(center2.copy().sub(rVec), center2.copy().add(rVec));
+        return new BoundingBox(bbox1, bbox2);
     }
 }

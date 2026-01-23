@@ -28,22 +28,19 @@ public class QuadsScene implements Scene {
 
     @Override
     public ObjectList getWorld() {
-        ObjectList world = new ObjectList();
-
         // Materials
-        Material leftRed     = new Lambertian(new Triplet(1.0, 0.2, 0.2));
-        Material backGreen   = new Lambertian(new Triplet(0.2, 1.0, 0.2));
-        Material rightBlue   = new Lambertian(new Triplet(0.2, 0.2, 1.0));
+        Material leftRed = new Lambertian(new Triplet(1.0, 0.2, 0.2));
+        Material backGreen = new Lambertian(new Triplet(0.2, 1.0, 0.2));
+        Material rightBlue = new Lambertian(new Triplet(0.2, 0.2, 1.0));
         Material upperOrange = new Lambertian(new Triplet(1.0, 0.5, 0.0));
-        Material lowerTeal   = new Lambertian(new Triplet(0.2, 0.8, 0.8));
+        Material lowerTeal = new Lambertian(new Triplet(0.2, 0.8, 0.8));
 
         // Quads
-        world.add(new Quad(new Triplet(-3,-2, 5), new Triplet(0, 0,-4), new Triplet(0, 4, 0), leftRed));
-        world.add(new Quad(new Triplet(-2,-2, 0), new Triplet(4, 0, 0), new Triplet(0, 4, 0), backGreen));
-        world.add(new Quad(new Triplet( 3,-2, 1), new Triplet(0, 0, 4), new Triplet(0, 4, 0), rightBlue));
-        world.add(new Quad(new Triplet(-2, 3, 1), new Triplet(4, 0, 0), new Triplet(0, 0, 4), upperOrange));
-        world.add(new Quad(new Triplet(-2,-3, 5), new Triplet(4, 0, 0), new Triplet(0, 0,-4), lowerTeal));
-
-        return world;
+        return new ObjectList(
+                new Quad(new Triplet(-3, -2, 5), new Triplet(0, 0, -4), new Triplet(0, 4, 0), leftRed),
+                new Quad(new Triplet(-2, -2, 0), new Triplet(4, 0, 0), new Triplet(0, 4, 0), backGreen),
+                new Quad(new Triplet(3, -2, 1), new Triplet(0, 0, 4), new Triplet(0, 4, 0), rightBlue),
+                new Quad(new Triplet(-2, 3, 1), new Triplet(4, 0, 0), new Triplet(0, 0, 4), upperOrange),
+                new Quad(new Triplet(-2, -3, 5), new Triplet(4, 0, 0), new Triplet(0, 0, -4), lowerTeal));
     }
 }

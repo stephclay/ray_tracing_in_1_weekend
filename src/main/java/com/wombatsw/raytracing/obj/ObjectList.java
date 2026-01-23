@@ -4,54 +4,29 @@ import com.wombatsw.raytracing.model.BoundingBox;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
-import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * A list of scene objects
  */
+@Getter
+@ToString(callSuper = true)
 public class ObjectList extends AbstractObj {
-    @Getter(AccessLevel.PACKAGE)
-    private final ArrayList<AbstractObj> list = new ArrayList<>();
-    private BoundingBox boundingBox;
-
-    public ObjectList() {
-        super(null);
-        boundingBox = new BoundingBox();
-    }
+    private final List<AbstractObj> list;
 
     public ObjectList(AbstractObj... objs) {
-        this();
-        add(objs);
+        this(List.of(objs));
     }
 
     public ObjectList(List<AbstractObj> objs) {
-        this();
-        objs.forEach(this::add);
-    }
+        super(null, computeBoundingBox(objs));
 
-    /**
-     * Add an object to the list. May be chained
-     *
-     * @param objs One or more scene objects
-     * @return this
-     */
-    public ObjectList add(AbstractObj... objs) {
-        for (AbstractObj obj : objs) {
-            list.add(obj);
-            boundingBox = new BoundingBox(boundingBox, obj.getBoundingBox());
-        }
-        return this;
-    }
-
-    /**
-     * Clear the list of scene objects
-     */
-    public void clear() {
-        list.clear();
+        list = Collections.unmodifiableList(new ArrayList<>(objs));
     }
 
     @Override
@@ -69,8 +44,17 @@ public class ObjectList extends AbstractObj {
         return returnVal;
     }
 
-    @Override
-    public BoundingBox getBoundingBox() {
+    /**
+     * Compute the bounding box for the given set of objects
+     *
+     * @param objs The set of objects
+     * @return The {@link BoundingBox}
+     */
+    private static BoundingBox computeBoundingBox(List<AbstractObj> objs) {
+        BoundingBox boundingBox = new BoundingBox();
+        for (AbstractObj obj : objs) {
+            boundingBox = new BoundingBox(boundingBox, obj.getBoundingBox());
+        }
         return boundingBox;
     }
 }

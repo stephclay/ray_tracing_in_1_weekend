@@ -4,6 +4,8 @@ import com.wombatsw.raytracing.model.BoundingBox;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -11,6 +13,8 @@ import java.util.Comparator;
 /**
  * Bounding Volume Hierarchy Node
  */
+@Getter
+@ToString(callSuper = true)
 public class BVHNode extends AbstractObj {
     /**
      * A helper class to sort objects along a given axis
@@ -31,7 +35,6 @@ public class BVHNode extends AbstractObj {
 
     private final AbstractObj left;
     private final AbstractObj right;
-    private final BoundingBox boundingBox;
 
     /**
      * Create a Bounding Volume Hierarchy Node from the given list of objects
@@ -49,16 +52,10 @@ public class BVHNode extends AbstractObj {
      * @param start   The start of the subset, inclusive
      * @param end     The end of the subset, exclusive
      */
-    public BVHNode(final AbstractObj[] objects, final int start, final int end) {
-        super(null);
+    private BVHNode(final AbstractObj[] objects, final int start, final int end) {
+        super(null, computeBoundingBox(objects, start, end));
 
-        BoundingBox bbox = new BoundingBox();
-        for (int i = start; i < end; i++) {
-            bbox = new BoundingBox(bbox, objects[i].getBoundingBox());
-        }
-        boundingBox = bbox;
-
-        int axis = bbox.longestAxis();
+        int axis = getBoundingBox().longestAxis();
         int span = end - start;
 
         if (span == 1) {
@@ -76,7 +73,7 @@ public class BVHNode extends AbstractObj {
 
     @Override
     public Intersection intersect(Ray ray, Interval tRange) {
-        Interval rayInt = boundingBox.intersect(ray, tRange);
+        Interval rayInt = getBoundingBox().intersect(ray, tRange);
         if (rayInt == null) {
             return null;
         }
@@ -96,8 +93,19 @@ public class BVHNode extends AbstractObj {
         return returnVal;
     }
 
-    @Override
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
+    /**
+     * Compute the bounding box for the given set of objects
+     *
+     * @param objects The set of objects
+     * @param start The starting index of the elements to use, inclusive
+     * @param end The ending index of the elements to use, exclusive
+     * @return The {@link BoundingBox}
+     */
+    private static BoundingBox computeBoundingBox(AbstractObj[] objects, int start, int end) {
+        BoundingBox bbox = new BoundingBox();
+        for (int i = start; i < end; i++) {
+            bbox = new BoundingBox(bbox, objects[i].getBoundingBox());
+        }
+        return bbox;
     }
 }

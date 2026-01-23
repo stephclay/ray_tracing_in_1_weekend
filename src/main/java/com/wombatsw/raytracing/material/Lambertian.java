@@ -6,10 +6,14 @@ import com.wombatsw.raytracing.model.ScatterData;
 import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.texture.SolidColor;
 import com.wombatsw.raytracing.texture.Texture;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * A Lambertian (diffuse) material
  */
+@Getter
+@ToString(callSuper = true)
 public class Lambertian extends Material {
     private final Texture texture;
 

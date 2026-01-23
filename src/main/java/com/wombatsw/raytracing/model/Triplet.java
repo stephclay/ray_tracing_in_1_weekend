@@ -15,7 +15,7 @@ import static com.wombatsw.raytracing.Constants.EPSILON;
  * A mutable Triplet
  */
 @EqualsAndHashCode(exclude = "mutable")
-@ToString(callSuper = true)
+@ToString
 public class Triplet {
     private final double[] values;
 

@@ -1,11 +1,13 @@
 package com.wombatsw.raytracing.obj;
 
-import com.wombatsw.raytracing.model.BoundingBox;
 import com.wombatsw.raytracing.material.Material;
+import com.wombatsw.raytracing.model.BoundingBox;
 import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
 import static com.wombatsw.raytracing.Constants.EPSILON;
 import static com.wombatsw.raytracing.Constants.UNIT_INTERVAL;
@@ -13,14 +15,18 @@ import static com.wombatsw.raytracing.Constants.UNIT_INTERVAL;
 /**
  * A quadrilateral
  */
+@ToString(callSuper = true)
 public class Quad extends AbstractObj {
+    @Getter
     private final Triplet q;
+    @Getter
     private final Triplet u;
+    @Getter
     private final Triplet v;
+
     private final Triplet n;
     private final Triplet w;
     private final double d;
-    private final BoundingBox boundingBox;
 
     /**
      * Stationary quad
@@ -31,7 +37,8 @@ public class Quad extends AbstractObj {
      * @param material Material sphere is made of
      */
     public Quad(final Triplet q, final Triplet u, final Triplet v, final Material material) {
-        super(material);
+        super(material, createBoundingBox(q, u, v));
+
         this.q = q;
         this.u = u;
         this.v = v;
@@ -44,7 +51,6 @@ public class Quad extends AbstractObj {
 
         n.setImmutable();
         w.setImmutable();
-        this.boundingBox = createBoundingBox();
     }
 
     /**
@@ -105,17 +111,12 @@ public class Quad extends AbstractObj {
         return new Intersection(ray, t, p, n.copy(), a, b, getMaterial());
     }
 
-    @Override
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
-    }
-
     /**
      * Create the bounding box for this object
      *
      * @return The {@link BoundingBox}
      */
-    private BoundingBox createBoundingBox() {
+    private static BoundingBox createBoundingBox(final Triplet q, final Triplet u, final Triplet v) {
         BoundingBox bbDiag1 = new BoundingBox(q, q.copy().add(u).add(v));
         BoundingBox bbDiag2 = new BoundingBox(q.copy().add(u), q.copy().add(v));
         return new BoundingBox(bbDiag1, bbDiag2);

@@ -2,6 +2,8 @@ package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,8 +13,12 @@ import java.io.IOException;
 /**
  * Image texture from a provided image file
  */
-public class ImageTexture implements Texture {
+@ToString(callSuper = true)
+public class ImageTexture extends Texture {
     private static final Interval BOUNDS = new Interval(0, 1);
+
+    @Getter
+    private final String filename;
 
     private final BufferedImage image;
     private final int width;
@@ -20,12 +26,15 @@ public class ImageTexture implements Texture {
 
     public ImageTexture(final String filename) {
         try {
+            this.filename = filename;
+
             File file = new File(filename);
             if (file.exists()) {
                 image = ImageIO.read(file);
             } else {
                 throw new IllegalArgumentException("Couldn't find image file: " + filename);
             }
+
             width = image.getWidth();
             height = image.getHeight();
         } catch (IOException e) {

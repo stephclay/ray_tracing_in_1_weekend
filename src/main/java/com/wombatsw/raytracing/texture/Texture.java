@@ -1,8 +1,10 @@
 package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.ToString;
 
-public interface Texture {
+@ToString
+public abstract class Texture {
     /**
      * Get the color value at a specific point on the texture map
      *
@@ -11,5 +13,5 @@ public interface Texture {
      * @param p The location of the intersection
      * @return The color at that point
      */
-    Triplet value(double u, double v, Triplet p);
+    public abstract Triplet value(double u, double v, Triplet p);
 }

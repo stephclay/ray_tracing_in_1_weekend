@@ -15,14 +15,14 @@ public class ResolveContext {
     private final Map<DTOType, Map<String, DTO<?>>> registries = new HashMap<>();
 
     /**
-     * Register the provided {@link DTO} with a specific name
+     * Register the provided map of named {@link DTO}s. The map may be null.
      *
-     * @param name  The name of the {@link DTO}
-     * @param value The {@link DTO}
+     * @param dtoMap The map from name to {@link DTO}
      */
-    public void register(final String name, final DTO<?> value) {
-        Map<String, DTO<?>> registry = getRegistry(value.getType());
-        registry.put(name, value);
+    public <T extends DTO<?>> void register(final Map<String, T> dtoMap) {
+        if (dtoMap != null) {
+            dtoMap.forEach(this::register);
+        }
     }
 
     /**
@@ -46,6 +46,17 @@ public class ResolveContext {
         }
 
         return value;
+    }
+
+    /**
+     * Register the provided {@link DTO} with a specific name
+     *
+     * @param name  The name of the {@link DTO}
+     * @param value The {@link DTO}
+     */
+    private void register(final String name, final DTO<?> value) {
+        Map<String, DTO<?>> registry = getRegistry(value.getType());
+        registry.put(name, value);
     }
 
     /**

@@ -1,11 +1,15 @@
 package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Noise texture
  */
-public class NoiseTexture implements Texture {
+@ToString(callSuper = true)
+public class NoiseTexture extends Texture {
+    @Getter
     private final double scale;
     private final Perlin perlin;
 

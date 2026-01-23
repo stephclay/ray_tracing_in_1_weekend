@@ -6,20 +6,23 @@ import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Interval;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * An object made from transforming another object.
  */
+@Getter
+@ToString(callSuper = true)
 public class Transform extends AbstractObj {
     private final AbstractObj object;
     private final Affine affine;
-    private final BoundingBox boundingBox;
 
     public Transform(final AbstractObj object, final Affine affine) {
-        super(object.getMaterial());
+        super(object.getMaterial(), new BoundingBox(object.getBoundingBox(), affine));
+
         this.object = object;
         this.affine = affine;
-        this.boundingBox = new BoundingBox(object.getBoundingBox(), affine);
     }
 
     @Override
@@ -41,10 +44,5 @@ public class Transform extends AbstractObj {
         Triplet n = affine.invert(intersection.getN(), false);
 
         return new Intersection(intersection, p, n);
-    }
-
-    @Override
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
     }
 }

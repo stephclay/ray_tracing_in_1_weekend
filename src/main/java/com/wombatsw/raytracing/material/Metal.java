@@ -4,10 +4,14 @@ import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * A metal material
  */
+@Getter
+@ToString(callSuper = true)
 public class Metal extends Material {
     private final Triplet albedo;
     private final double fuzz;

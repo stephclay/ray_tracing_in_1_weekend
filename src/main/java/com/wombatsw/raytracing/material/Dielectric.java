@@ -6,10 +6,14 @@ import com.wombatsw.raytracing.model.Intersection;
 import com.wombatsw.raytracing.model.Ray;
 import com.wombatsw.raytracing.model.ScatterData;
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * A dielectric (transparent) material
  */
+@Getter
+@ToString(callSuper = true)
 public class Dielectric extends Material {
     private final double refractionIndex;
 

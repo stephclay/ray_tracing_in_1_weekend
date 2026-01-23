@@ -29,7 +29,7 @@ public class SceneReader {
 
         try (InputStream in = new FileInputStream(file)) {
             SceneDTO sceneDTO = mapper.readValue(in, SceneDTO.class);
-            scene = sceneDTO.resolve(new ResolveContext());
+            scene = sceneDTO.toScene();
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot read scene file " + file, e);
         }

@@ -1,19 +1,29 @@
 package com.wombatsw.raytracing.texture;
 
 import com.wombatsw.raytracing.model.Triplet;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * A checker texture based on world coordinates
  */
-public class CheckerTexture implements Texture {
-    private final double invScale;
+@ToString(callSuper = true)
+public class CheckerTexture extends Texture {
+    @Getter
+    private final double scale;
+    @Getter
     private final Texture even;
+    @Getter
     private final Texture odd;
 
+    private final double invScale;
+
     public CheckerTexture(final double scale, final Texture even, final Texture odd) {
-        invScale = 1.0 / scale;
+        this.scale = scale;
         this.even = even;
         this.odd = odd;
+
+        invScale = 1.0 / scale;
     }
 
     @Override

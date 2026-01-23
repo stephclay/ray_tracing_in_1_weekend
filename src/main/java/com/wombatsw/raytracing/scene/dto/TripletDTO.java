@@ -18,6 +18,15 @@ public class TripletDTO extends DTO<Triplet> {
         this.values = values;
     }
 
+    public TripletDTO(Triplet triplet) {
+        super(DTOType.TRIPLET);
+        values = new double[]{
+                triplet.getValue(0),
+                triplet.getValue(1),
+                triplet.getValue(2)
+        };
+    }
+
     @Override
     protected Triplet createFromDTO(ResolveContext context) {
         return new Triplet(values[0], values[1], values[2]);
