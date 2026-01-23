@@ -17,6 +17,11 @@ public class DielectricDTO extends MaterialDTO<Dielectric> {
         this.refractionIndex = refractionIndex;
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public DielectricDTO(final int refractionIndex) {
+        this((double) refractionIndex);
+    }
+
     @Override
     protected Dielectric createFromDTO(ResolveContext context) {
         return new Dielectric(refractionIndex);

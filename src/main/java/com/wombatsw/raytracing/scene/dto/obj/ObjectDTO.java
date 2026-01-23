@@ -17,6 +17,8 @@ import lombok.ToString;
         include = JsonTypeInfo.As.WRAPPER_OBJECT
 )
 @JsonSubTypes({
+        @JsonSubTypes.Type(value = BoxDTO.class, name = "Box"),
+        @JsonSubTypes.Type(value = QuadDTO.class, name = "Quad"),
         @JsonSubTypes.Type(value = SphereDTO.class, name = "Sphere")
 })
 @ToString(callSuper = true)

@@ -33,7 +33,7 @@ public class CheckerTextureDTO extends TextureDTO<CheckerTexture> {
     }
 
     @Override
-    protected Texture createFromDTO(final ResolveContext context) {
+    protected CheckerTexture createFromDTO(final ResolveContext context) {
         Texture even = getTexture(context,
                 evenTextureRef, "evenTexture",
                 evenColorRef, "evenColor");

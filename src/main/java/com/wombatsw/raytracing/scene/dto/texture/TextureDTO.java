@@ -19,6 +19,7 @@ import lombok.ToString;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = CheckerTextureDTO.class, name = "Checker"),
         @JsonSubTypes.Type(value = ImageTextureDTO.class, name = "Image"),
+        @JsonSubTypes.Type(value = NoiseTextureDTO.class, name = "Noise"),
         @JsonSubTypes.Type(value = SolidColorDTO.class, name = "SolidColor")
 })
 @ToString(callSuper = true)
