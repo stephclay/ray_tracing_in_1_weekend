@@ -42,8 +42,15 @@ public class SceneDTO extends DTO<Scene> {
         this.world = world;
     }
 
-    private <T> Map<String, T> ensureMapExists(Map<String, T> dtoMap) {
-        return dtoMap == null ? new HashMap<>() : dtoMap;
+    /**
+     * Create a new map if the provided one is {@code null}
+     *
+     * @param map The map which might be null
+     * @param <T> The type of object that the map references
+     * @return The provide map, or a new one if the provided one was {@code null}
+     */
+    private static <T> Map<String, T> ensureMapExists(Map<String, T> map) {
+        return map == null ? new HashMap<>() : map;
     }
 
     @Override
@@ -59,11 +66,8 @@ public class SceneDTO extends DTO<Scene> {
      * @return The list of scene objects
      */
     private List<AbstractObj> resolveWorldElements(ResolveContext context) {
-        // Triplets do not reference other types
         tripletDTOs.forEach(context::register);
-        // Textures reference triplets and other textures
-        // TODO: resolve textures. Need to be mindful of references to other textures.
-        // Materials reference textures and triplets
+        textureDTOs.forEach(context::register);
         materialDTOs.forEach(context::register);
 
         return world.stream()

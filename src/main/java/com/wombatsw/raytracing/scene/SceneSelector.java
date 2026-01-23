@@ -3,7 +3,7 @@ package com.wombatsw.raytracing.scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.net.URL;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +21,17 @@ public class SceneSelector {
     }
 
     public Scene getScene(final String sceneName) {
-        URL resource = this.getClass().getResource("/" + sceneName);
-        if (resource != null) {
-            SceneReader reader = new SceneReader(resource);
-            return reader.getScene();
+        Scene scene = scenesMap.get(sceneName);
+        if (scene != null) {
+            return scene;
         }
-        return scenesMap.getOrDefault(sceneName, scenesMap.get(RandomSpheresScene.class.getSimpleName()));
+
+        File sceneFile = new File(sceneName);
+        if (!sceneFile.exists()) {
+            throw new RuntimeException(String.format("Scene %s not found", sceneName));
+        }
+
+        SceneReader reader = new SceneReader(sceneFile);
+        return reader.getScene();
     }
 }

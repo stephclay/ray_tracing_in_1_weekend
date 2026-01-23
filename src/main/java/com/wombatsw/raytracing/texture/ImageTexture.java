@@ -5,8 +5,8 @@ import com.wombatsw.raytracing.model.Triplet;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Image texture from a provided image file
@@ -20,11 +20,12 @@ public class ImageTexture implements Texture {
 
     public ImageTexture(final String filename) {
         try {
-            URL imageRes = ImageTexture.class.getResource(filename);
-            if (imageRes == null) {
+            File file = new File(filename);
+            if (file.exists()) {
+                image = ImageIO.read(file);
+            } else {
                 throw new IllegalArgumentException("Couldn't find image file: " + filename);
             }
-            image = ImageIO.read(imageRes);
             width = image.getWidth();
             height = image.getHeight();
         } catch (IOException e) {

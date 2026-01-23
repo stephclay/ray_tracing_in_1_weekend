@@ -16,10 +16,6 @@ public class CheckerTexture implements Texture {
         this.odd = odd;
     }
 
-    public CheckerTexture(final double scale, final Triplet even, final Triplet odd) {
-        this(scale, new SolidColor(even), new SolidColor(odd));
-    }
-
     @Override
     public Triplet value(final double u, final double v, final Triplet p) {
         int xInt = (int) Math.floor(invScale * p.getX());

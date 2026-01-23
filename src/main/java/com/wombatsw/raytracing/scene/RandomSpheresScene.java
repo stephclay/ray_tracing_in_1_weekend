@@ -11,6 +11,7 @@ import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Sphere;
 import com.wombatsw.raytracing.texture.CheckerTexture;
+import com.wombatsw.raytracing.texture.SolidColor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,8 +36,9 @@ public class RandomSpheresScene implements Scene {
     public ObjectList getWorld() {
         ObjectList world = new ObjectList();
 
-        CheckerTexture checkered = new CheckerTexture(0.32, new Triplet(.2, .3, .1),
-                new Triplet(.9, .9, .9));
+        CheckerTexture checkered = new CheckerTexture(0.32,
+                new SolidColor(new Triplet(.2, .3, .1)),
+                new SolidColor(new Triplet(.9, .9, .9)));
         Material matGround = new Lambertian(checkered);
         world.add(new Sphere(new Triplet(0, -1000, 0), 1000, matGround));
 
