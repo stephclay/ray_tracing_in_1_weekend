@@ -9,6 +9,7 @@ import com.wombatsw.raytracing.texture.ImageTexture;
 import com.wombatsw.raytracing.texture.NoiseTexture;
 import com.wombatsw.raytracing.texture.SolidColor;
 import com.wombatsw.raytracing.texture.Texture;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -27,6 +28,7 @@ import lombok.ToString;
         @JsonSubTypes.Type(value = SolidColorDTO.class, name = "SolidColor")
 })
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public abstract class TextureDTO<T extends Texture> extends DTO<Texture> {
     public TextureDTO() {
         super(DTOType.TEXTURE);

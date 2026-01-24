@@ -2,6 +2,7 @@ package com.wombatsw.raytracing.scene.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wombatsw.raytracing.scene.ResolveContext;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,6 +12,7 @@ import lombok.ToString;
  * @param <T> The data type that this DTO converts into
  */
 @ToString
+@EqualsAndHashCode
 public abstract class DTO<T> {
     /**
      * The type of DTO. Used for looking up references in the registry

@@ -13,8 +13,10 @@ import com.wombatsw.raytracing.scene.SceneFile;
 import com.wombatsw.raytracing.scene.dto.material.MaterialDTO;
 import com.wombatsw.raytracing.scene.dto.obj.ObjectDTO;
 import com.wombatsw.raytracing.scene.dto.texture.TextureDTO;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.Map;
  * The DTO for Scenes.
  */
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @JsonPropertyOrder({"camera", "triplets", "textures", "materials", "world"})
 public class SceneDTO extends DTO<Scene> {
     @Getter

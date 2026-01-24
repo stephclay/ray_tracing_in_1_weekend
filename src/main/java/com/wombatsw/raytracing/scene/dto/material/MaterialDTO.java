@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.scene.dto.material;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.wombatsw.raytracing.material.Dielectric;
@@ -9,6 +10,7 @@ import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.material.Metal;
 import com.wombatsw.raytracing.scene.dto.DTO;
 import com.wombatsw.raytracing.scene.dto.DTOType;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -27,6 +29,7 @@ import lombok.ToString;
         @JsonSubTypes.Type(value = MetalDTO.class, name = "Metal")
 })
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public abstract class MaterialDTO<T extends Material> extends DTO<T> {
     public MaterialDTO() {
         super(DTOType.MATERIAL);

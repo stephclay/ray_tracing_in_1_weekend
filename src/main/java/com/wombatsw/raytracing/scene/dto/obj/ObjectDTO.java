@@ -7,6 +7,7 @@ import com.wombatsw.raytracing.obj.Quad;
 import com.wombatsw.raytracing.obj.Sphere;
 import com.wombatsw.raytracing.scene.dto.DTO;
 import com.wombatsw.raytracing.scene.dto.DTOType;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -25,6 +26,7 @@ import lombok.ToString;
         // TODO: Add TransformDTO
 })
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public abstract class ObjectDTO<T extends AbstractObj> extends DTO<T> {
     public ObjectDTO() {
         super(DTOType.OBJECT);

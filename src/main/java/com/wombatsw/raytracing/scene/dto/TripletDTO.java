@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.scene.ResolveContext;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -12,6 +13,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class TripletDTO extends DTO<Triplet> {
     private final double[] values;
 

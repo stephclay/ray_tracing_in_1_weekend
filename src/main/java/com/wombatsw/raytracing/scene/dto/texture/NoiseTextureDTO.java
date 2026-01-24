@@ -1,8 +1,10 @@
 package com.wombatsw.raytracing.scene.dto.texture;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.texture.NoiseTexture;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,6 +13,8 @@ import lombok.ToString;
  */
 @Getter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@JsonPropertyOrder({"scale"})
 public class NoiseTextureDTO extends TextureDTO<NoiseTexture> {
     private final double scale;
 

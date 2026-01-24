@@ -8,6 +8,7 @@ import com.wombatsw.raytracing.scene.dto.TripletDTO;
 import com.wombatsw.raytracing.scene.dto.material.MaterialDTO;
 import com.wombatsw.raytracing.scene.ref.MaterialRef;
 import com.wombatsw.raytracing.scene.ref.TripletRef;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -16,6 +17,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @JsonPropertyOrder({"corner", "u", "v", "material"})
 public class QuadDTO extends ObjectDTO<Quad> {
     private final TripletRef corner;
