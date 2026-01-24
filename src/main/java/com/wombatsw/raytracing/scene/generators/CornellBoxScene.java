@@ -1,4 +1,4 @@
-package com.wombatsw.raytracing.scene;
+package com.wombatsw.raytracing.scene.generators;
 
 import com.wombatsw.raytracing.engine.Camera;
 import com.wombatsw.raytracing.engine.ColorUtils;
@@ -12,6 +12,7 @@ import com.wombatsw.raytracing.obj.AbstractObj;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Quad;
 import com.wombatsw.raytracing.obj.Transform;
+import com.wombatsw.raytracing.scene.Scene;
 import org.springframework.stereotype.Component;
 
 @Component

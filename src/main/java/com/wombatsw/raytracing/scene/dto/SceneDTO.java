@@ -7,7 +7,6 @@ import com.wombatsw.raytracing.engine.Camera;
 import com.wombatsw.raytracing.obj.AbstractObj;
 import com.wombatsw.raytracing.obj.BVHNode;
 import com.wombatsw.raytracing.obj.ObjectList;
-import com.wombatsw.raytracing.obj.Transform;
 import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.scene.Scene;
 import com.wombatsw.raytracing.scene.SceneFile;
@@ -19,7 +18,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -105,8 +103,6 @@ public class SceneDTO extends DTO<Scene> {
             if (bvhNode.getLeft() != bvhNode.getRight()) {
                 mapToDTO(objectDTOList, bvhNode.getRight());
             }
-        } else if (object instanceof Transform transform) {
-            throw new UnsupportedOperationException("Transformation serialization not supported yet.");
         } else {
             objectDTOList.add(ObjectDTO.toDTO(object, context));
         }

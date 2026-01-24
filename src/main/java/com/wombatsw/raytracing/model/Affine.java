@@ -1,8 +1,16 @@
 package com.wombatsw.raytracing.model;
 
+import lombok.ToString;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
+
 /**
  * Affine transformation matrix
  */
+@ToString(exclude = "inverse")
 public class Affine {
     private static final int DIM = 4;
 
@@ -103,6 +111,43 @@ public class Affine {
         double[][] invRotation = createRotation(axisNorm, -angle);
         inverse = multiply(inverse, invRotation);
         return this;
+    }
+
+    /**
+     * Serialize this Affine matrix to a string
+     *
+     * @return
+     */
+    public String serialize() {
+        // TODO: Track the transformations and use that for serialization. One possibility is to
+        //  nest the transformations (each rotate, translate, etc returns a new object), tracking the
+        //  name of the transform and its parameters at each step. The name handling could be done at
+        //  the DTO later, so there is no serialization here.
+        return Stream.of(matrix)
+                .flatMap(row -> DoubleStream.of(row).boxed())
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
+    }
+
+    /**
+     * Deserialize this Affine matrix from a string
+     *
+     * @param value The value to deserialize
+     * @return The corresponding {@link Affine} matrix
+     */
+    public static Affine deserialize(final String value) {
+        List<Double> values = Stream.of(value.split(","))
+                .map(Double::parseDouble)
+                .toList();
+
+        Affine affine = new Affine();
+        for (int i = 0; i < DIM; i++) {
+            for (int j = 0; j < DIM; j++) {
+                affine.matrix[i][j] = values.get(i * DIM + j);
+            }
+        }
+
+        return affine;
     }
 
     /**

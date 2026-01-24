@@ -31,7 +31,6 @@ public class SceneSelector {
             throw new RuntimeException(String.format("Scene %s not found", sceneName));
         }
 
-        SceneReader reader = new SceneReader(sceneFile);
-        return reader.getScene();
+        return new SceneReader().read(sceneFile);
     }
 }

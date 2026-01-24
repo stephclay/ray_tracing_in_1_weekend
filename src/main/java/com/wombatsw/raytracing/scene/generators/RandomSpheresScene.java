@@ -1,4 +1,4 @@
-package com.wombatsw.raytracing.scene;
+package com.wombatsw.raytracing.scene.generators;
 
 import com.wombatsw.raytracing.engine.Camera;
 import com.wombatsw.raytracing.engine.MathUtils;
@@ -11,6 +11,7 @@ import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.obj.AbstractObj;
 import com.wombatsw.raytracing.obj.ObjectList;
 import com.wombatsw.raytracing.obj.Sphere;
+import com.wombatsw.raytracing.scene.Scene;
 import com.wombatsw.raytracing.texture.CheckerTexture;
 import com.wombatsw.raytracing.texture.SolidColor;
 import org.springframework.stereotype.Component;
