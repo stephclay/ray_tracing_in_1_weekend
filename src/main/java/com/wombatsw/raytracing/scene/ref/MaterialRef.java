@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.scene.dto.DTOType;
 import com.wombatsw.raytracing.scene.dto.material.MaterialDTO;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -11,6 +12,7 @@ import lombok.ToString;
  */
 @JsonDeserialize(using = MaterialRefDeserializer.class)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class MaterialRef extends Ref<Material> {
 
     public MaterialRef(final String name) {

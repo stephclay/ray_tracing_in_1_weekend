@@ -1,10 +1,9 @@
 package com.wombatsw.raytracing.scene.dto.material;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.wombatsw.raytracing.material.DiffuseLight;
 import com.wombatsw.raytracing.scene.ResolveContext;
-import com.wombatsw.raytracing.scene.dto.texture.TextureDTO;
 import com.wombatsw.raytracing.scene.ref.TextureRef;
 import com.wombatsw.raytracing.scene.ref.TripletRef;
 import lombok.EqualsAndHashCode;
@@ -17,7 +16,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@JsonPropertyOrder({"texture", "color"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DiffuseLightDTO extends MaterialDTO<DiffuseLight> {
     private final TextureRef texture;
     private final TripletRef color;
@@ -28,8 +27,8 @@ public class DiffuseLightDTO extends MaterialDTO<DiffuseLight> {
         this.color = color;
     }
 
-    public DiffuseLightDTO(final DiffuseLight diffuseLight) {
-        this(new TextureRef(TextureDTO.toDTO(diffuseLight.getTexture())), null);
+    public DiffuseLightDTO(final DiffuseLight diffuseLight, final ResolveContext context) {
+        this(context.getTextureRef(diffuseLight.getTexture()), null);
     }
 
     @Override

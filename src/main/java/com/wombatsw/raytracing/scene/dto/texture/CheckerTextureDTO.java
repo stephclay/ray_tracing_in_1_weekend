@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.scene.dto.texture;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.wombatsw.raytracing.scene.ResolveContext;
@@ -18,6 +19,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"scale", "evenTexture", "oddTexture", "evenColor", "oddColor"})
 public class CheckerTextureDTO extends TextureDTO<CheckerTexture> {
     private final double scale;
@@ -38,10 +40,10 @@ public class CheckerTextureDTO extends TextureDTO<CheckerTexture> {
         this.oddColor = oddColor;
     }
 
-    public CheckerTextureDTO(final CheckerTexture texture) {
+    public CheckerTextureDTO(final CheckerTexture texture, final ResolveContext context) {
         this(texture.getScale(),
-                new TextureRef(TextureDTO.toDTO(texture.getEven())),
-                new TextureRef(TextureDTO.toDTO(texture.getOdd())),
+                context.getTextureRef(texture.getEven()),
+                context.getTextureRef(texture.getOdd()),
                 null, null);
     }
 

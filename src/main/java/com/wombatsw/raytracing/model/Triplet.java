@@ -1,5 +1,7 @@
 package com.wombatsw.raytracing.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.wombatsw.raytracing.engine.MathUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,6 +19,8 @@ import static com.wombatsw.raytracing.Constants.EPSILON;
 @EqualsAndHashCode(exclude = "mutable")
 @ToString
 public class Triplet {
+    // TODO: Remove Jackson annotations once Camera has its own DTO
+    @JsonValue
     private final double[] values;
 
     /**
@@ -24,6 +28,7 @@ public class Triplet {
      */
     @Setter
     @Getter
+    @JsonIgnore
     private boolean mutable = true;
 
     public Triplet(final double x, final double y, final double z) {

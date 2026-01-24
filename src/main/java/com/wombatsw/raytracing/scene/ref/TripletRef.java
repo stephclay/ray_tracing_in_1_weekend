@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.scene.dto.DTOType;
 import com.wombatsw.raytracing.scene.dto.TripletDTO;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -11,6 +12,7 @@ import lombok.ToString;
  */
 @JsonDeserialize(using = TripletRefDeserializer.class)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class TripletRef extends Ref<Triplet> {
     public TripletRef(final String name) {
         super(name);

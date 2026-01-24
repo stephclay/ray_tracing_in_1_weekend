@@ -2,6 +2,7 @@ package com.wombatsw.raytracing.scene.dto.texture;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.texture.ImageTexture;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @JsonPropertyOrder({"filename"})
 public class ImageTextureDTO extends TextureDTO<ImageTexture> {
+    @JsonValue
     private final String filename;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

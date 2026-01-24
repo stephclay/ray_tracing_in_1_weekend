@@ -2,6 +2,7 @@ package com.wombatsw.raytracing.scene.dto.texture;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.scene.dto.DTO;
 import com.wombatsw.raytracing.scene.dto.DTOType;
 import com.wombatsw.raytracing.texture.CheckerTexture;
@@ -34,9 +35,9 @@ public abstract class TextureDTO<T extends Texture> extends DTO<Texture> {
         super(DTOType.TEXTURE);
     }
 
-    public static TextureDTO<? extends Texture> toDTO(final Texture value) {
+    public static TextureDTO<? extends Texture> toDTO(final Texture value, final ResolveContext context) {
         if (value instanceof CheckerTexture texture) {
-            return new CheckerTextureDTO(texture);
+            return new CheckerTextureDTO(texture, context);
         }
         if (value instanceof ImageTexture texture) {
             return new ImageTextureDTO(texture);
@@ -45,7 +46,7 @@ public abstract class TextureDTO<T extends Texture> extends DTO<Texture> {
             return new NoiseTextureDTO(texture);
         }
         if (value instanceof SolidColor texture) {
-            return new SolidColorDTO(texture);
+            return new SolidColorDTO(texture, context);
         }
         throw new IllegalArgumentException("Unknown texture type: " + value.getClass().getSimpleName());
     }

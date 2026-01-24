@@ -32,11 +32,10 @@ public class SphereDTO extends ObjectDTO<Sphere> {
         this.material = material;
     }
 
-    public SphereDTO(final Sphere sphere) {
+    public SphereDTO(final Sphere sphere, final ResolveContext context) {
         this(new TripletRef(new TripletDTO(sphere.getCenterPath().origin())),
                 sphere.getRadius(),
-                new MaterialRef(MaterialDTO.toDTO(sphere.getMaterial()))
-        );
+                context.getMaterialRef(sphere.getMaterial()));
     }
 
     @Override

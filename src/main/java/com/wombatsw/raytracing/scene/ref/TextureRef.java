@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wombatsw.raytracing.scene.dto.DTOType;
 import com.wombatsw.raytracing.scene.dto.texture.TextureDTO;
 import com.wombatsw.raytracing.texture.Texture;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -11,6 +12,7 @@ import lombok.ToString;
  */
 @JsonDeserialize(using = TextureRefDeserializer.class)
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class TextureRef extends Ref<Texture> {
 
     public TextureRef(final String name) {

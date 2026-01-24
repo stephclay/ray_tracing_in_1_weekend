@@ -3,6 +3,7 @@ package com.wombatsw.raytracing.scene.ref;
 import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.scene.dto.DTO;
 import com.wombatsw.raytracing.scene.dto.DTOType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -14,6 +15,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
+@EqualsAndHashCode
 public abstract class Ref<T> {
     private final String name;
     private final DTO<? extends T> value;

@@ -35,11 +35,11 @@ public class QuadDTO extends ObjectDTO<Quad> {
         this.material = material;
     }
 
-    public QuadDTO(final Quad quad) {
+    public QuadDTO(final Quad quad, final ResolveContext context) {
         this(new TripletRef(new TripletDTO(quad.getQ())),
                 new TripletRef(new TripletDTO(quad.getU())),
                 new TripletRef(new TripletDTO(quad.getV())),
-                new MaterialRef(MaterialDTO.toDTO(quad.getMaterial())));
+                context.getMaterialRef(quad.getMaterial()));
     }
 
     @Override

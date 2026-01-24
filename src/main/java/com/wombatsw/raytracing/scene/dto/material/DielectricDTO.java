@@ -1,7 +1,7 @@
 package com.wombatsw.raytracing.scene.dto.material;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.wombatsw.raytracing.material.Dielectric;
 import com.wombatsw.raytracing.scene.ResolveContext;
 import lombok.EqualsAndHashCode;
@@ -14,8 +14,8 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@JsonPropertyOrder({"refractionIndex"})
 public class DielectricDTO extends MaterialDTO<Dielectric> {
+    @JsonValue
     private final double refractionIndex;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)

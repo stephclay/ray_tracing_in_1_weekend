@@ -1,6 +1,5 @@
 package com.wombatsw.raytracing.scene.dto.material;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.wombatsw.raytracing.material.Dielectric;
@@ -8,6 +7,7 @@ import com.wombatsw.raytracing.material.DiffuseLight;
 import com.wombatsw.raytracing.material.Lambertian;
 import com.wombatsw.raytracing.material.Material;
 import com.wombatsw.raytracing.material.Metal;
+import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.scene.dto.DTO;
 import com.wombatsw.raytracing.scene.dto.DTOType;
 import lombok.EqualsAndHashCode;
@@ -35,15 +35,15 @@ public abstract class MaterialDTO<T extends Material> extends DTO<T> {
         super(DTOType.MATERIAL);
     }
 
-    public static MaterialDTO<? extends Material> toDTO(final Material value) {
+    public static MaterialDTO<? extends Material> toDTO(final Material value, final ResolveContext context) {
         if (value instanceof Dielectric material) {
             return new DielectricDTO(material);
         }
         if (value instanceof DiffuseLight material) {
-            return new DiffuseLightDTO(material);
+            return new DiffuseLightDTO(material, context);
         }
         if (value instanceof Lambertian material) {
-            return new LambertianDTO(material);
+            return new LambertianDTO(material, context);
         }
         if (value instanceof Metal material) {
             return new MetalDTO(material);

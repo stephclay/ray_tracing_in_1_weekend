@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.wombatsw.raytracing.obj.AbstractObj;
 import com.wombatsw.raytracing.obj.Quad;
 import com.wombatsw.raytracing.obj.Sphere;
+import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.scene.dto.DTO;
 import com.wombatsw.raytracing.scene.dto.DTOType;
 import lombok.EqualsAndHashCode;
@@ -32,12 +33,12 @@ public abstract class ObjectDTO<T extends AbstractObj> extends DTO<T> {
         super(DTOType.OBJECT);
     }
 
-    public static ObjectDTO<? extends AbstractObj> toDTO(AbstractObj value) {
+    public static ObjectDTO<? extends AbstractObj> toDTO(AbstractObj value, final ResolveContext context) {
         if (value instanceof Sphere obj) {
-            return new SphereDTO(obj);
+            return new SphereDTO(obj, context);
         }
         if (value instanceof Quad obj) {
-            return new QuadDTO(obj);
+            return new QuadDTO(obj, context);
         }
         // TODO: Add TransformDTO
         // Note: Box does not have its own object, it is a collection of quads. If that changes, add it here

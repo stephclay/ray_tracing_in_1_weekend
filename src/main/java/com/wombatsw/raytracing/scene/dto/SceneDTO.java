@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.scene.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.wombatsw.raytracing.engine.Camera;
@@ -16,9 +17,9 @@ import com.wombatsw.raytracing.scene.dto.texture.TextureDTO;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.Value;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import java.util.Map;
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"camera", "triplets", "textures", "materials", "world"})
 public class SceneDTO extends DTO<Scene> {
     @Getter
@@ -47,9 +49,7 @@ public class SceneDTO extends DTO<Scene> {
         this.camera = camera == null ? new Camera() : camera;
         this.objectDTOList = world;
 
-        context.register(tripletDTOs);
-        context.register(textureDTOs);
-        context.register(materialDTOs);
+        context.register(tripletDTOs, textureDTOs, materialDTOs);
     }
 
     public SceneDTO(final Scene scene) {
@@ -60,15 +60,18 @@ public class SceneDTO extends DTO<Scene> {
         mapToDTO(this.objectDTOList, scene.getWorld());
     }
 
-    public Map<String, ? extends DTO<?>> getTriplets() {
+    @JsonProperty
+    public Map<String, ? extends TripletDTO> getTriplets() {
         return context.getTriplets();
     }
 
-    public Map<String, ? extends DTO<?>> getTextures() {
+    @JsonProperty
+    public Map<String, ? extends TextureDTO<?>> getTextures() {
         return context.getTextures();
     }
 
-    public Map<String, ? extends DTO<?>> getMaterials() {
+    @JsonProperty
+    public Map<String, ? extends MaterialDTO<?>> getMaterials() {
         return context.getMaterials();
     }
 
@@ -105,7 +108,7 @@ public class SceneDTO extends DTO<Scene> {
         } else if (object instanceof Transform transform) {
             throw new UnsupportedOperationException("Transformation serialization not supported yet.");
         } else {
-            objectDTOList.add(ObjectDTO.toDTO(object));
+            objectDTOList.add(ObjectDTO.toDTO(object, context));
         }
     }
 }
