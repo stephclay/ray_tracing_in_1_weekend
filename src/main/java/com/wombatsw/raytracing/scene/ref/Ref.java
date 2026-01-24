@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 public abstract class Ref<T> {
     private final String name;
-    private final DTO<T> value;
+    private final DTO<? extends T> value;
 
     /**
      * Construct a named reference
@@ -33,7 +33,7 @@ public abstract class Ref<T> {
      *
      * @param value The DTO of the value being referenced
      */
-    public Ref(final DTO<T> value) {
+    public Ref(final DTO<? extends T> value) {
         this.name = null;
         this.value = value;
     }
@@ -64,7 +64,7 @@ public abstract class Ref<T> {
      * @return The DTO
      * @throws IllegalArgumentException if this is a named reference and there is no object associated with that name
      */
-    private DTO<T> resolveReference(final ResolveContext context) {
+    private DTO<? extends T> resolveReference(final ResolveContext context) {
         if (value != null) {
             return value;
         }

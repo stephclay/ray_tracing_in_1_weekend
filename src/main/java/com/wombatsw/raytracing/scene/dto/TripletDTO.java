@@ -1,13 +1,16 @@
 package com.wombatsw.raytracing.scene.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.wombatsw.raytracing.model.Triplet;
 import com.wombatsw.raytracing.scene.ResolveContext;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
  * A DTO fpr {@link Triplet}s
  */
+@Getter
 @ToString(callSuper = true)
 public class TripletDTO extends DTO<Triplet> {
     private final double[] values;
@@ -16,6 +19,11 @@ public class TripletDTO extends DTO<Triplet> {
     public TripletDTO(double[] values) {
         super(DTOType.TRIPLET);
         this.values = values;
+    }
+
+    @JsonValue
+    public double[] getValues() {
+        return values;
     }
 
     public TripletDTO(Triplet triplet) {

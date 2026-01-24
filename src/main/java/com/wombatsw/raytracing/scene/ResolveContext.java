@@ -2,6 +2,8 @@ package com.wombatsw.raytracing.scene;
 
 import com.wombatsw.raytracing.scene.dto.DTO;
 import com.wombatsw.raytracing.scene.dto.DTOType;
+import com.wombatsw.raytracing.scene.dto.material.MaterialDTO;
+import lombok.Getter;
 import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
@@ -11,8 +13,11 @@ import java.util.Map;
  * The resolution context for registering named {@link DTO}s and the looking then up when they are
  * referenced from a reference type
  */
+@Getter
 public class ResolveContext {
-    private final Map<DTOType, Map<String, DTO<?>>> registries = new HashMap<>();
+    private final Map<String, DTO<?>> triplets = new HashMap<>();
+    private final Map<String, DTO<?>> textures = new HashMap<>();
+    private final Map<String, DTO<?>> materials = new HashMap<>();
 
     /**
      * Register the provided map of named {@link DTO}s. The map may be null.
@@ -65,7 +70,12 @@ public class ResolveContext {
      * @param type The type of {@link DTO}
      * @return A {@link Map} from name to {@link DTO}
      */
-    private @NonNull Map<String, DTO<?>> getRegistry(final DTOType type) {
-        return registries.computeIfAbsent(type, k -> new HashMap<>());
+    private Map<String, DTO<?>> getRegistry(final DTOType type) {
+        return switch (type) {
+            case MATERIAL -> materials;
+            case TEXTURE -> textures;
+            case TRIPLET -> triplets;
+            default -> throw new IllegalArgumentException(String.format("Type %s not supported by registry.", type));
+        };
     }
 }

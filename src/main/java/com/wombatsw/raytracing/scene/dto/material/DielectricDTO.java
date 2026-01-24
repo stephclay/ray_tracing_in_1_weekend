@@ -3,11 +3,13 @@ package com.wombatsw.raytracing.scene.dto.material;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.wombatsw.raytracing.material.Dielectric;
 import com.wombatsw.raytracing.scene.ResolveContext;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
  * A DTO for {@link Dielectric} materials
  */
+@Getter
 @ToString(callSuper = true)
 public class DielectricDTO extends MaterialDTO<Dielectric> {
     private final double refractionIndex;
@@ -20,6 +22,10 @@ public class DielectricDTO extends MaterialDTO<Dielectric> {
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public DielectricDTO(final int refractionIndex) {
         this((double) refractionIndex);
+    }
+
+    public DielectricDTO(final Dielectric material) {
+        this(material.getRefractionIndex());
     }
 
     @Override

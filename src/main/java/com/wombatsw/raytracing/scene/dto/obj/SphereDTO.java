@@ -1,34 +1,47 @@
 package com.wombatsw.raytracing.scene.dto.obj;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.wombatsw.raytracing.obj.Sphere;
 import com.wombatsw.raytracing.scene.ResolveContext;
+import com.wombatsw.raytracing.scene.dto.TripletDTO;
+import com.wombatsw.raytracing.scene.dto.material.MaterialDTO;
 import com.wombatsw.raytracing.scene.ref.MaterialRef;
 import com.wombatsw.raytracing.scene.ref.TripletRef;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
  * A DTO for {@link Sphere} objects
  */
+@Getter
 @ToString(callSuper = true)
+@JsonPropertyOrder({"center", "radius", "material"})
 public class SphereDTO extends ObjectDTO<Sphere> {
-    private final TripletRef centerRef;
+    private final TripletRef center;
     private final double radius;
-    private final MaterialRef materialRef;
+    private final MaterialRef material;
 
-    public SphereDTO(@JsonProperty("center") final TripletRef centerRef,
+    public SphereDTO(@JsonProperty("center") final TripletRef center,
                      @JsonProperty("radius") final double radius,
-                     @JsonProperty("material") final MaterialRef materialRef) {
-        this.centerRef = centerRef;
+                     @JsonProperty("material") final MaterialRef material) {
+        this.center = center;
         this.radius = radius;
-        this.materialRef = materialRef;
+        this.material = material;
+    }
+
+    public SphereDTO(final Sphere sphere) {
+        this(new TripletRef(new TripletDTO(sphere.getCenterPath().origin())),
+                sphere.getRadius(),
+                new MaterialRef(MaterialDTO.toDTO(sphere.getMaterial()))
+        );
     }
 
     @Override
     protected Sphere createFromDTO(final ResolveContext context) {
         return new Sphere(
-                centerRef.resolve(context),
+                center.resolve(context),
                 radius,
-                materialRef.resolve(context));
+                material.resolve(context));
     }
 }

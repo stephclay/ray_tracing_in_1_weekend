@@ -3,11 +3,13 @@ package com.wombatsw.raytracing.scene.dto.texture;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.wombatsw.raytracing.scene.ResolveContext;
 import com.wombatsw.raytracing.texture.NoiseTexture;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
  * A DTO for {@link NoiseTexture}
  */
+@Getter
 @ToString(callSuper = true)
 public class NoiseTextureDTO extends TextureDTO<NoiseTexture> {
     private final double scale;
@@ -20,6 +22,10 @@ public class NoiseTextureDTO extends TextureDTO<NoiseTexture> {
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public NoiseTextureDTO(final int scale) {
         this((double) scale);
+    }
+
+    public NoiseTextureDTO(final NoiseTexture texture) {
+        this(texture.getScale());
     }
 
     @Override

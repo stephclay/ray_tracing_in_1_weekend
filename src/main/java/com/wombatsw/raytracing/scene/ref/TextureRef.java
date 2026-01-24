@@ -17,7 +17,7 @@ public class TextureRef extends Ref<Texture> {
         super(name);
     }
 
-    public TextureRef(final TextureDTO<Texture> value) {
+    public TextureRef(final TextureDTO<? extends Texture> value) {
         super(value);
     }
 

@@ -3,30 +3,37 @@ package com.wombatsw.raytracing.scene.dto.material;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wombatsw.raytracing.material.DiffuseLight;
 import com.wombatsw.raytracing.scene.ResolveContext;
+import com.wombatsw.raytracing.scene.dto.texture.TextureDTO;
 import com.wombatsw.raytracing.scene.ref.TextureRef;
 import com.wombatsw.raytracing.scene.ref.TripletRef;
+import lombok.Getter;
 import lombok.ToString;
 
 /**
  * A DTO for {@link DiffuseLight} materials
  */
+@Getter
 @ToString(callSuper = true)
 public class DiffuseLightDTO extends MaterialDTO<DiffuseLight> {
-    private final TextureRef textureRef;
-    private final TripletRef colorRef;
+    private final TextureRef texture;
+    private final TripletRef color;
 
-    public DiffuseLightDTO(@JsonProperty("texture") final TextureRef textureRef,
-                           @JsonProperty("color") final TripletRef colorRef) {
-        this.textureRef = textureRef;
-        this.colorRef = colorRef;
+    public DiffuseLightDTO(@JsonProperty("texture") final TextureRef texture,
+                           @JsonProperty("color") final TripletRef color) {
+        this.texture = texture;
+        this.color = color;
+    }
+
+    public DiffuseLightDTO(final DiffuseLight diffuseLight) {
+        this(new TextureRef(TextureDTO.toDTO(diffuseLight.getTexture())), null);
     }
 
     @Override
     protected DiffuseLight createFromDTO(ResolveContext context) {
-        if (textureRef != null) {
-            return new DiffuseLight(textureRef.resolve(context));
-        } else if (colorRef != null) {
-            return new DiffuseLight(colorRef.resolve(context));
+        if (texture != null) {
+            return new DiffuseLight(texture.resolve(context));
+        } else if (color != null) {
+            return new DiffuseLight(color.resolve(context));
         } else {
             throw new IllegalArgumentException("DiffuseLight requires either texture or color");
         }

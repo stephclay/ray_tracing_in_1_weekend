@@ -1,5 +1,6 @@
 package com.wombatsw.raytracing.scene.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wombatsw.raytracing.scene.ResolveContext;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,6 +16,7 @@ public abstract class DTO<T> {
      * The type of DTO. Used for looking up references in the registry
      */
     @Getter
+    @JsonIgnore
     private final DTOType type;
 
     private T resolvedValue;

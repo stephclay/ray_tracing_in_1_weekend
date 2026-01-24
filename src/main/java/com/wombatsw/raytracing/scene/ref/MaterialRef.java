@@ -17,7 +17,7 @@ public class MaterialRef extends Ref<Material> {
         super(name);
     }
 
-    public MaterialRef(final MaterialDTO<Material> value) {
+    public MaterialRef(final MaterialDTO<? extends Material> value) {
         super(value);
     }
 
