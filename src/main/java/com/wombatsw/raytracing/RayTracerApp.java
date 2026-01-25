@@ -22,13 +22,15 @@ import java.io.File;
 public class RayTracerApp implements CommandLineRunner {
     private static final String DIR = "src/main/resources/scenes/";
     private static final String[] SCENES = {
+            "CornellBoxScene",
+            "RandomSpheresScene",
+            DIR + "QuadsScene.yaml",
             DIR + "SimpleLightScene.yaml",
             DIR + "PerlinSpheres.yaml",
             DIR + "CheckerSpheres.yaml",
             DIR + "EarthScene.yaml",
             DIR + "ThreeSpheres.yaml",
             DIR + "TwoSpheres.yaml",
-            "CornellBoxScene",
     };
     private final SceneSelector sceneSelector;
 
